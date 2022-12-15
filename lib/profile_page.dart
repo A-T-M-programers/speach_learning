@@ -4,15 +4,22 @@ import './home_page.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'Splash_Screen.dart';
+
 class profile_page extends StatelessWidget {
+  Size size = Size(0.0, 0.0);
   profile_page({
     Key? key,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffeeece4),
-      body: Stack(
+      body: SingleChildScrollView(
+          child: Container(
+          height: size.height,
+          child:Stack(
         children: <Widget>[
           Pinned.fromPins(
             Pin(start: -64.0, end: -11.2),
@@ -32,7 +39,7 @@ class profile_page extends StatelessWidget {
                 ),
                 Pinned.fromPins(
                   Pin(start: 64.0, end: 10.2),
-                  Pin(size: 200.0, start: 0.0),
+                  Pin(size: size.height * 0.3, start: 0.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xff888579),
@@ -41,48 +48,19 @@ class profile_page extends StatelessWidget {
                     ),
                   ),
                 ),
-                Pinned.fromPins(
-                  Pin(size: 232.5, start: 0.0),
-                  Pin(start: 10.0, end: 0.0),
-                  child: SvgPicture.string(
-                    _svg_ql4fpw,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 206.9, middle: 0.5202),
-                  Pin(start: 10.0, end: 0.0),
-                  child: SvgPicture.string(
-                    _svg_gwwr,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 198.5, end: 0.0),
-                  Pin(start: 10.0, end: 0.0),
-                  child: SvgPicture.string(
-                    _svg_ag1ssr,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
-                  ),
+                Container(
+                    width: size.width,
+                    margin: EdgeInsets.only(top:(size.height * 0.3)-70.0,left: 64.0),
+                    child: get_svg_top_navbar(size.width)
                 ),
               ],
             ),
           ),
           Pinned.fromPins(
             Pin(start: -5.0, end: -3.0),
-            Pin(size: 57.0, start: -4.0),
+            Pin(size: 59.0, start: 0.0),
             child: Stack(
               children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xff888579),
-                    border:
-                        Border.all(width: 1.0, color: const Color(0xffffffff)),
-                  ),
-                ),
                 Pinned.fromPins(
                   Pin(size: 18.0, start: 21.0),
                   Pin(size: 15.8, middle: 0.5576),
@@ -128,7 +106,7 @@ class profile_page extends StatelessWidget {
                       'profile',
                       style: TextStyle(
                         fontFamily: 'PMingLiU-ExtB',
-                        fontSize: 31,
+                        fontSize: (size.height+size.width) * 0.02,
                         color: const Color(0xffdbd6d6),
                       ),
                       softWrap: false,
@@ -139,8 +117,8 @@ class profile_page extends StatelessWidget {
             ),
           ),
           Pinned.fromPins(
-            Pin(size: 133.0, middle: 0.5017),
-            Pin(size: 133.0, start: 102.0),
+            Pin(size: size.height * 0.15, middle:size.height > size.width? 0.5017:0.0517),
+            Pin(size: size.height * 0.15, start: size.height * 0.15),
             child: Stack(
               children: <Widget>[
                 Stack(
@@ -187,20 +165,21 @@ class profile_page extends StatelessWidget {
                   ],
                 ),
                 Pinned.fromPins(
-                  Pin(size: 28.5, start: 12.0),
-                  Pin(size: 28.5, end: 6.5),
-                  child: SvgPicture.string(
-                    _svg_um029l,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
-                  ),
+                  Pin(size: size.height * 0.04, start: 0.0),
+                  Pin(size: size.height * 0.04, end: 6.5),
+                  child: IconButton(
+                    onPressed: (){},
+                    icon: Icon(Icons.add_photo_alternate),
+                    color: Colors.lime,
+                    iconSize: size.height * 0.04,
+                  )
                 ),
               ],
             ),
           ),
           Pinned.fromPins(
             Pin(start: 20.0, end: 31.0),
-            Pin(size: 20.0, middle: 0.4349),
+            Pin(size: 20.0, middle: 0.5249),
             child: Stack(
               children: <Widget>[
                 Pinned.fromPins(
@@ -210,7 +189,7 @@ class profile_page extends StatelessWidget {
                     'Language ',
                     style: TextStyle(
                       fontFamily: 'PMingLiU-ExtB',
-                      fontSize: 20,
+                      fontSize: 18,
                       color: const Color(0xff4b4949),
                     ),
                     softWrap: false,
@@ -277,7 +256,7 @@ class profile_page extends StatelessWidget {
           ),
           Pinned.fromPins(
             Pin(start: 20.0, end: 31.0),
-            Pin(size: 20.0, middle: 0.5232),
+            Pin(size: 20.0, middle: 0.6132),
             child: Stack(
               children: <Widget>[
                 Pinned.fromPins(
@@ -287,7 +266,7 @@ class profile_page extends StatelessWidget {
                     'Dark Mode',
                     style: TextStyle(
                       fontFamily: 'PMingLiU-ExtB',
-                      fontSize: 20,
+                      fontSize: 18,
                       color: const Color(0xff4b4949),
                     ),
                     softWrap: false,
@@ -364,7 +343,7 @@ class profile_page extends StatelessWidget {
           ),
           Pinned.fromPins(
             Pin(start: 20.0, end: 30.0),
-            Pin(size: 20.0, middle: 0.6589),
+            Pin(size: 20.0, middle: 0.8089),
             child: Stack(
               children: <Widget>[
                 Align(
@@ -433,7 +412,7 @@ class profile_page extends StatelessWidget {
                     'Volume',
                     style: TextStyle(
                       fontFamily: 'PMingLiU-ExtB',
-                      fontSize: 20,
+                      fontSize: 18,
                       color: const Color(0xff4b4949),
                     ),
                     softWrap: false,
@@ -458,7 +437,7 @@ class profile_page extends StatelessWidget {
           ),
           Pinned.fromPins(
             Pin(start: 20.0, end: 48.0),
-            Pin(size: 20.0, middle: 0.5905),
+            Pin(size: 20.0, middle: 0.7105),
             child: Stack(
               children: <Widget>[
                 Pinned.fromPins(
@@ -468,7 +447,7 @@ class profile_page extends StatelessWidget {
                     'Level',
                     style: TextStyle(
                       fontFamily: 'PMingLiU-ExtB',
-                      fontSize: 20,
+                      fontSize: 18,
                       color: const Color(0xff4b4949),
                     ),
                     softWrap: false,
@@ -507,16 +486,10 @@ class profile_page extends StatelessWidget {
           ),
         ],
       ),
-    );
+    )));
   }
 }
 
-const String _svg_ql4fpw =
-    '<svg viewBox="-73.0 -2227.0 232.5 300.0" ><path transform="translate(-73.0, -2227.0)" d="M 116.2445068359375 0 C 180.444580078125 0 232.489013671875 63.53021240234375 232.489013671875 141.898681640625 C 232.489013671875 220.2671813964844 132.0780792236328 344.606689453125 116.2445068359375 283.79736328125 C 100.4109649658203 222.9880981445312 0 220.2671813964844 0 141.898681640625 C 0 63.53021240234375 52.0444450378418 0 116.2445068359375 0 Z" fill="#888579" stroke="#888579" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_gwwr =
-    '<svg viewBox="81.1 -2227.0 206.9 300.0" ><path transform="translate(81.11, -2227.0)" d="M 103.4497375488281 0 C 160.5834503173828 0 206.8994750976562 63.96303176879883 206.8994750976562 142.8654174804688 C 206.8994750976562 221.7677917480469 119.2037734985352 341.3616943359375 103.4497375488281 285.7308349609375 C 87.69570159912109 230.0999755859375 0 221.7677917480469 0 142.8654174804688 C 0 63.96303176879883 46.3160285949707 0 103.4497375488281 0 Z" fill="#888579" stroke="#888579" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_ag1ssr =
-    '<svg viewBox="231.7 -2227.0 198.5 300.0" ><path transform="translate(231.69, -2227.0)" d="M 99.24234008789062 0 C 154.0523681640625 0 198.4846801757812 63.53021621704102 198.4846801757812 141.8986968994141 C 198.4846801757812 220.2671813964844 110.1236801147461 344.606689453125 99.24234008789062 283.7973937988281 C 88.36099243164062 222.9880981445312 0 220.2671813964844 0 141.8986968994141 C 0 63.53021621704102 44.43231582641602 0 99.24234008789062 0 Z" fill="#888579" stroke="#888579" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_pdme76 =
     '<svg viewBox="9.0 10.1 9.0 15.8" ><path  d="M 17.67200088500977 10.45400047302246 C 17.88359451293945 10.66506004333496 18.00251197814941 10.95163917541504 18.00251197814941 11.25050067901611 C 18.00251197814941 11.54936218261719 17.88359451293945 11.83594131469727 17.67200088500977 12.04700088500977 L 11.71599960327148 18 L 17.67199897766113 23.95400047302246 C 18.11189270019531 24.39389610290527 18.11189270019531 25.10710716247559 17.6719970703125 25.54700088500977 C 17.23210334777832 25.98689651489258 16.51889228820801 25.98689651489258 16.0789966583252 25.54700088500977 L 9.328998565673828 18.79700088500977 C 9.117405891418457 18.58593940734863 8.998488426208496 18.29936027526855 8.998488426208496 18.0004997253418 C 8.998488426208496 17.70163917541504 9.117404937744141 17.41506004333496 9.328998565673828 17.20400047302246 L 16.07899856567383 10.45400047302246 C 16.29006004333496 10.24240684509277 16.57663917541504 10.12348937988281 16.8754997253418 10.12348937988281 C 17.17436027526855 10.12348937988281 17.46094131469727 10.24240684509277 17.67200088500977 10.45400047302246 Z" fill="#f9f1f1" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_sira0z =
@@ -527,7 +500,5 @@ const String _svg_l =
     '<svg viewBox="41.6 24.9 49.9 49.9" ><path  d="M 66.5 74.8125 C 80.27259826660156 74.8125 91.4375 63.64760208129883 91.4375 49.875 C 91.4375 36.10239791870117 80.27259826660156 24.9375 66.5 24.9375 C 52.72739791870117 24.9375 41.5625 36.10239791870117 41.5625 49.875 C 41.5625 63.64760208129883 52.72739791870117 74.8125 66.5 74.8125 Z" fill="#cecdcd" stroke="none" stroke-width="3.694444417953491" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_ocwynj =
     '<svg viewBox="0.0 0.0 133.0 133.0" ><path  d="M 66.5 8.3125 C 34.36392974853516 8.3125 8.3125 34.36393356323242 8.3125 66.5 C 8.3125 98.63607025146484 34.36393356323242 124.6875 66.5 124.6875 C 98.63607025146484 124.6875 124.6875 98.63607025146484 124.6875 66.5 C 124.6875 34.36392974853516 98.63607025146484 8.3125 66.5 8.3125 Z M 0 66.5 C 0 29.77306175231934 29.7730655670166 0 66.5 0 C 103.226936340332 0 133 29.7730655670166 133 66.5 C 133 103.226936340332 103.2269287109375 133 66.5 133 C 29.77306175231934 133 0 103.2269287109375 0 66.5 Z" fill="#ffffff" fill-opacity="0.0" stroke="#9e9d9d" stroke-width="3.694444417953491" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_um029l =
-    '<svg viewBox="160.0 200.0 28.5 28.5" ><path transform="translate(154.0, 198.5)" d="M 34.5 6 L 34.5 9 L 30 9 L 30 13.5 L 27 13.5 L 27 9 L 22.5 9 L 22.5 6 L 27 6 L 27 1.5 L 30 1.5 L 30 6 L 34.5 6 Z M 21.75 16.5 C 22.99319458007812 16.49944686889648 24.00055313110352 15.49119281768799 24 14.2480001449585 C 23.99944686889648 13.00480651855469 22.9911937713623 11.9974479675293 21.74799919128418 11.99800109863281 C 20.50480651855469 11.99855327606201 19.49744606018066 13.00680828094482 19.49799919128418 14.25000095367432 C 19.49855041503906 15.49319362640381 20.50680541992188 16.50055313110352 21.74999809265137 16.5 Z M 27 21.35099983215332 L 26.22999954223633 20.49600028991699 C 25.6610050201416 19.86243629455566 24.84956550598145 19.50053787231445 23.99800109863281 19.50053787231445 C 23.14643669128418 19.50053787231445 22.33499717712402 19.86243629455566 21.76599884033203 20.49600028991699 L 20.78299903869629 21.59099960327148 L 13.5 13.5 L 9 18.5 L 9 9 L 19.5 9 L 19.5 6 L 9 6 C 7.343145370483398 6 5.999999523162842 7.343146324157715 6 9.000000953674316 L 6 27 C 6 28.6568546295166 7.343145847320557 30 9 30 L 27 30 C 28.6568546295166 30 30 28.6568546295166 30 27 L 30 16.5 L 27 16.5 L 27 21.35099983215332 Z" fill="#d4d481" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_ddu0 =
     '<svg viewBox="167.5 607.5 225.0 1.0" ><path transform="translate(167.5, 607.5)" d="M 0 0 L 225 0" fill="none" stroke="#848d47" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';

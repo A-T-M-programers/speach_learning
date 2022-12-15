@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/blend_mask.dart';
@@ -9,11 +11,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'home_page.dart';
 
 class log_in extends StatelessWidget {
+  Size size = Size(0.0, 0.0);
+  String arrow_left = "right";
+  bool is_arrow_left = false;
+
   log_in({
     Key? key,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffd4af37),
       body: Stack(
@@ -34,57 +41,38 @@ class log_in extends StatelessWidget {
                     ),
                   ),
                 ),
+                Stack(
+                    children: [
                 Pinned.fromPins(
-                  Pin(start: 64.0, end: 10.2),
-                  Pin(size: 200.0, start: 0.0),
-                  child: Container(
+                  Pin(start: 0.0, end: 0.0),
+                  Pin(start: 0.0, size: size.height * 0.3),
+                  child:Stack(children: [ Container(
                     decoration: BoxDecoration(
                       color: const Color(0xff888579),
                       border: Border.all(
                           width: 1.0, color: const Color(0xff888579)),
                     ),
-                  ),
+                  )]),
                 ),
-                Pinned.fromPins(
-                  Pin(size: 232.5, start: 0.0),
-                  Pin(start: 10.0, end: 0.0),
-                  child: SvgPicture.string(
-                    _svg_ql4fpw,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 206.9, middle: 0.5202),
-                  Pin(start: 10.0, end: 0.0),
-                  child: SvgPicture.string(
-                    _svg_gwwr,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 198.5, end: 0.0),
-                  Pin(start: 10.0, end: 0.0),
-                  child: SvgPicture.string(
-                    _svg_ag1ssr,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
-                  ),
-                ),
+                Container(
+                  width: size.width,
+                  margin: EdgeInsets.only(top:(size.height * 0.3)-70.0,left: 64.0),
+                  child: get_svg_top_navbar(size.width)
+                )
+                ]),
               ],
             ),
           ),
           Pinned.fromPins(
-            Pin(size: 132.0, middle: 0.5),
-            Pin(size: 144.0, start: 56.9),
+            Pin(size: 122.0, middle: 0.55),
+            Pin(size: 122.0, middle: 0.02),
             child: BlendMask(
               blendMode: BlendMode.multiply,
               child: Text(
                 'sl',
                 style: TextStyle(
                   fontFamily: 'Castellar',
-                  fontSize: 120,
+                  fontSize: size.height * 0.15,
                   color: const Color(0xffe1e1e1),
                 ),
                 softWrap: false,
@@ -92,7 +80,7 @@ class log_in extends StatelessWidget {
             ),
           ),
           Align(
-            alignment: Alignment(-0.008, 0.455),
+            alignment: Alignment(-0.008, 0.255),
             child: SizedBox(
               width: 210.0,
               height: 58.0,
@@ -195,8 +183,8 @@ class log_in extends StatelessWidget {
             ),
           ),
           Pinned.fromPins(
-            Pin(size: 174.3, middle: 0.5754),
-            Pin(size: 134.0, end: 97.0),
+            Pin(size: (size.width * size.height) * 0.00046, middle: size.height > size.width? 0.5754:0.9754),
+            Pin(size: (size.width * size.height) * 0.00035, end: 97.0),
             child: Stack(
               children: <Widget>[
                 SizedBox.expand(
@@ -271,10 +259,37 @@ class log_in extends StatelessWidget {
           Pinned.fromPins(
             Pin(size: 46.0, end: 47.0),
             Pin(size: 46.0, end: 25.0),
-            child: Component21(),
-          ),
+            child: Draggable(
+              axis: Axis.horizontal,
+              data:arrow_left,
+              child: Component21(icons: 1),
+              feedback: Component21(icons:1),
+              childWhenDragging: SizedBox(),
+            ),
+          ),Pinned.fromPins(
+              Pin(size: 46.0, start: 48.0),
+              Pin(size: 46.0, end: 28.0),
+              child:DragTarget<String>(
+                builder: (BuildContext context, List<dynamic> accepted,
+                    List<dynamic> rejected) {
+                  return Container(
+                    width: 46.0,
+                    height: 46.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                        border:
+                        Border.all(color: Colors.white38, width: 1.0)),
+                  );
+                }, onAccept: (data) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Splash_Screen()),
+                        (route) => false);
+              },onWillAccept: (data){
+                return data == arrow_left;
+              },)),
           Align(
-            alignment: Alignment(0.004, -0.306),
+            alignment: Alignment(0.14, -0.656),
             child: SizedBox(
               width: 161.0,
               height: 35.0,
@@ -282,7 +297,7 @@ class log_in extends StatelessWidget {
                 'welcome',
                 style: TextStyle(
                   fontFamily: 'Castellar',
-                  fontSize: 29,
+                  fontSize: size.height * 0.04,
                   color: const Color(0xffdcdcdc),
                 ),
                 softWrap: false,
@@ -290,31 +305,32 @@ class log_in extends StatelessWidget {
             ),
           ),
           Align(
-            alignment: Alignment(0.0, -0.203),
+            alignment: Alignment(0, -0.530),
             child: SizedBox(
               width: 138.0,
               height: 48.0,
               child: Text(
-                '  please press to \ncreate account \n     or sign in',
+                'please press to\ncreate account\nor sign in',
                 style: TextStyle(
                   fontFamily: 'Castellar',
-                  fontSize: 13,
+                  fontSize: size.height * 0.017,
                   color: const Color(0xffdcdcdc),
                 ),
                 softWrap: false,
+                textAlign: TextAlign.center,
               ),
             ),
           ),
           Pinned.fromPins(
-            Pin(start: 63.0, end: 63.0),
-            Pin(size: 36.0, start: 113.0),
+            Pin(size: size.height * 0.3, middle: 0.5),
+            Pin(size: 36.0, middle: 0.09),
             child: BlendMask(
               blendMode: BlendMode.difference,
               child: Text(
-                'speech learning',
+                'speach learning',
                 style: TextStyle(
                   fontFamily: 'Castellar',
-                  fontSize: 30,
+                  fontSize: size.height * 0.04,
                   color: const Color(0xff673a3a),
                 ),
                 softWrap: false,
@@ -322,8 +338,8 @@ class log_in extends StatelessWidget {
             ),
           ),
           Pinned.fromPins(
-            Pin(start: 47.0, end: 28.0),
-            Pin(size: 50.0, middle: 0.484),
+            Pin(size: size.height * 0.4,start: 47.0,),
+            Pin(size: 40.0, middle: size.height > size.width? 0.424:0.574),
             child: PageLink(
               links: [
                 PageLinkInfo(
@@ -333,6 +349,7 @@ class log_in extends StatelessWidget {
                 ),
               ],
               child: Stack(
+
                 children: <Widget>[
                   Container(
                     decoration: BoxDecoration(
@@ -343,15 +360,13 @@ class log_in extends StatelessWidget {
                     ),
                   ),
                   Align(
-                    alignment: Alignment(0.0, 0.2),
+                    alignment: Alignment(0.0, 0.0),
                     child: SizedBox(
-                      width: 73.0,
-                      height: 30.0,
                       child: Text(
                         'Email',
                         style: TextStyle(
                           fontFamily: 'Cambria Math',
-                          fontSize: 30,
+                          fontSize: size.height * 0.035,
                           color: const Color(0xff647793),
                         ),
                         softWrap: false,
@@ -372,8 +387,8 @@ class log_in extends StatelessWidget {
             ),
           ),
           Pinned.fromPins(
-            Pin(start: 47.0, end: 28.0),
-            Pin(size: 50.0, middle: 0.5993),
+            Pin(size: size.height*0.4, start: 47.0,),
+            Pin(size: 43.0, start:size.height> size.width? size.height * 0.5:size.height * 0.65),
             child: PageLink(
               links: [
                 PageLinkInfo(
@@ -402,15 +417,13 @@ class log_in extends StatelessWidget {
                     ),
                   ),
                   Align(
-                    alignment: Alignment(0.0, 0.167),
+                    alignment: Alignment(0.0, 0.0),
                     child: SizedBox(
-                      width: 105.0,
-                      height: 26.0,
                       child: Text(
                         'Facebook',
                         style: TextStyle(
                           fontFamily: 'Cambria Math',
-                          fontSize: 26,
+                          fontSize: size.height * 0.03,
                           color: const Color(0xff647793),
                         ),
                         softWrap: false,
@@ -427,12 +440,6 @@ class log_in extends StatelessWidget {
   }
 }
 
-const String _svg_ql4fpw =
-    '<svg viewBox="-73.0 -2227.0 232.5 300.0" ><path transform="translate(-73.0, -2227.0)" d="M 116.2445068359375 0 C 180.444580078125 0 232.489013671875 63.53021240234375 232.489013671875 141.898681640625 C 232.489013671875 220.2671813964844 132.0780792236328 344.606689453125 116.2445068359375 283.79736328125 C 100.4109649658203 222.9880981445312 0 220.2671813964844 0 141.898681640625 C 0 63.53021240234375 52.0444450378418 0 116.2445068359375 0 Z" fill="#888579" stroke="#888579" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_gwwr =
-    '<svg viewBox="81.1 -2227.0 206.9 300.0" ><path transform="translate(81.11, -2227.0)" d="M 103.4497375488281 0 C 160.5834503173828 0 206.8994750976562 63.96303176879883 206.8994750976562 142.8654174804688 C 206.8994750976562 221.7677917480469 119.2037734985352 341.3616943359375 103.4497375488281 285.7308349609375 C 87.69570159912109 230.0999755859375 0 221.7677917480469 0 142.8654174804688 C 0 63.96303176879883 46.3160285949707 0 103.4497375488281 0 Z" fill="#888579" stroke="#888579" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_ag1ssr =
-    '<svg viewBox="231.7 -2227.0 198.5 300.0" ><path transform="translate(231.69, -2227.0)" d="M 99.24234008789062 0 C 154.0523681640625 0 198.4846801757812 63.53021621704102 198.4846801757812 141.8986968994141 C 198.4846801757812 220.2671813964844 110.1236801147461 344.606689453125 99.24234008789062 283.7973937988281 C 88.36099243164062 222.9880981445312 0 220.2671813964844 0 141.8986968994141 C 0 63.53021621704102 44.43231582641602 0 99.24234008789062 0 Z" fill="#888579" stroke="#888579" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_iqcu40 =
     '<svg viewBox="156.7 425.3 10.4 26.5" ><path transform="translate(156.75, 425.26)" d="M 5.126118659973145 0 C 10.65900325775146 -0.040435791015625 10.27263736724854 5.927684307098389 10.27263736724854 13.23985290527344 C 10.27263736724854 20.5520191192627 11.35083675384521 26.3504638671875 5.126118659973145 26.47970581054688 C -1.098599910736084 26.60894775390625 -0.02040053531527519 20.5520191192627 -0.02040053531527519 13.23985290527344 C -0.02040053531527519 5.927684307098389 -0.4067660570144653 0.040435791015625 5.126118659973145 0 Z" fill="#ddffcc" fill-opacity="0.64" stroke="#ddffcc" stroke-width="1" stroke-opacity="0.0" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_j03yrj =

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/blend_mask.dart';
 
 class Component21 extends StatelessWidget {
+  int? icons;
   Component21({
-    Key? key,
+    Key? key,this.icons
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class Component21 extends StatelessWidget {
           child: Container(
             height: 40,
             width: 40,
-            child: Icon(Icons.keyboard_arrow_right_rounded),
+            child: icons == 0 ? Icon(Icons.keyboard_arrow_right_rounded) :Icon(Icons.keyboard_arrow_left_rounded),
             decoration: BoxDecoration(
               color: const Color(0xff756329),
               borderRadius: BorderRadius.all(Radius.elliptical(9999.0, 9999.0)),

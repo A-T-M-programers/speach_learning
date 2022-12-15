@@ -5,11 +5,14 @@ import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class read_page extends StatelessWidget {
+  Size size = Size(0.0, 0.0);
+  List<Map<String,String>>? text_read;
   read_page({
-    Key? key,
+    Key? key,this.text_read,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffeeece4),
       body: Stack(
@@ -80,29 +83,14 @@ class read_page extends StatelessWidget {
                 ),
                 Center(
                   child: SizedBox(
-                    width: 20.0,
+                    width: 32.0,
                     height: 32.0,
-                    child: Stack(
-                      children: <Widget>[
-                        Pinned.fromPins(
-                          Pin(start: 0.0, end: 0.0),
-                          Pin(size: 18.0, end: 0.0),
-                          child: SvgPicture.string(
-                            _svg_yxi9aw,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(start: 4.5, end: 4.5),
-                          Pin(size: 22.5, start: 0.0),
-                          child: SvgPicture.string(
-                            _svg_hmg344,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ],
+                    child: IconButton(
+                      icon: Icon(Icons.mic),
+                      onPressed: (){},
+                      color: Colors.white70,
+                      iconSize: 30,
+                      padding: EdgeInsets.only(left: 1.0,top: 2.0),
                     ),
                   ),
                 ),
@@ -359,7 +347,7 @@ class read_page extends StatelessWidget {
           ),
           Pinned.fromPins(
             Pin(start: 44.0, end: 44.0),
-            Pin(size: 38.0, start: 111.0),
+            Pin(size: 48.0, start: size.height * 0.15),
             child: Stack(
               children: <Widget>[
                 Container(
@@ -371,132 +359,31 @@ class read_page extends StatelessWidget {
                 ),
                 Pinned.fromPins(
                   Pin(start: 3.0, end: 9.0),
-                  Pin(size: 20.0, start: 4.0),
-                  child: Text.rich(
-                    TextSpan(
-                      style: TextStyle(
-                        fontFamily: 'PMingLiU-ExtB',
-                        fontSize: 20,
-                        color: const Color(0xff52f900),
-                        shadows: [
-                          Shadow(
-                            color: const Color(0x29000000),
-                            offset: Offset(0, 2),
-                            blurRadius: 6,
-                          )
-                        ],
+                  Pin(size: 48.0, middle: 0.5),
+                  child: Container(
+                    child: SingleChildScrollView(
+                      primary: false,
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 5,
+                        runSpacing: 10,
+                        children: text_read!.map((itemData) {
+                          return TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                itemData["Name"]!,
+                                textAlign: TextAlign.center,
+                              ),
+                            style: ButtonStyle(textStyle: MaterialStateProperty.all(TextStyle(
+                              decorationThickness: 3,
+                          decorationStyle: TextDecorationStyle.dashed,
+                          decoration: TextDecoration.underline,
+                          decorationColor:itemData["type"] == "1"?Colors.green : itemData["type"] == "0"?Colors.red : Colors.black,
+                            shadows: [BoxShadow(color: itemData["type"] == "1"?Colors.green : itemData["type"] == "0"?Colors.red : Colors.black,offset: Offset(0,-10))])),
+                            foregroundColor: MaterialStateProperty.all(Colors.transparent)));
+                        }).toList(),
                       ),
-                      children: [
-                        TextSpan(
-                          text: 'Hello',
-                        ),
-                        TextSpan(
-                          text: ' ',
-                          style: TextStyle(
-                            color: const Color(0xff707070),
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'world',
-                          style: TextStyle(
-                            color: const Color(0xffff0000),
-                          ),
-                        ),
-                        TextSpan(
-                          text: ', this app has a beautiful voice ',
-                          style: TextStyle(
-                            color: const Color(0xff707070),
-                          ),
-                        ),
-                      ],
                     ),
-                    textHeightBehavior:
-                        TextHeightBehavior(applyHeightToFirstAscent: false),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 41.0, start: 5.5),
-                  Pin(size: 1.0, middle: 0.7432),
-                  child: SvgPicture.string(
-                    _svg_azu4co,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(-0.629, 0.486),
-                  child: SizedBox(
-                    width: 41.0,
-                    height: 1.0,
-                    child: SvgPicture.string(
-                      _svg_j,
-                      allowDrawingOutsideViewBox: true,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(-0.317, 0.486),
-                  child: SizedBox(
-                    width: 28.0,
-                    height: 1.0,
-                    child: SvgPicture.string(
-                      _svg_e1r2rk,
-                      allowDrawingOutsideViewBox: true,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(-0.099, 0.486),
-                  child: SizedBox(
-                    width: 26.0,
-                    height: 1.0,
-                    child: SvgPicture.string(
-                      _svg_al3ham,
-                      allowDrawingOutsideViewBox: true,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(0.092, 0.486),
-                  child: SizedBox(
-                    width: 26.0,
-                    height: 1.0,
-                    child: SvgPicture.string(
-                      _svg_hn9tby,
-                      allowDrawingOutsideViewBox: true,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(0.221, 0.486),
-                  child: SizedBox(
-                    width: 10.0,
-                    height: 1.0,
-                    child: SvgPicture.string(
-                      _svg_n2mm9y,
-                      allowDrawingOutsideViewBox: true,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(0.575, 0.486),
-                  child: SizedBox(
-                    width: 65.0,
-                    height: 1.0,
-                    child: SvgPicture.string(
-                      _svg_l51gy,
-                      allowDrawingOutsideViewBox: true,
-                    ),
-                  ),
-                ),
-                Pinned.fromPins(
-                  Pin(size: 38.0, end: 11.5),
-                  Pin(size: 1.0, middle: 0.7432),
-                  child: SvgPicture.string(
-                    _svg_whal6s,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
                   ),
                 ),
               ],
@@ -512,10 +399,6 @@ const String _svg_pdme76 =
     '<svg viewBox="9.0 10.1 9.0 15.8" ><path  d="M 17.67200088500977 10.45400047302246 C 17.88359451293945 10.66506004333496 18.00251197814941 10.95163917541504 18.00251197814941 11.25050067901611 C 18.00251197814941 11.54936218261719 17.88359451293945 11.83594131469727 17.67200088500977 12.04700088500977 L 11.71599960327148 18 L 17.67199897766113 23.95400047302246 C 18.11189270019531 24.39389610290527 18.11189270019531 25.10710716247559 17.6719970703125 25.54700088500977 C 17.23210334777832 25.98689651489258 16.51889228820801 25.98689651489258 16.0789966583252 25.54700088500977 L 9.328998565673828 18.79700088500977 C 9.117405891418457 18.58593940734863 8.998488426208496 18.29936027526855 8.998488426208496 18.0004997253418 C 8.998488426208496 17.70163917541504 9.117404937744141 17.41506004333496 9.328998565673828 17.20400047302246 L 16.07899856567383 10.45400047302246 C 16.29006004333496 10.24240684509277 16.57663917541504 10.12348937988281 16.8754997253418 10.12348937988281 C 17.17436027526855 10.12348937988281 17.46094131469727 10.24240684509277 17.67200088500977 10.45400047302246 Z" fill="#f9f1f1" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_sira0z =
     '<svg viewBox="10.1 16.9 16.9 2.3" ><path  d="M 10.125 18 C 10.125 17.3786792755127 10.62868022918701 16.875 11.25 16.875 L 25.875 16.875 C 26.4963207244873 16.875 27 17.3786792755127 27 18 C 27 18.6213207244873 26.4963207244873 19.125 25.875 19.125 L 11.25 19.125 C 10.6286792755127 19.125 10.125 18.6213207244873 10.125 18 Z" fill="#f9f1f1" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_yxi9aw =
-    '<svg viewBox="7.9 15.8 20.3 18.0" ><path  d="M 25.875 15.75 L 25.875 19.125 C 25.875 23.4742431640625 22.3492431640625 27 18 27 C 13.6507568359375 27 10.125 23.4742431640625 10.125 19.125 L 10.125 15.75 L 7.875 15.75 L 7.875 19.125 C 7.877700805664062 24.27951812744141 11.75240325927734 28.60927963256836 16.87500190734863 29.18200302124023 L 16.875 31.5 L 12.375 31.5 L 12.375 33.75 L 23.625 33.75 L 23.625 31.5 L 19.125 31.5 L 19.125 29.1830005645752 C 24.24797821044922 28.61023330688477 28.1228084564209 24.2798957824707 28.125 19.125 L 28.125 15.75 L 25.875 15.75 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_hmg344 =
-    '<svg viewBox="12.4 2.3 11.3 22.5" ><path  d="M 18 24.75 C 21.10660362243652 24.75 23.62500190734863 22.23160171508789 23.62500190734863 19.12499809265137 L 23.625 7.875 C 23.62500190734863 4.768398284912109 21.10660362243652 2.25 18.00000190734863 2.25 C 14.89340019226074 2.25 12.37500190734863 4.768398284912109 12.37500190734863 7.875000476837158 L 12.375 19.125 C 12.375 22.23160171508789 14.89339828491211 24.75 18 24.75 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_vpejl =
     '<svg viewBox="157.0 425.3 5.0 26.5" ><path transform="translate(157.06, 425.26)" d="M 2.408223152160645 0 C 5.059140205383301 -0.040435791015625 4.874024868011475 5.927684307098389 4.874024868011475 13.23985290527344 C 4.874024868011475 20.5520191192627 5.390612602233887 26.3504638671875 2.408223152160645 26.47970581054688 C -0.5741664171218872 26.60894775390625 -0.05757910385727882 20.5520191192627 -0.05757910385727882 13.23985290527344 C -0.05757910385727882 5.927684307098389 -0.2426947057247162 0.040435791015625 2.408223152160645 0 Z" fill="#ddffcc" fill-opacity="0.64" stroke="#ddffcc" stroke-width="1" stroke-opacity="0.0" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_qzld1c =
@@ -562,19 +445,3 @@ const String _svg_gu2d0f =
     '<svg viewBox="315.3 329.3 2.7 8.4" ><path transform="translate(315.42, 329.29)" d="M 1.277476072311401 -0.0001392239209963009 C 2.729386806488037 -0.01301508955657482 2.62799859046936 1.887398242950439 2.62799859046936 4.215793132781982 C 2.62799859046936 6.544187545776367 2.910934209823608 8.390572547912598 1.277476072311401 8.431726455688477 C -0.3559825718402863 8.472880363464355 -0.07304707169532776 6.544187545776367 -0.07304707169532776 4.215793132781982 C -0.07304707169532776 1.887398242950439 -0.1744351089000702 0.01273664180189371 1.277476072311401 -0.0001392239209963009 Z" fill="#ddffcc" fill-opacity="0.64" stroke="#ddffcc" stroke-width="1" stroke-opacity="0.0" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 const String _svg_quqi4l =
     '<svg viewBox="146.0 695.0 359.9 134.0" ><path transform="translate(146.0, 695.0)" d="M 141.4691314697266 0 C 219.6003723144531 0 282.9382629394531 29.99692153930664 282.9382629394531 67 C 282.9382629394531 81.57921600341797 250.1876373291016 123.2044677734375 359.894287109375 129.71923828125 C 332.985107421875 134.2294921875 188.8166656494141 134 141.4691314697266 134 C 63.33789825439453 134 0 104.0030822753906 0 67 C 0 29.99692153930664 63.33789825439453 0 141.4691314697266 0 Z" fill="#554616" stroke="#554616" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_azu4co =
-    '<svg viewBox="35.5 172.5 41.0 1.0" ><path transform="translate(35.5, 172.5)" d="M 0 0 L 41 0" fill="none" stroke="#62df24" stroke-width="1" stroke-dasharray="1 1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_j =
-    '<svg viewBox="85.5 172.5 41.0 1.0" ><path transform="translate(85.5, 172.5)" d="M 0 0 L 41 0" fill="none" stroke="#ef0000" stroke-width="1" stroke-dasharray="1 1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_e1r2rk =
-    '<svg viewBox="136.5 172.5 28.0 1.0" ><path transform="translate(136.5, 172.5)" d="M 0 0 L 28 0" fill="none" stroke="#646464" stroke-width="1" stroke-dasharray="1 1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_al3ham =
-    '<svg viewBox="171.5 172.5 26.0 1.0" ><path transform="translate(171.5, 172.5)" d="M 0 0 L 26 0" fill="none" stroke="#646464" stroke-width="1" stroke-dasharray="1 1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_hn9tby =
-    '<svg viewBox="201.5 172.5 26.0 1.0" ><path transform="translate(201.5, 172.5)" d="M 0 0 L 26 0" fill="none" stroke="#646464" stroke-width="1" stroke-dasharray="1 1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_n2mm9y =
-    '<svg viewBox="231.5 172.5 10.0 1.0" ><path transform="translate(231.5, 172.5)" d="M 0 0 L 10 0" fill="none" stroke="#646464" stroke-width="1" stroke-dasharray="1 1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_l51gy =
-    '<svg viewBox="246.5 172.5 65.0 1.0" ><path transform="translate(246.5, 172.5)" d="M 0 0 L 65 0" fill="none" stroke="#646464" stroke-width="1" stroke-dasharray="1 1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_whal6s =
-    '<svg viewBox="320.5 172.5 38.0 1.0" ><path transform="translate(320.5, 172.5)" d="M 0 0 L 38 0" fill="none" stroke="#646464" stroke-width="1" stroke-dasharray="1 1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
