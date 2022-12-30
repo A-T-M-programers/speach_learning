@@ -50,15 +50,15 @@ class Splash_Screen extends StatelessWidget {
                 ),
               ),
               Pinned.fromPins(
-                Pin(start: -61.0, end: -45.0),
-                Pin(size: (Width * Hieght) * 0.0015, start: 29.0),
+                Pin(start: -41.0, end: -45.0),
+                Pin(size: Hieght * 0.5, middle:Hieght >= Width? 0.25:1),
                 child: Transform.rotate(
                   angle: 0.3491,
-                  child: const Text(
+                  child: Text(
                       'sl',
                       style: TextStyle(
                         fontFamily: 'Castellar',
-                        fontSize: 484,
+                        fontSize: Hieght * 0.45,
                         color: Colors.white38,
                       ),
                       softWrap: false,
@@ -256,18 +256,16 @@ class Splash_Screen extends StatelessWidget {
                     childWhenDragging: SizedBox(),
                   )),
               Pinned.fromPins(
-                    Pin(size: 46.0, end: 48.0),
+                    Pin(size: Width * 0.4, end: 0.0),
                     Pin(size: 46.0, end: 28.0),
                     child:DragTarget<String>(
                       builder: (BuildContext context, List<dynamic> accepted,
                           List<dynamic> rejected) {
                         return Container(
-                      width: 46.0,
                       height: 46.0,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                          border:
-                              Border.all(color: Colors.white38, width: 1.0)),
+                      ),
                     );
               }, onAccept: (data) {
                 Navigator.pushAndRemoveUntil(
@@ -286,7 +284,7 @@ class Splash_Screen extends StatelessWidget {
                   'Speech Learning',
                   style: TextStyle(
                     fontFamily: 'Castellar',
-                    fontSize: 35,
+                    fontSize: 32,
                     color: const Color(0xffdcdcdc),
                   ),
                   softWrap: false,

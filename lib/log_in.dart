@@ -8,7 +8,7 @@ import './Splash_Screen.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'home_page.dart';
+import 'Home/UI/home_page.dart';
 
 class log_in extends StatelessWidget {
   Size size = Size(0.0, 0.0);
@@ -57,7 +57,7 @@ class log_in extends StatelessWidget {
                 Container(
                   width: size.width,
                   margin: EdgeInsets.only(top:(size.height * 0.3)-70.0,left: 64.0),
-                  child: get_svg_top_navbar(size.width)
+                  child: get_svg_top_navbar(size.width),
                 )
                 ]),
               ],
@@ -66,21 +66,18 @@ class log_in extends StatelessWidget {
           Pinned.fromPins(
             Pin(size: 122.0, middle: 0.55),
             Pin(size: 122.0, middle: 0.02),
-            child: BlendMask(
-              blendMode: BlendMode.multiply,
-              child: Text(
+            child: Text(
                 'sl',
                 style: TextStyle(
                   fontFamily: 'Castellar',
                   fontSize: size.height * 0.15,
-                  color: const Color(0xffe1e1e1),
+                  color: Colors.black26,
                 ),
                 softWrap: false,
               ),
-            ),
           ),
           Align(
-            alignment: Alignment(-0.008, 0.255),
+            alignment: Alignment(-0.008, 0.285),
             child: SizedBox(
               width: 210.0,
               height: 58.0,
@@ -267,7 +264,7 @@ class log_in extends StatelessWidget {
               childWhenDragging: SizedBox(),
             ),
           ),Pinned.fromPins(
-              Pin(size: 46.0, start: 48.0),
+              Pin(size: size.width * 0.4, start: 0.0),
               Pin(size: 46.0, end: 28.0),
               child:DragTarget<String>(
                 builder: (BuildContext context, List<dynamic> accepted,
@@ -277,8 +274,7 @@ class log_in extends StatelessWidget {
                     height: 46.0,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                        border:
-                        Border.all(color: Colors.white38, width: 1.0)),
+                    ),
                   );
                 }, onAccept: (data) {
                 Navigator.pushAndRemoveUntil(
@@ -289,7 +285,7 @@ class log_in extends StatelessWidget {
                 return data == arrow_left;
               },)),
           Align(
-            alignment: Alignment(0.14, -0.656),
+            alignment: Alignment(0.14, -0.626),
             child: SizedBox(
               width: 161.0,
               height: 35.0,
@@ -305,7 +301,7 @@ class log_in extends StatelessWidget {
             ),
           ),
           Align(
-            alignment: Alignment(0, -0.530),
+            alignment: Alignment(0, -0.510),
             child: SizedBox(
               width: 138.0,
               height: 48.0,
@@ -323,14 +319,14 @@ class log_in extends StatelessWidget {
           ),
           Pinned.fromPins(
             Pin(size: size.height * 0.3, middle: 0.5),
-            Pin(size: 36.0, middle: 0.09),
+            Pin(size: 36.0, middle: 0.1),
             child: BlendMask(
               blendMode: BlendMode.difference,
               child: Text(
                 'speach learning',
                 style: TextStyle(
                   fontFamily: 'Castellar',
-                  fontSize: size.height * 0.04,
+                  fontSize: size.height * 0.037,
                   color: const Color(0xff673a3a),
                 ),
                 softWrap: false,
@@ -339,24 +335,24 @@ class log_in extends StatelessWidget {
           ),
           Pinned.fromPins(
             Pin(size: size.height * 0.4,start: 47.0,),
-            Pin(size: 40.0, middle: size.height > size.width? 0.424:0.574),
+            Pin(size: 40.0, middle: size.height > size.width? 0.454:0.574),
             child: PageLink(
               links: [
                 PageLinkInfo(
-                  ease: Curves.linear,
+                  ease: Curves.easeOutSine,
                   duration: 0.3,
                   pageBuilder: () => home_page(),
                 ),
               ],
               child: Stack(
-
                 children: <Widget>[
                   Container(
                     decoration: BoxDecoration(
                       color: const Color(0xfff6df82),
                       borderRadius: BorderRadius.circular(20.0),
                       border: Border.all(
-                          width: 1.0, color: const Color(0xc2707070)),
+                          width: 1.0, color: const Color(0xfff6df82)),
+                      boxShadow: [BoxShadow(color: Color(0xfff6df82),blurRadius: 10,spreadRadius: 1)]
                     ),
                   ),
                   Align(
@@ -366,7 +362,7 @@ class log_in extends StatelessWidget {
                         'Email',
                         style: TextStyle(
                           fontFamily: 'Cambria Math',
-                          fontSize: size.height * 0.035,
+                          fontSize: size.height * 0.03,
                           color: const Color(0xff647793),
                         ),
                         softWrap: false,
@@ -374,13 +370,9 @@ class log_in extends StatelessWidget {
                     ),
                   ),
                   Pinned.fromPins(
-                    Pin(size: 30.0, start: 16.0),
+                    Pin(size: 24.0, start: 16.0),
                     Pin(size: 24.0, middle: 0.5),
-                    child: SvgPicture.string(
-                      _svg_ql36a,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
+                    child: CustomPaint(painter: GoogleLogoPainter(), size: Size.square(0.0))
                   ),
                 ],
               ),
@@ -404,17 +396,14 @@ class log_in extends StatelessWidget {
                       color: const Color(0xfff6df82),
                       borderRadius: BorderRadius.circular(20.0),
                       border: Border.all(
-                          width: 1.0, color: const Color(0xc2707070)),
+                          width: 1.0, color: const Color(0xfff6df82)),
+                        boxShadow: [BoxShadow(color: Color(0xfff6df82),blurRadius: 10,spreadRadius: 1)]
                     ),
                   ),
                   Pinned.fromPins(
-                    Pin(size: 34.9, start: 13.1),
-                    Pin(start: 8.0, end: 7.3),
-                    child: SvgPicture.string(
-                      _svg_or9maf,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
+                    Pin(size: 28.9, start: 10.0),
+                    Pin(start: 0.0, end: 0.0),
+                    child: Icon(Icons.facebook_rounded,size: 35,color: Colors.blue,)
                   ),
                   Align(
                     alignment: Alignment(0.0, 0.0),
@@ -436,6 +425,46 @@ class log_in extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class GoogleLogoPainter extends CustomPainter {
+  @override
+  bool shouldRepaint(_) => true;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final length = size.width;
+    final verticalOffset = (size.height / 2) - (length / 2);
+    final bounds = Offset(0, verticalOffset) & Size.square(length);
+    final center = bounds.center;
+    final arcThickness = size.width / 4.5;
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = arcThickness;
+
+    void drawArc(double startAngle, double sweepAngle, Color color) {
+      final _paint = paint..color = color;
+      canvas.drawArc(bounds, startAngle, sweepAngle, false, _paint);
+    }
+
+    drawArc(3.5, 1.9, Colors.red);
+    drawArc(2.5, 1.0, Colors.amber);
+    drawArc(0.9, 1.6, Colors.green.shade600);
+    drawArc(-0.18, 1.1, Colors.blue.shade600);
+
+    canvas.drawRect(
+      Rect.fromLTRB(
+        center.dx,
+        center.dy - (arcThickness / 2),
+        bounds.centerRight.dx + (arcThickness / 2) - 4,
+        bounds.centerRight.dy + (arcThickness / 2),
+      ),
+      paint
+        ..color = Colors.blue.shade600
+        ..style = PaintingStyle.fill
+        ..strokeWidth = 0,
     );
   }
 }

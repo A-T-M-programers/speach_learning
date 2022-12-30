@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import './home_page.dart';
+import 'Home/UI/home_page.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -16,6 +16,11 @@ class profile_page extends StatelessWidget {
     size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffeeece4),
+        appBar: AppBar(
+          backgroundColor: const Color(0xff888579),
+          title: Text("Profile"),
+          centerTitle: true,
+        ),
       body: SingleChildScrollView(
           child: Container(
           height: size.height,
@@ -39,7 +44,7 @@ class profile_page extends StatelessWidget {
                 ),
                 Pinned.fromPins(
                   Pin(start: 64.0, end: 10.2),
-                  Pin(size: size.height * 0.3, start: 0.0),
+                  Pin(size: size.height * 0.25, start: 0.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xff888579),
@@ -50,75 +55,15 @@ class profile_page extends StatelessWidget {
                 ),
                 Container(
                     width: size.width,
-                    margin: EdgeInsets.only(top:(size.height * 0.3)-70.0,left: 64.0),
+                    margin: EdgeInsets.only(top:(size.height * 0.25)-70.0,left: 64.0),
                     child: get_svg_top_navbar(size.width)
                 ),
               ],
             ),
           ),
           Pinned.fromPins(
-            Pin(start: -5.0, end: -3.0),
-            Pin(size: 59.0, start: 0.0),
-            child: Stack(
-              children: <Widget>[
-                Pinned.fromPins(
-                  Pin(size: 18.0, start: 21.0),
-                  Pin(size: 15.8, middle: 0.5576),
-                  child: PageLink(
-                    links: [
-                      PageLinkInfo(
-                        transition: LinkTransition.Fade,
-                        ease: Curves.easeOut,
-                        duration: 0.3,
-                        pageBuilder: () => home_page(),
-                      ),
-                    ],
-                    child: Stack(
-                      children: <Widget>[
-                        Pinned.fromPins(
-                          Pin(size: 9.0, start: 0.0),
-                          Pin(start: 0.0, end: 0.0),
-                          child: SvgPicture.string(
-                            _svg_pdme76,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(start: 1.1, end: 0.0),
-                          Pin(size: 2.3, middle: 0.5),
-                          child: SvgPicture.string(
-                            _svg_sira0z,
-                            allowDrawingOutsideViewBox: true,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(0.011, 0.154),
-                  child: SizedBox(
-                    width: 78.0,
-                    height: 31.0,
-                    child: Text(
-                      'profile',
-                      style: TextStyle(
-                        fontFamily: 'PMingLiU-ExtB',
-                        fontSize: (size.height+size.width) * 0.02,
-                        color: const Color(0xffdbd6d6),
-                      ),
-                      softWrap: false,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Pinned.fromPins(
             Pin(size: size.height * 0.15, middle:size.height > size.width? 0.5017:0.0517),
-            Pin(size: size.height * 0.15, start: size.height * 0.15),
+            Pin(size: size.height * 0.15, start: size.height * 0.05),
             child: Stack(
               children: <Widget>[
                 Stack(
@@ -189,7 +134,7 @@ class profile_page extends StatelessWidget {
                     'Language ',
                     style: TextStyle(
                       fontFamily: 'PMingLiU-ExtB',
-                      fontSize: 18,
+                      fontSize: 16,
                       color: const Color(0xff4b4949),
                     ),
                     softWrap: false,
@@ -245,7 +190,7 @@ class profile_page extends StatelessWidget {
                     'on',
                     style: TextStyle(
                       fontFamily: 'Courier New',
-                      fontSize: 12,
+                      fontSize: 10,
                       color: const Color(0xffe1dcdc),
                     ),
                     softWrap: false,
@@ -266,7 +211,7 @@ class profile_page extends StatelessWidget {
                     'Dark Mode',
                     style: TextStyle(
                       fontFamily: 'PMingLiU-ExtB',
-                      fontSize: 18,
+                      fontSize: 16,
                       color: const Color(0xff4b4949),
                     ),
                     softWrap: false,
@@ -314,7 +259,7 @@ class profile_page extends StatelessWidget {
                             'OFF',
                             style: TextStyle(
                               fontFamily: 'Courier New',
-                              fontSize: 10,
+                              fontSize: 8,
                               color: const Color(0xff9e9393),
                             ),
                             softWrap: false,
@@ -412,7 +357,7 @@ class profile_page extends StatelessWidget {
                     'Volume',
                     style: TextStyle(
                       fontFamily: 'PMingLiU-ExtB',
-                      fontSize: 18,
+                      fontSize: 16,
                       color: const Color(0xff4b4949),
                     ),
                     softWrap: false,
@@ -447,7 +392,7 @@ class profile_page extends StatelessWidget {
                     'Level',
                     style: TextStyle(
                       fontFamily: 'PMingLiU-ExtB',
-                      fontSize: 18,
+                      fontSize: 16,
                       color: const Color(0xff4b4949),
                     ),
                     softWrap: false,
@@ -474,7 +419,7 @@ class profile_page extends StatelessWidget {
                     '0',
                     style: TextStyle(
                       fontFamily: 'PMingLiU-ExtB',
-                      fontSize: 16,
+                      fontSize: 14,
                       color: const Color(0xff707070),
                     ),
                     textAlign: TextAlign.center,
