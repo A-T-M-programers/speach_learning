@@ -51,13 +51,6 @@ class _text_WordState extends State<text_Word> {
     return Container(
         margin: const EdgeInsets.only(top: 8.0),
         height: 30.0,
-        decoration: const BoxDecoration(boxShadow: [
-          BoxShadow(
-              color: Colors.white54,
-              blurRadius: 10.0,
-              offset: Offset(0.0, 5.0),
-              spreadRadius: 5.0)
-        ]),
         padding: const EdgeInsets.only(top: 7.0),
         child: BlocBuilder<Bloc_Controler, dynamic>(
             buildWhen: (previos, next) {
@@ -92,7 +85,7 @@ class _text_WordState extends State<text_Word> {
                       : widget.Map_Word!["type"] == "0"
                           ? Colors.red
                           : widget.Map_Word!["type"] == "2"
-                              ? Colors.black
+                              ? Theme.of(context).textTheme.headline2!.color
                               : Colors.blue,
                   shadows: [
                     BoxShadow(
@@ -101,7 +94,7 @@ class _text_WordState extends State<text_Word> {
                             : widget.Map_Word!["type"] == "0"
                                 ? Colors.red
                                 : widget.Map_Word!["type"] == "2"
-                                    ? Colors.black
+                                    ? Theme.of(context).textTheme.headline2!.color!
                                     : Colors.blue,
                         offset: const Offset(0, -5))
                   ]),

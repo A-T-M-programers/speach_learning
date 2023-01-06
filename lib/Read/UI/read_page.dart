@@ -59,8 +59,8 @@ class _read_pageState extends State<read_page> {
     size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: const Color(0xffeeece4),
-      appBar: AppBar(backgroundColor: const Color(0xff888579), actions: [
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(backgroundColor: Theme.of(context).appBarTheme.backgroundColor, actions: [
         Center(
             child: Container(
           width: size.width * 0.3,

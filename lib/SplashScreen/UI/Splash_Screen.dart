@@ -68,7 +68,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                         ),
                       ),
                     ),
-                    get_svg_top_navbar(Width),
+                    get_svg_top_navbar(Width,context),
                   ],
                 ),
               ),
@@ -273,7 +273,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
 }
 
 // ignore: non_constant_identifier_names
-Widget get_svg_top_navbar(double width) {
+Widget get_svg_top_navbar(double width,BuildContext context) {
   int length = 0;
   List<Widget> list = [];
   while (width > length * 142.0) {
@@ -287,6 +287,7 @@ Widget get_svg_top_navbar(double width) {
           _svg_p8cx,
           allowDrawingOutsideViewBox: true,
           fit: BoxFit.fill,
+          color: Theme.of(context).cardColor,
         ),
       ),
     )));

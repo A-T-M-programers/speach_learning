@@ -24,9 +24,9 @@ class add_page extends StatelessWidget {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: const Color(0xffeeece4),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: const Color(0xff888579),
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         ),
         body: SingleChildScrollView(
             child: SizedBox(
@@ -40,7 +40,7 @@ class add_page extends StatelessWidget {
                     Pin(size: size.height * 0.15, start: 0.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xff888579),
+                        color: Theme.of(context).appBarTheme.backgroundColor,
                         border: Border.all(
                             width: 1.0, color: const Color(0xff888579)),
                       ),
@@ -49,7 +49,7 @@ class add_page extends StatelessWidget {
                   SafeArea(
                       child: Pinned.fromPins(Pin(start: 0.0, end: 0.0),
                           Pin(size: 143.0, start: (size.height * 0.15) - 70),
-                          child: get_svg_top_navbar(size.width))),
+                          child: get_svg_top_navbar(size.width,context))),
                 ],
               ),
               Pinned.fromPins(

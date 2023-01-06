@@ -44,7 +44,7 @@ class _home_pageState extends State<home_page> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xffeeece4),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
           child: Stack(
         children: <Widget>[
@@ -93,7 +93,7 @@ class _home_pageState extends State<home_page> {
                         children: <Widget>[
                           Container(
                             decoration: BoxDecoration(
-                              color: const Color(0xffeeece4),
+                              color: Theme.of(context).scaffoldBackgroundColor,
                               border: Border.all(
                                   width: 1.0, color: const Color(0xffe2e0d5)),
                             ),
@@ -122,7 +122,7 @@ class _home_pageState extends State<home_page> {
                               style: TextStyle(
                                 fontFamily: 'Sakkal Majalla',
                                 fontSize: 10,
-                                color: Colors.black38,
+                                color: Theme.of(context).textTheme.headline2!.color,
                                 fontWeight: FontWeight.w700,
                               ),
                               softWrap: true,
@@ -150,21 +150,20 @@ class _home_pageState extends State<home_page> {
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xff888579),
-                    border:
-                        Border.all(width: 1.0, color: const Color(0xff707070)),
+                    color: Theme.of(context).appBarTheme.backgroundColor,
                   ),
                 ),
                 Pinned.fromPins(
                   Pin(size: 124.0, end: 19.5),
                   Pin(size: 28.5, middle: 0.5306),
                   child: TextFormField(
+                    style: TextStyle(color: Theme.of(context).textTheme.headline1!.color),
                     enabled: true,
                     controller: search,
                     decoration: InputDecoration(
-                        icon: Icon(Icons.search),
+                        icon: Icon(Icons.search,color: Theme.of(context).appBarTheme.iconTheme!.color,),
                         hintText: "Search",
-                        hintStyle: TextStyle(color: Colors.white)),
+                        hintStyle: TextStyle(color: Theme.of(context).textTheme.headline1!.color),),
                     onChanged: (value) {},
                   ),
                 ),
@@ -319,12 +318,12 @@ class _home_pageState extends State<home_page> {
                       children: <Widget>[
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.black87,
+                            color: Theme.of(context).cardColor,
                             borderRadius: const BorderRadius.all(
                                 Radius.elliptical(9999.0, 9999.0)),
                             border: Border.all(
                                 width: 6.0,
-                                color: const Color(0xffeeece4),
+                                color: Theme.of(context).scaffoldBackgroundColor,
                                 strokeAlign: StrokeAlign.outside),
                           ),
                         ),
@@ -332,7 +331,7 @@ class _home_pageState extends State<home_page> {
                           child: IconButton(
                             padding: const EdgeInsets.all(0.0),
                             iconSize: 40,
-                            color: Colors.white,
+                            color: Theme.of(context).appBarTheme.iconTheme!.color,
                             onPressed: () async {
                               try {
                                 File? file = await get_file_pdf.pickFile();

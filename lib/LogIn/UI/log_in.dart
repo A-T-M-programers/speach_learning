@@ -70,19 +70,35 @@ class _log_inState extends State<log_in> {
                         Pin(start: 0.0, size: size.height * 0.3),
                         child:Stack(children: [ Container(
                           decoration: BoxDecoration(
-                            color: const Color(0xff888579),
+                            color: Theme.of(context).cardColor,
                             border: Border.all(
-                                width: 1.0, color: const Color(0xff888579)),
+                                width: 1.0, color: Theme.of(context).cardColor),
                           ),
                         )]),
                       ),
                       Container(
                         width: size.width,
                         margin: EdgeInsets.only(top:(size.height * 0.3)-70.0,left: 64.0),
-                        child: get_svg_top_navbar(size.width),
+                        child: get_svg_top_navbar(size.width,context),
                       )
                     ]),
               ],
+            ),
+          ),
+          Pinned.fromPins(
+            Pin(size: size.height * 0.3, middle: 0.5),
+            Pin(size: 36.0, middle: 0.1),
+            child: BlendMask(
+              blendMode: BlendMode.difference,
+              child: Text(
+                'speach learning',
+                style: TextStyle(
+                  fontFamily: 'Castellar',
+                  fontSize: size.height * 0.037,
+                  color: Theme.of(context).textTheme.headline4!.color,
+                ),
+                softWrap: false,
+              ),
             ),
           ),
           Pinned.fromPins(
@@ -93,7 +109,7 @@ class _log_inState extends State<log_in> {
               style: TextStyle(
                 fontFamily: 'Castellar',
                 fontSize: size.height * 0.15,
-                color: Colors.black26,
+                color: Theme.of(context).textTheme.headline3!.color,
               ),
               softWrap: false,
             ),
@@ -348,22 +364,6 @@ class _log_inState extends State<log_in> {
                 ),
                 softWrap: false,
                 textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Pinned.fromPins(
-            Pin(size: size.height * 0.3, middle: 0.5),
-            Pin(size: 36.0, middle: 0.1),
-            child: BlendMask(
-              blendMode: BlendMode.difference,
-              child: Text(
-                'speach learning',
-                style: TextStyle(
-                  fontFamily: 'Castellar',
-                  fontSize: size.height * 0.037,
-                  color: const Color(0xff673a3a),
-                ),
-                softWrap: false,
               ),
             ),
           ),
