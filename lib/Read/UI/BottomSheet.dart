@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/Process_Class/Error_Class.dart';
+import 'package:speach_learning/Read/bloc/Bloc_Controler_Read.dart';
 
 
 // ignore: camel_case_types
 class bottomSheet {
 
-  static void showbottomsheet(bc,Map<String, String> level) async{
-    Size size = MediaQuery.of(bc).size;
-    Future.delayed(Duration.zero,() async { showModalBottomSheet(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(50.0),topLeft: Radius.circular(50.0))),
+  static void showbottomsheet(context,Map<String, String> level){
+    Size size = MediaQuery.of(context).size;
+    Future.delayed(Duration.zero,() {
+      showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(topRight: Radius.circular(50.0),topLeft: Radius.circular(50.0))),
         elevation: 6,
         backgroundColor: const Color(0xffeeece4),
         enableDrag: false,
@@ -80,7 +84,14 @@ class bottomSheet {
               ],
             ),
           );
-        }, context: bc);});
+        },
+        context: context).whenComplete(() {
+          try {
+            BlocProvider.of<Bloc_Controler>(context).changeStateBottomSheet(false);
+          } catch (e, s) {
+            print(s);
+          }
+      });});
   }
 
 }

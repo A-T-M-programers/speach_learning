@@ -22,6 +22,7 @@ class signal_Ui_controler extends StatefulWidget {
 class _signal_Ui_controlerState extends State<signal_Ui_controler> {
 
   Size size = const Size(0, 0);
+  double level = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +38,7 @@ class _signal_Ui_controlerState extends State<signal_Ui_controler> {
         Pinned.fromPins(Pin(start: size.width * 0.09), Pin(),
             child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 50),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                          flex: 0,
-                          child: Row(
-                            children: List.generate(
-                                9,
-                                    (index) => Container(
+                child: Container(
                                   height: 6,
                                   decoration: const BoxDecoration(
                                       borderRadius:
@@ -53,102 +46,110 @@ class _signal_Ui_controlerState extends State<signal_Ui_controler> {
                                           Radius.circular(50))),
                                   margin: const EdgeInsets.only(right: 8),
                                   child: BlocBuilder<Bloc_Controler,dynamic>(
-                                      builder: (context, level) =>
-                                          RectangleWaveform(
+                                    buildWhen: (previos,next){
+                                      if (next is double && previos != next && previos is double) {
+                                        return true;
+                                      }else{
+                                        return false;
+                                      }
+                                    },
+                                      builder: (context, level) {
+                                        if (level is double) {
+                                          this.level = level;
+                                        }
+                                       return   RectangleWaveform(
                                             samples: [
-                                              -(level is double ? double.parse(level.toString()) : 0.0) + (9 - index)
-                                            ],
-                                            height: 2.5,
-                                            width: size.width * 0.01,
-                                            activeColor:
-                                            Colors.white70,
-                                            inactiveColor:
-                                            Colors.white70,
-                                            elapsedDuration:
-                                            const Duration(
-                                                milliseconds:
-                                                50),
-                                            maxDuration: const Duration(
-                                                milliseconds: 50),
-                                            isCentered: true,
-                                            isRoundedRectangle:
-                                            true,
-                                            inactiveBorderColor:
-                                            Colors.black45,
-                                            activeBorderColor:
-                                            Colors.black45,
-                                            borderWidth: 0.001,
-                                            activeGradient: const LinearGradient(
-                                                begin: Alignment
-                                                    .bottomCenter,
-                                                end: Alignment
-                                                    .topCenter,
-                                                colors: [
-                                                  Colors.black26,
-                                                  Colors.black45
-                                                ],
-                                                stops: [
-                                                  0.0,
-                                                  0.3
-                                                ]),
-                                          )),
-                                )),
-                          )),
-                      Expanded(
-                          flex: 0,
-                          child: Row(
-                            children: List.generate(
-                                9,
-                                    (index) => Container(
-                                    height: 6,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(50))),
-                                    margin: const EdgeInsets.only(right: 8),
-                                    child: BlocBuilder<Bloc_Controler,
-                                        dynamic>(
-                                      builder: (context, level) =>
-                                          RectangleWaveform(
-                                            samples: [
-                                              -(level is double
-                                                  ? double.parse(
-                                                  level.toString())
-                                                  : 0.0) +
-                                                  index
-                                            ],
-                                            height: 2.5,
-                                            width: size.width * 0.01,
+                                              this.level - 1,
+                                              this.level - 8,
+                                              this.level - 5,
+                                              this.level - 9,
+                                              this.level - 3,
+                                              this.level - 4,
+                                              this.level - 5,
+                                              this.level - 7,
+                                              this.level - 3,
+                                              -this.level + 4,
+                                              -this.level + 3,
+                                              -this.level + 8,
+                                              -this.level + 2,
+                                              -this.level + 7,
+                                              -this.level + 1,
+                                              -this.level + 9,
+                                              -this.level + 2,
+                                              -this.level + 9,
+                                              this.level - 4,
+                                              this.level - 5,
+                                              this.level - 7,
+                                              this.level - 3,
+                                              -this.level + 4,
+                                              -this.level + 3,
+                                              -this.level + 8,
+                                              -this.level + 2,
+                                              this.level - 1,
+                                              this.level - 8,
+                                              this.level - 5,
+                                              this.level - 9,
+                                              this.level - 3,
+                                              -this.level + 7,
+                                              -this.level + 1,
+                                              -this.level + 9,
+                                              -this.level + 2,
+                                              -this.level + 9,
+                                              this.level - 1,
+                                              this.level - 8,
+                                              this.level - 5,
+                                              this.level - 9,
+                                              this.level - 3,
+                                              this.level - 4,
+                                              this.level - 5,
+                                              this.level - 7,
+                                              this.level - 3,
+                                              -this.level + 4,
+                                              -this.level + 3,
+                                              -this.level + 8,
+                                              -this.level + 2,
+                                              -this.level + 7,
+                                              -this.level + 1,
+                                              -this.level + 9,
+                                              -this.level + 2,
+                                              -this.level + 9,
+                                              this.level - 4,
+                                              this.level - 5,
+                                              this.level - 7,
+                                              this.level - 3,
+                                              -this.level + 4,
+                                              -this.level + 3,
+                                              -this.level + 8,
+                                              -this.level + 2,
+                                              this.level - 1,
+                                              this.level - 8,
+                                              this.level - 5,
+                                              this.level - 9,
+                                              this.level - 3,
+                                              -this.level + 7,
+                                              -this.level + 1,
+                                              -this.level + 9,
+                                              -this.level + 2,
+                                              -this.level + 9,],
+                                            height: 40,
+                                            width: size.width * 0.5,
                                             activeColor: Colors.white70,
                                             inactiveColor: Colors.white70,
-                                            elapsedDuration:
-                                            const Duration(milliseconds: 100),
-                                            maxDuration:
-                                            const Duration(milliseconds: 200),
-                                            isRoundedRectangle: true,
+                                            elapsedDuration: const Duration(milliseconds: 50),
+                                            maxDuration: const Duration(milliseconds: 50),
                                             isCentered: true,
-                                            inactiveBorderColor:
-                                            Colors.black45,
-                                            activeBorderColor:
-                                            Colors.black45,
+                                            isRoundedRectangle: true,
+                                            inactiveBorderColor: Colors.black45,
+                                            activeBorderColor: Colors.black45,
                                             borderWidth: 0.001,
                                             activeGradient: const LinearGradient(
-                                                begin:
-                                                Alignment.bottomCenter,
+                                                begin: Alignment.bottomCenter,
                                                 end: Alignment.topCenter,
-                                                colors: [
-                                                  Colors.black26,
-                                                  Colors.black45
-                                                ],
-                                                stops: [
-                                                  0.0,
-                                                  0.3
-                                                ]),
-                                          ),
-                                    ))),
-                          )),
-                    ]))),
-      ],
-    );
+                                                colors: [Colors.black26, Colors.black45],
+                                                stops: [0.0, 0.3]),
+                                          );}),
+                                )))
+    ]);
   }
 }
 

@@ -3,7 +3,7 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/Read/UI/BottomSheet.dart';
 import 'package:speach_learning/Read/UI/signal_Ui.dart';
-import 'package:speach_learning/Read/UI/ui_Text_Word.dart';
+import 'package:speach_learning/Read/Widget/SingleChildListTextView.dart';
 import 'package:speach_learning/Read/controle/Speech_To_Text.dart';
 
 import '../bloc/Bloc_Controler_Read.dart';
@@ -22,13 +22,12 @@ class read_page extends StatefulWidget {
 
 // ignore: camel_case_types
 class _read_pageState extends State<read_page> {
-  late List<Widget> readText;
-
   // ignore: non_constant_identifier_names
 
   // ignore: non_constant_identifier_names
   Speech_To_Text? speech_to_text;
-
+  bool _isShowBottomSheet = false;
+  int displayWords = 0;
   Size size = const Size(0.0, 0.0);
 
   // ignore: non_constant_identifier_names
@@ -37,102 +36,90 @@ class _read_pageState extends State<read_page> {
     {"name": "en-us-x-tpf-local", "locale": "en-US"},
     {"name": "en-gb-x-gbd-local", "locale": "en-GB"}
   ];
-  int displayWords = 20;
-  var refreshKey = GlobalKey<RefreshIndicatorState>();
-  bool _isShowbottomSheet = false;
-  final _scrollController = ScrollController();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   initState() {
     super.initState();
-    readText = <Widget>[];
-    speech_to_text = Speech_To_Text(text_read: widget.text_read);
+    speech_to_text = Speech_To_Text(text_read: widget.text_read, bc: context);
     speech_to_text!.initSpeechState();
-    refreshKey.currentState?.show(atTop: false);
-    _scrollController.addListener(_onScroll);
-    int minus = widget.text_read!.length - displayWords;
-    setState(() {
-      displayWords += minus >= 20
-          ? 20
-          : minus >= 0
-              ? minus
-              : 0;
-    });
+    displayWords =
+        widget.text_read!.length > 20 ? 20 : widget.text_read!.length;
   }
 
   @override
   void dispose() {
-    _isShowbottomSheet = false;
+    speech_to_text = null;
     super.dispose();
-  }
-
-  void _onScroll() {
-    if (_isBottom) context.read<Bloc_Controler>().increment();
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
-  }
-
-  Future<void> _refresh() async {
-    return await Future.delayed(Duration.zero, () {
-      int minus = widget.text_read!.length - displayWords;
-      setState(() {
-        displayWords += minus >= 10
-            ? 10
-            : minus >= 0
-                ? minus
-                : 0;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: const Color(0xffeeece4),
       appBar: AppBar(backgroundColor: const Color(0xff888579), actions: [
         Center(
             child: Container(
           width: size.width * 0.3,
           alignment: Alignment.centerLeft,
-          child: Text(
-            "Words : " + displayWords.toString(),
-            style: const TextStyle(color: Colors.white70),
-          ),
+          child:
+              BlocBuilder<Bloc_Controler, dynamic>(buildWhen: (previos, next) {
+            if (next is Map<String, int> &&
+                next["count"] != 0 &&
+                previos != next) {
+              return true;
+            } else {
+              return false;
+            }
+          }, builder: (context, type) {
+            if (type is Map<String, int> && type["count"] != 0) {
+              displayWords = int.parse(type["count"].toString());
+            }
+            return Text(
+              "Words : " + displayWords.toString(),
+              style: const TextStyle(color: Colors.white70),
+            );
+          }),
         )),
         Container(
             margin: const EdgeInsets.only(right: 20),
             height: 50.0,
             width: 155.0,
-            child: DropdownButton(
-              elevation: 2,
-              borderRadius: BorderRadius.circular(20),
-              dropdownColor: const Color(0xff888579),
-              style: const TextStyle(color: Colors.white70),
-              iconSize: 28,
-              value: change_Language,
-              items: const [
-                DropdownMenuItem(
-                    value: "English(US)", child: Text("English(US)     ")),
-                DropdownMenuItem(
-                    value: "English(UK)", child: Text("English(UK)     ")),
-              ],
-              onChanged: (value) {
-                setState(() => change_Language = value.toString());
-              },
-            )),
+            child: BlocBuilder<Bloc_Controler, dynamic>(
+                buildWhen: (previos, current) {
+              return current is String ? true : false;
+            }, builder: (bc, type) {
+              return DropdownButton(
+                elevation: 2,
+                borderRadius: BorderRadius.circular(20),
+                dropdownColor: const Color(0xff888579),
+                style: const TextStyle(color: Colors.white70),
+                iconSize: 28,
+                value: type is String ? type : change_Language,
+                items: const [
+                  DropdownMenuItem(
+                      value: "English(US)", child: Text("English(US)     ")),
+                  DropdownMenuItem(
+                      value: "English(UK)", child: Text("English(UK)     ")),
+                ],
+                onChanged: (value) {
+                  context
+                      .read<Bloc_Controler>()
+                      .change_Language(value.toString());
+                  change_Language = value.toString();
+                },
+              );
+            })),
       ]),
       body: Stack(
         children: <Widget>[
           Center(
             heightFactor: 1,
             child: Container(
-              height: size.height * 0.35,
+              height: size.height * 0.30,
               margin: const EdgeInsets.only(top: 18.0),
               padding: const EdgeInsets.all(10.0),
               alignment: Alignment.topCenter,
@@ -149,46 +136,20 @@ class _read_pageState extends State<read_page> {
                 color: Colors.white38,
                 border: Border.all(width: 0.0, color: Colors.white38),
               ),
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child:Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
-                        children: List.generate(
-                            displayWords,
-                            (index) => BlocBuilder<Bloc_Controler, dynamic>(
-                                builder: (context, type) {
-                                  if (type is Map<String, String>) {
-                                    type["Name"] ==
-                                            widget.text_read![index]["Name"]
-                                        ? widget.text_read![index]["type"] =
-                                            type["type"]!
-                                        : null;
-
-                                    if (type["Problem"].toString().isNotEmpty &&
-                                        !_isShowbottomSheet) {
-                                      _isShowbottomSheet = true;
-                                      bottomSheet.showbottomsheet(
-                                          context, type);
-                                    }
-                                  }
-                                  return text_Word(
-                                      text_read: widget.text_read,
-                                      index: index,
-                                      change_Language: change_Language,
-                                      lan: lan);
-                                })))),
+              child: SingleChildListTextView(
+                  text_read: widget.text_read,
+                  lan: lan,
+                  change_Language: change_Language),
             ),
           ),
           Pinned.fromPins(
             Pin(size: 14 * (size.width * 0.05), start: size.width * 0.24),
-            Pin(size: 84.0, end: 42.0),
+            Pin(size: 84.0, end: 12.0),
             child: signal_Ui_controler(speech_to_text: speech_to_text),
           ),
           Pinned.fromPins(
             Pin(size: 45.0, start: 26.0),
-            Pin(size: 45.0, end: 62.0),
+            Pin(size: 45.0, end: 28.0),
             child: Stack(
               children: <Widget>[
                 Container(
@@ -203,18 +164,40 @@ class _read_pageState extends State<read_page> {
                       ]),
                 ),
                 Center(
-                  child: SizedBox(
-                    width: 32.0,
-                    height: 32.0,
+                    child: SizedBox(
+                  width: 32.0,
+                  height: 32.0,
+                  child: BlocListener<Bloc_Controler, dynamic>(
+                    listenWhen: (previos, next) {
+                      if (next is Map<String, String> &&
+                          next["Problem"].toString().isNotEmpty &&
+                          previos != next) {
+                        return true;
+                      } else if (next is bool && previos != next) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    },
+                    listener: (context, type) {
+                      if (type is Map<String, String> && !_isShowBottomSheet) {
+                        if (type["Problem"].toString().isNotEmpty) {
+                          _isShowBottomSheet = true;
+                          bottomSheet.showbottomsheet(this.context, type);
+                        }
+                      } else if (type is bool) {
+                        _isShowBottomSheet = type;
+                      }
+                    },
                     child: IconButton(
                       icon: const Icon(Icons.mic),
-                      onPressed: () => speech_to_text!.startListening(context),
+                      onPressed: () => speech_to_text!.startListening(),
                       color: Colors.white70,
                       iconSize: 30,
                       padding: const EdgeInsets.only(left: 1.0, top: 2.0),
                     ),
                   ),
-                ),
+                )),
               ],
             ),
           ),

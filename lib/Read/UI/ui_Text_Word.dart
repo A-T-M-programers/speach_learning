@@ -1,14 +1,22 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:speach_learning/Read/bloc/Bloc_Controler_Read.dart';
 import '../controle/Text_To_Speech.dart';
 
 // ignore: camel_case_types, must_be_immutable
 class text_Word extends StatefulWidget {
   // ignore: non_constant_identifier_names
-  text_Word({Key? key, this.text_read, required this.index, this.change_Language, this.lan}) : super(key: key);
+  text_Word(
+      {Key? key,
+      this.Map_Word,
+      required this.index,
+      this.change_Language,
+      this.lan})
+      : super(key: key);
 
   // ignore: non_constant_identifier_names
-  List<Map<String, String>>? text_read;
+  Map<String, String>? Map_Word;
   late int index;
 
   // ignore: non_constant_identifier_names
@@ -41,45 +49,64 @@ class _text_WordState extends State<text_Word> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.only(top: 10.0),
-        child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: Text.rich(
-              TextSpan(
-                text: widget.text_read![widget.index]["Name"]!,
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => text_to_speech.speak(
-                      widget.text_read![widget.index]["Name"]!,
-                      widget.change_Language == "English(US)"
-                          ? widget.lan!.first
-                          : widget.lan!.last),
-                mouseCursor: MaterialStateMouseCursor.clickable,
-                style: TextStyle(
-                    color: Colors.transparent,
-                    decorationThickness: 3,
-                    decorationStyle: TextDecorationStyle.dashed,
-                    decoration: TextDecoration.underline,
-                    decorationColor:
-                        widget.text_read![widget.index]["type"] == "1"
+        margin: const EdgeInsets.only(top: 8.0),
+        height: 30.0,
+        decoration: const BoxDecoration(boxShadow: [
+          BoxShadow(
+              color: Colors.white54,
+              blurRadius: 10.0,
+              offset: Offset(0.0, 5.0),
+              spreadRadius: 5.0)
+        ]),
+        padding: const EdgeInsets.only(top: 7.0),
+        child: BlocBuilder<Bloc_Controler, dynamic>(
+            buildWhen: (previos, next) {
+          if (next is Map<String, String> && next["Name"] == widget.Map_Word!["Name"]) {
+            return true;
+          } else {
+            return false;
+          }
+        }, builder: (context, type) {
+          if (type is Map<String, String>) {
+            type["Name"] == widget.Map_Word!["Name"]
+                ? widget.Map_Word!["type"] = type["type"]!
+                : null;
+          }
+          return Text.rich(
+            TextSpan(
+              text: widget.Map_Word!["Name"]!,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => text_to_speech.speak(
+                    widget.Map_Word!["Name"]!,
+                    widget.change_Language == "English(US)"
+                        ? widget.lan!.first
+                        : widget.lan!.last),
+              mouseCursor: MaterialStateMouseCursor.clickable,
+              style: TextStyle(
+                  color: Colors.transparent,
+                  decorationThickness: 3,
+                  decorationStyle: TextDecorationStyle.dotted,
+                  decoration: TextDecoration.underline,
+                  decorationColor: widget.Map_Word!["type"] == "1"
+                      ? Colors.green
+                      : widget.Map_Word!["type"] == "0"
+                          ? Colors.red
+                          : widget.Map_Word!["type"] == "2"
+                              ? Colors.black
+                              : Colors.blue,
+                  shadows: [
+                    BoxShadow(
+                        color: widget.Map_Word!["type"] == "1"
                             ? Colors.green
-                            : widget.text_read![widget.index]["type"] == "0"
+                            : widget.Map_Word!["type"] == "0"
                                 ? Colors.red
-                                : widget.text_read![widget.index]["type"] == "2"
+                                : widget.Map_Word!["type"] == "2"
                                     ? Colors.black
                                     : Colors.blue,
-                    shadows: [
-                      BoxShadow(
-                          color: widget.text_read![widget.index]["type"] == "1"
-                              ? Colors.green
-                              : widget.text_read![widget.index]["type"] == "0"
-                                  ? Colors.red
-                                  : widget.text_read![widget.index]["type"] ==
-                                          "2"
-                                      ? Colors.black
-                                      : Colors.blue,
-                          offset: const Offset(0, -10))
-                    ]),
-              ),
-            )));
+                        offset: const Offset(0, -5))
+                  ]),
+            ),
+          );
+        }));
   }
 }

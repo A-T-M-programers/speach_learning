@@ -42,6 +42,7 @@ dependencies:
   file_picker: ^5.2.4
   flutter_pdfview: ^1.2.5
   syncfusion_flutter_pdf: ^20.4.38
+  flutter_native_splash: ^2.2.16
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +54,13 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  flutter_launcher_icons: ^0.11.0
+
+flutter_icons:
+  image_path: "assets/icon/icon_SpeechLearning.png"
+  android: "launcher_icon"
+  ios: true
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -2,18 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:speach_learning/profile_page.dart';
+import 'package:speach_learning/AlertDialog.dart';
+import 'package:speach_learning/Profile/UI/profile_page.dart';
 
-import '../../add_page.dart';
-import '../../Read/UI/read_page.dart';
+import '../../AddText/UI/add_page.dart';
 import '../Controle/Get_File_PDF.dart';
 import 'Display_File_PDF.dart';
 
+// ignore: camel_case_types
 class home_page extends StatefulWidget {
-
+  // ignore: prefer_const_constructors_in_immutables
   home_page({
     Key? key,
   }) : super(key: key);
@@ -22,104 +22,124 @@ class home_page extends StatefulWidget {
   State<home_page> createState() => _home_pageState();
 }
 
+// ignore: camel_case_types
 class _home_pageState extends State<home_page> {
+  // ignore: prefer_const_constructors
   Size size = Size(0.0, 0.0);
 
   TextEditingController search = TextEditingController();
 
+  // ignore: non_constant_identifier_names
   Get_File_PDF get_file_pdf = Get_File_PDF();
 
-  List<Map<String,String>> books = [];
+  List<Map<String, String>> books = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffeeece4),
-      body:SafeArea(
+      body: SafeArea(
           child: Stack(
         children: <Widget>[
           Padding(
+            // ignore: prefer_const_constructors
             padding: EdgeInsets.fromLTRB(26.0, 83.0, 10.0, 0.0),
-            child: PageLink(
-              links: [
-                PageLinkInfo(
-                  ease: Curves.linear,
-                  duration: 0.3,
-                  pageBuilder: () => read_page(),
-                ),
-              ],
-              child: SingleChildScrollView(
-                primary: false,
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 20,
-                  runSpacing: 20,
-                  children: books.map((itemData) {
-                    return SizedBox(
-                      width: 110.0,
-                      height: 160.0,
-                      child: PageLink(
-                        links: [
-                          PageLinkInfo(
-                            ease: Curves.linear,
-                            duration: 0.3,
-                            pageBuilder: () => Display_File_PDF(file: File(itemData["Path"]!)),
+            child: SingleChildScrollView(
+              primary: false,
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 20,
+                runSpacing: 20,
+                children: books.map((itemData) {
+                  return SizedBox(
+                    width: 110.0,
+                    height: 160.0,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        // ignore: prefer_const_constructors
+                        textStyle: MaterialStateProperty.all(
+                            TextStyle(fontWeight: FontWeight.normal)),
+                        backgroundColor:
+                        MaterialStateProperty.all(Colors.transparent),
+                        // ignore: prefer_const_constructors
+                        padding: MaterialStateProperty.all(EdgeInsets.all(0.0)),
+                        foregroundColor:
+                        MaterialStateProperty.all(Colors.transparent),
+                        shadowColor:
+                        MaterialStateProperty.all(Colors.transparent),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0))),
+                      ),
+                      onPressed: () {
+                        try {
+                          AlertDialogShow.showAlertDialog(context);
+                          // ignore: prefer_const_constructors
+                          Future.delayed(Duration(seconds: 1), () {
+                            Navigator.pop(context);
+                            Navigator.push(context, MaterialPageRoute(builder: (route) => Display_File_PDF(file: File(itemData["Path"]!))));
+                          });
+                        } catch (e, s) {
+                          print(s);
+                        }
+                      },
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xffeeece4),
+                              border: Border.all(
+                                  width: 1.0, color: const Color(0xffe2e0d5)),
+                            ),
+                          ),
+                          Pinned.fromPins(
+                            Pin(start: 6.0, end: 6.7),
+                            Pin(size: 107.0, start: 9.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xffffffff),
+                                border: Border.all(
+                                    width: 1.0, color: const Color(0x00707070)),
+                              ),
+                              child: PDFView(
+                                filePath: itemData["Path"],
+                                enableSwipe: false,
+                                defaultPage: 0,
+                              ),
+                            ),
+                          ),
+                          Pinned.fromPins(
+                            Pin(size: 80.0, middle: 0.5),
+                            Pin(size: 30.0, end: 05.0),
+                            child: Text(
+                              itemData["Name"]!,
+                              style: TextStyle(
+                                fontFamily: 'Sakkal Majalla',
+                                fontSize: 10,
+                                color: Colors.black38,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              softWrap: true,
+                            ),
+                          ),
+                          Pinned.fromPins(
+                            Pin(start: 5.9, end: 6.9),
+                            Pin(size: 97.0, start: 9.0),
+                            child: Container(
+                              decoration: BoxDecoration(),
+                            ),
                           ),
                         ],
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xffeeece4),
-                                border: Border.all(
-                                    width: 1.0, color: const Color(0xffe2e0d5)),
-                              ),
-                            ),
-                            Pinned.fromPins(
-                              Pin(start: 6.0, end: 6.7),
-                              Pin(size: 107.0, start: 9.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffffffff),
-                                  border: Border.all(
-                                      width: 1.0,
-                                      color: const Color(0x00707070)),
-                                ),
-                                child: PDFView(
-                                  filePath: itemData["Path"],
-                                  enableSwipe: false,
-                                  defaultPage: 0,
-                                ),
-                              ),
-                            ),
-                            Pinned.fromPins(
-                              Pin(size: 80.0, middle: 0.5),
-                              Pin(size: 30.0, end: 05.0),
-                              child: Text(
-                                itemData["Name"]!,
-                                style: TextStyle(
-                                  fontFamily: 'Sakkal Majalla',
-                                  fontSize: 10,
-                                  color:Colors.black38,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                softWrap: true,
-                              ),
-                            ),
-                            Pinned.fromPins(
-                              Pin(start: 5.9, end: 6.9),
-                              Pin(size: 97.0, start: 9.0),
-                              child: Container(
-                                decoration: BoxDecoration(),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
-                    );
-                  }).toList(),
-                ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
           ),
@@ -138,19 +158,14 @@ class _home_pageState extends State<home_page> {
                 Pinned.fromPins(
                   Pin(size: 124.0, end: 19.5),
                   Pin(size: 28.5, middle: 0.5306),
-                  child:
-                      TextFormField(
-                        enabled: true,
-                        controller: search,
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.search),
-                          hintText: "Search",
-                          hintStyle: TextStyle(
-                            color: Colors.white
-                          )
-                        ),
-                        onChanged: (value){
-                        },
+                  child: TextFormField(
+                    enabled: true,
+                    controller: search,
+                    decoration: InputDecoration(
+                        icon: Icon(Icons.search),
+                        hintText: "Search",
+                        hintStyle: TextStyle(color: Colors.white)),
+                    onChanged: (value) {},
                   ),
                 ),
               ],
@@ -166,15 +181,37 @@ class _home_pageState extends State<home_page> {
                   child: SizedBox(
                     width: size.width * 0.495,
                     height: 61.0,
-                    child: PageLink(
-                      links: [
-                        PageLinkInfo(
-                          transition: LinkTransition.Fade,
-                          ease: Curves.easeOut,
-                          duration: 0.3,
-                          pageBuilder: () => profile_page(),
-                        ),
-                      ],
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        // ignore: prefer_const_constructors
+                        textStyle: MaterialStateProperty.all(
+                            TextStyle(fontWeight: FontWeight.normal)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        // ignore: prefer_const_constructors
+                        padding: MaterialStateProperty.all(EdgeInsets.all(0.0)),
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        shadowColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0))),
+                      ),
+                      onPressed: () {
+                        try {
+                          AlertDialogShow.showAlertDialog(context);
+                          // ignore: prefer_const_constructors
+                          Future.delayed(Duration(seconds: 1), () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (route) => profile_page()));
+                          });
+                        } catch (e, s) {
+                          print(s);
+                        }
+                      },
                       child: Stack(
                         children: <Widget>[
                           Container(
@@ -214,21 +251,43 @@ class _home_pageState extends State<home_page> {
                   child: SizedBox(
                     width: size.width * 0.495,
                     height: 61.0,
-                    child: PageLink(
-                      links: [
-                        PageLinkInfo(
-                          transition: LinkTransition.Fade,
-                          ease: Curves.easeOut,
-                          duration: 0.3,
-                          pageBuilder: () => add_page(),
-                        ),
-                      ],
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        // ignore: prefer_const_constructors
+                        textStyle: MaterialStateProperty.all(
+                            TextStyle(fontWeight: FontWeight.normal)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        // ignore: prefer_const_constructors
+                        padding: MaterialStateProperty.all(EdgeInsets.all(0.0)),
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        shadowColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0))),
+                      ),
+                      onPressed: () {
+                        try {
+                          AlertDialogShow.showAlertDialog(context);
+                          // ignore: prefer_const_constructors
+                          Future.delayed(Duration(seconds: 1), () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (route) => add_page()));
+                          });
+                        } catch (e, s) {
+                          print(s);
+                        }
+                      },
                       child: Stack(
                         children: <Widget>[
                           Container(
                             decoration: BoxDecoration(
                               color: const Color(0xffd4af37),
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(20.0),
                               ),
                               border: Border.all(
@@ -261,26 +320,48 @@ class _home_pageState extends State<home_page> {
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.black87,
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                                 Radius.elliptical(9999.0, 9999.0)),
                             border: Border.all(
-                                width: 6.0, color: const Color(0xffeeece4),strokeAlign: StrokeAlign.outside),
+                                width: 6.0,
+                                color: const Color(0xffeeece4),
+                                strokeAlign: StrokeAlign.outside),
                           ),
                         ),
                         Center(
                           child: IconButton(
-                            padding: EdgeInsets.all(0.0),
+                            padding: const EdgeInsets.all(0.0),
                             iconSize: 40,
                             color: Colors.white,
-                            onPressed: ()async{
-                            File? file = await get_file_pdf.pickFile();
-                            setState(() {
-                              books.add({"Name":file!.path.split("/").last.replaceFirst(".pdf", ""),"Path":file.path});
-                            });
-                            Navigator.push(context, MaterialPageRoute(builder:(route) => Display_File_PDF(file: file,)));
-
-                          }, icon: Icon(Icons.add,),
-                            tooltip: "Add File",),
+                            onPressed: () async {
+                              try {
+                                File? file = await get_file_pdf.pickFile();
+                                if (file != null) {
+                                  setState(() {
+                                    books.add({
+                                      "Name": file.path
+                                          .split("/")
+                                          .last
+                                          .replaceFirst(".pdf", ""),
+                                      "Path": file.path
+                                    });
+                                  });
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (route) => Display_File_PDF(
+                                                file: file,
+                                              )));
+                                }
+                              } catch (e, s) {
+                                print(s);
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.add,
+                            ),
+                            tooltip: "Add File",
+                          ),
                         ),
                       ],
                     ),

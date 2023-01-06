@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/Read/UI/BottomSheet.dart';
 import 'package:speach_learning/Read/UI/read_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'Process_Class/Filter_Text.dart';
-import 'Read/bloc/Bloc_Controler_Read.dart';
-import 'Splash_Screen.dart';
+import '../../Process_Class/Filter_Text.dart';
+import '../../SplashScreen/UI/Splash_Screen.dart';
 
 // ignore: camel_case_types, must_be_immutable
 class add_page extends StatelessWidget {
@@ -110,17 +108,10 @@ class add_page extends StatelessWidget {
                       : list_map.add({"Name": word, "type": "2"});
                 }
               }
-              Navigator.push(context, MaterialPageRoute(builder: (route) => BlocProvider(
-                  create: (_) =>
-                      Bloc_Controler(),
-                  child: read_page(text_read: list_map))));
+              Navigator.push(context, MaterialPageRoute(builder: (route) => read_page(text_read: list_map)));
             } else {
-              Navigator.push(context, MaterialPageRoute(builder: (route) =>  BlocProvider(
-                  create: (_) => Bloc_Controler(),
-                  child: read_page(text_read: const [{"Name": "Hello", "type": "3"}],
-                  )
-              )
-              ));
+              // ignore: prefer_const_literals_to_create_immutables
+              Navigator.push(context, MaterialPageRoute(builder: (route) =>read_page(text_read: [{"Name": "Hello", "type": "3"},{"Name": "World", "type": "2"}],)));
             }
           }
         } on SocketException catch (_) {
