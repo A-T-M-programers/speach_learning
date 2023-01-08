@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:speach_learning/AlertDialog.dart';
 import 'package:speach_learning/Read/UI/BottomSheet.dart';
 import 'package:speach_learning/Read/UI/signal_Ui.dart';
 import 'package:speach_learning/Read/Widget/SingleChildListTextView.dart';
@@ -9,7 +11,7 @@ import 'package:speach_learning/Read/controle/Speech_To_Text.dart';
 import '../bloc/Bloc_Controler_Read.dart';
 
 // ignore: camel_case_types, must_be_immutable
-class read_page extends StatefulWidget {
+class read_page extends StatefulWidget{
   // ignore: non_constant_identifier_names
   read_page({Key? key, this.text_read}) : super(key: key);
 
@@ -21,7 +23,7 @@ class read_page extends StatefulWidget {
 }
 
 // ignore: camel_case_types
-class _read_pageState extends State<read_page> {
+class _read_pageState extends State<read_page> with TickerProviderStateMixin{
   // ignore: non_constant_identifier_names
 
   // ignore: non_constant_identifier_names
@@ -37,8 +39,6 @@ class _read_pageState extends State<read_page> {
     {"name": "en-gb-x-gbd-local", "locale": "en-GB"}
   ];
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   initState() {
     super.initState();
@@ -51,6 +51,8 @@ class _read_pageState extends State<read_page> {
   @override
   void dispose() {
     speech_to_text = null;
+    displayWords = 0;
+    widget.text_read = [];
     super.dispose();
   }
 
@@ -58,62 +60,69 @@ class _read_pageState extends State<read_page> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     return Scaffold(
-      key: _scaffoldKey,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(backgroundColor: Theme.of(context).appBarTheme.backgroundColor, actions: [
-        Center(
-            child: Container(
-          width: size.width * 0.3,
-          alignment: Alignment.centerLeft,
-          child:
-              BlocBuilder<Bloc_Controler, dynamic>(buildWhen: (previos, next) {
-            if (next is Map<String, int> &&
-                next["count"] != 0 &&
-                previos != next) {
-              return true;
-            } else {
-              return false;
-            }
-          }, builder: (context, type) {
-            if (type is Map<String, int> && type["count"] != 0) {
-              displayWords = int.parse(type["count"].toString());
-            }
-            return Text(
-              "Words : " + displayWords.toString(),
-              style: const TextStyle(color: Colors.white70),
-            );
-          }),
-        )),
-        Container(
-            margin: const EdgeInsets.only(right: 20),
-            height: 50.0,
-            width: 155.0,
-            child: BlocBuilder<Bloc_Controler, dynamic>(
-                buildWhen: (previos, current) {
-              return current is String ? true : false;
-            }, builder: (bc, type) {
-              return DropdownButton(
-                elevation: 2,
-                borderRadius: BorderRadius.circular(20),
-                dropdownColor: const Color(0xff888579),
-                style: const TextStyle(color: Colors.white70),
-                iconSize: 28,
-                value: type is String ? type : change_Language,
-                items: const [
-                  DropdownMenuItem(
-                      value: "English(US)", child: Text("English(US)     ")),
-                  DropdownMenuItem(
-                      value: "English(UK)", child: Text("English(UK)     ")),
-                ],
-                onChanged: (value) {
-                  context
-                      .read<Bloc_Controler>()
-                      .change_Language(value.toString());
-                  change_Language = value.toString();
-                },
-              );
-            })),
-      ]),
+      appBar: AppBar(
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          actions: [
+            Center(
+                child: Container(
+              width: size.width * 0.3,
+              alignment: Alignment.centerLeft,
+              child:
+                  BlocBuilder<Bloc_increment, int>(buildWhen: (previos, next) {
+                if (next != 0 && previos != next) {
+                  return true;
+                } else {
+                  return false;
+                }
+              }, builder: (context, type) {
+                if (type != 0) {
+                  displayWords = type;
+                }
+                return Text(
+                  "words".tr() + displayWords.toString(),
+                  style: const TextStyle(color: Colors.white70),
+                );
+              }),
+            )),
+            const SizedBox(
+              width: 30.0,
+            ),
+            Container(
+                margin: const EdgeInsets.only(right: 20),
+                height: 50.0,
+                width: 135.0,
+                child: BlocBuilder<Bloc_change_Language, dynamic>(
+                    buildWhen: (previos, current) {
+                  return current is String ? true : false;
+                }, builder: (bc, type) {
+                  return DropdownButton(
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(20),
+                    dropdownColor: const Color(0xff888579),
+                    style: const TextStyle(color: Colors.white70),
+                    iconSize: 28,
+                    value: type is String ? type : change_Language,
+                    items: const [
+                      DropdownMenuItem(
+                          value: "English(US)",
+                          child: Text("English(US)     ")),
+                      DropdownMenuItem(
+                          value: "English(UK)",
+                          child: Text("English(UK)     ")),
+                    ],
+                    onChanged: (value) {
+                      AlertDialogShow.showAlertDialog(context);
+                      context
+                          .read<Bloc_change_Language>()
+                          .change_Language(value.toString());
+                      change_Language = value.toString();
+                      Future.delayed(
+                          Duration(seconds: 1), () => Navigator.pop(context));
+                    },
+                  );
+                })),
+          ]),
       body: Stack(
         children: <Widget>[
           Center(
@@ -165,39 +174,56 @@ class _read_pageState extends State<read_page> {
                 ),
                 Center(
                     child: SizedBox(
-                  width: 32.0,
-                  height: 32.0,
-                  child: BlocListener<Bloc_Controler, dynamic>(
-                    listenWhen: (previos, next) {
-                      if (next is Map<String, String> &&
-                          next["Problem"].toString().isNotEmpty &&
-                          previos != next) {
-                        return true;
-                      } else if (next is bool && previos != next) {
-                        return true;
-                      } else {
-                        return false;
-                      }
-                    },
-                    listener: (context, type) {
-                      if (type is Map<String, String> && !_isShowBottomSheet) {
-                        if (type["Problem"].toString().isNotEmpty) {
-                          _isShowBottomSheet = true;
-                          bottomSheet.showbottomsheet(this.context, type);
-                        }
-                      } else if (type is bool) {
-                        _isShowBottomSheet = type;
-                      }
-                    },
-                    child: IconButton(
-                      icon: const Icon(Icons.mic),
-                      onPressed: () => speech_to_text!.startListening(),
-                      color: Colors.white70,
-                      iconSize: 30,
-                      padding: const EdgeInsets.only(left: 1.0, top: 2.0),
-                    ),
-                  ),
-                )),
+                        width: 32.0,
+                        height: 32.0,
+                        child: BlocListener<Bloc_changeStateBottomSheet, bool>(
+                            listenWhen: (previos, next) {
+                              if (previos != next) {
+                                return true;
+                              } else {
+                                return false;
+                              }
+                            },
+                            listener: (context, type) {
+                              _isShowBottomSheet = type;
+                            },
+                            child: BlocListener<Bloc_chang_color_Word, dynamic>(
+                              listenWhen: (previos, next) {
+                                if (next is Map<String, String> &&
+                                    next["Problem"] != null &&
+                                    previos != next) {
+                                  return true;
+                                } else {
+                                  return false;
+                                }
+                              },
+                              listener: (context, type) {
+                                if (type is Map<String, String> && !_isShowBottomSheet) {
+                                  if (type["Problem"] != null && type["Level"] != null && type["Level"] != "0") {
+                                    AlertDialogShow.showAlertDialogNextLevel(context, type["Level"]!,this);
+                                  }else if(type["Problem"] != null){
+                                    BlocProvider.of<Bloc_changeStateBottomSheet>(context).changeStateBottomSheet(true);
+                                    bottomSheet.showbottomsheet(this.context, type);
+                                  }
+                                }
+                              },
+                              child: IconButton(
+                                  icon: const Icon(Icons.mic),
+                                  onPressed: () {
+                                    if(widget.text_read!.last["type"] != "1") {
+                                      speech_to_text!.startListening();
+                                    }else{
+                                      BlocProvider.of<Bloc_changeStateBottomSheet>(context).changeStateBottomSheet(true);
+                                      bottomSheet.showbottomsheet(this.context, {"Problem":"final"});
+                                    }
+                                  },
+                                  color: Colors.white70,
+                                  iconSize: 30,
+                                  padding: const EdgeInsets.only(
+                                      left: 1.0, top: 2.0),
+                                ),
+                              ),
+                            ))),
               ],
             ),
           ),

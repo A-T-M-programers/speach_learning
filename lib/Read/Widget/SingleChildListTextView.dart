@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/Read/UI/ui_Text_Word.dart';
 import 'package:speach_learning/Read/bloc/Bloc_Controler_Read.dart';
+import 'package:speach_learning/Read/controle/Text_To_Speech.dart';
 
 // ignore: must_be_immutable
 class SingleChildListTextView extends StatefulWidget {
   // ignore: non_constant_identifier_names
   SingleChildListTextView(
+      // ignore: non_constant_identifier_names
       {Key? key, this.text_read, this.lan, this.change_Language})
       : super(key: key);
 
@@ -27,46 +29,57 @@ class SingleChildListTextView extends StatefulWidget {
 class _SingleChildListTextViewState extends State<SingleChildListTextView> {
   final _scrollController = ScrollController();
   int displayWords = 0;
-  bool _isShowCirculerBar = false;
-
+  Text_To_Speech text_to_speech = Text_To_Speech();
+  // ignore: non_constant_identifier_names
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<Bloc_Controler>().increment({"count": 0});
+    text_to_speech.initTts();
+    context.read<Bloc_increment>().increment(0);
     _scrollController.addListener(_onScroll);
     int minus = widget.text_read!.length - displayWords;
     displayWords += minus >= 20 ? 20 : minus >= 0 ? minus : 0;
   }
-  Future<void> refresh() async {
-    int count = displayWords + ((widget.text_read!.length - displayWords) >= 20 ? 20 : (widget.text_read!.length - displayWords) >= 0 ? (widget.text_read!.length - displayWords) : 0);
-    context.read<Bloc_Controler>().increment({"count": count});
+
+  static int refresh(data) {
+    int count = data[0] + ((data[1].length - data[0]) >= 20 ? 20 : (data[1].length - data[0]) >= 0 ? (data[1].length - data[0]) : 0);
+    return count;
   }
 
   void _onScroll() async {
-    if (_isShowCirculerBar = _isBottom && displayWords != widget.text_read!.length){
-
-    try {
-      // compute(refresh,1000).then((value) => print(value));
-     refresh();
-    } catch (e, s) {
-      print(s);
-    }
-    }else{
-      _isShowCirculerBar = false;
+    if (_isBottom && displayWords < widget.text_read!.length) {
+      context.read<Bloc_chang_display_circuler>().chang_display_circuler({"isShow": true});
+      try {
+        // compute(refresh,1000).then((value) => print(value));
+        BlocProvider.of<Bloc_increment>(context).increment(await compute(refresh,[displayWords,widget.text_read]));
+      } catch (e, s) {
+        // ignore: avoid_print
+        print(s);
+      }
+    } else {
+      context.read<Bloc_chang_display_circuler>().chang_display_circuler({"isShow": false});
     }
   }
+
   bool get _isBottom {
     try {
       if (!_scrollController.hasClients) return false;
       final maxScroll = _scrollController.position.maxScrollExtent;
       final currentScroll = _scrollController.offset;
-      return currentScroll >= (maxScroll + 50.0)? true : false;
-    }catch(e){
+      return currentScroll >= (maxScroll + 50.0) ? true : false;
+    } catch (e) {
+      // ignore: avoid_print
       print(e);
       return false;
     }
+  }
+  @override
+  void dispose() {
+    text_to_speech.stop();
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -75,46 +88,73 @@ class _SingleChildListTextViewState extends State<SingleChildListTextView> {
         dragStartBehavior: DragStartBehavior.down,
         controller: _scrollController,
         physics: const BouncingScrollPhysics(),
-        child: BlocBuilder<Bloc_Controler, dynamic>(
+        child: BlocBuilder<Bloc_increment, int>(
             buildWhen: (previos, next) {
-          if (next is Map<String, int> && next["count"] != 0 && previos != next) {
+          if (next != 0 && previos != next) {
             return true;
           } else {
             return false;
           }
         }, builder: (context, type) {
-          if (type is Map<String, int> && type["count"] != 0) {
-            displayWords = int.parse(type["count"].toString());
+          if (type != 0) {
+            displayWords = type;
           }
-          return buildListText(displayWords);
+          return FutureBuilder(
+              future: compute(buildListText, [displayWords,widget.text_read,widget.change_Language,widget.lan,text_to_speech]),
+              builder: (context, AsyncSnapshot<Widget> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Visibility(
+                      visible: true,
+                      child: Center(
+                          child: SizedBox(
+                        height: 40.0,
+                        width: 40.0,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.0,
+                        ),
+                      )));
+                } else if(snapshot.connectionState == ConnectionState.done) {
+                  if(snapshot.hasError){
+                    return const Center(child: Text("Their is Error"));
+                  }else if(snapshot.hasData) {
+                    return snapshot.data!;
+                  }else{
+                    return const Center(child: Text("Not Found"),);
+                  }
+                }else{
+                  return const Visibility(
+                      visible: true,
+                      child: Center(
+                          child: SizedBox(
+                            height: 40.0,
+                            width: 40.0,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                            ),
+                          )));
+                }
+              });
         }));
   }
-  Widget buildListText(int displayWord) {
+
+  // ignore: non_constant_identifier_names
+  static Widget buildListText(displayWord) {
     return Column(
-        children: [ Wrap(
-        spacing: 10,
-        runSpacing: 10,
-        children: List.generate(
-            displayWord,
-                (index) => text_Word(
-                Map_Word: widget.text_read![index],
-                index: index,
-                change_Language: widget.change_Language,
-                lan: widget.lan))),
-    const SizedBox(
-      height: 5.0,
-    ),
-    Visibility
-      (
-        visible: !_isShowCirculerBar,
-        child: const Center(
-      child:SizedBox(
-        height: 20.0,
-        width: 20.0,
-        child:  CircularProgressIndicator(
-          strokeWidth: 2.0,
-    ),))),
-        const SizedBox(height: 20.0,)
-        ]);
+        children: [
+      Wrap(
+          textDirection: TextDirection.ltr,
+          spacing: 10,
+          runSpacing: 10,
+          children: List.generate(
+              displayWord[0],
+              (index) => text_Word(
+                  Map_Word: displayWord[1][index],
+                  index: index,
+                  change_Language: displayWord[2],
+                  lan: displayWord[3],
+              text_to_speech: displayWord[4],)
+          )
+      ),
+    ]);
   }
 }

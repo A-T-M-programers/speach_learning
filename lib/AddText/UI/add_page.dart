@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:speach_learning/Read/UI/BottomSheet.dart';
@@ -68,12 +69,12 @@ class add_page extends StatelessWidget {
                           color: Colors.white70,
                         ),
                         keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          labelText: "Enter Text ...",
-                          labelStyle: TextStyle(color: Colors.white70),
-                          enabledBorder: OutlineInputBorder(
+                        decoration: InputDecoration(
+                          labelText: 'entertext'.tr(),
+                          labelStyle: const TextStyle(color: Colors.white70),
+                          enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white70)),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white70)),
                         ),
                       ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:speach_learning/Profile/bloc/ChangeThemeBloc.dart';
 
@@ -43,12 +44,12 @@ class _ToggleButtonCustomState extends State<ToggleButtonCustom> {
           // ignore: prefer_const_constructors
           Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6),
-          child:Row(children:[ Text('Dark', style: TextStyle(fontSize: 14)),Icon(Icons.dark_mode_outlined,)]),
+          child:Row(children:[ Text('dark', style: TextStyle(fontSize: 12)).tr(),Icon(Icons.dark_mode_outlined,)]),
         ),
           // ignore: prefer_const_constructors
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
-            child:Row(children: [ Text('Light', style: TextStyle(fontSize: 14,color: Colors.white)),Icon(Icons.light_mode_outlined,color: Colors.white,)]),
+            child:Row(children: [ Text('light', style: TextStyle(fontSize: 12,color: Colors.white)).tr(),Icon(Icons.light_mode_outlined,color: Colors.white,)]),
           ),
         ],
 // to select or deselect when pressed

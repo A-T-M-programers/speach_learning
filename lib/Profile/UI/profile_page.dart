@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:speach_learning/Profile/Widget/SimpleSwitchCostome.dart';
@@ -12,7 +13,11 @@ import 'DisplayPhoto.dart';
 
 // ignore: camel_case_types
 class profile_page extends StatefulWidget {
-  const profile_page({Key? key}) : super(key: key);
+  // ignore: non_constant_identifier_names
+  const profile_page({Key? key,required this.Level}) : super(key: key);
+
+  // ignore: non_constant_identifier_names
+  final int Level;
 
   @override
   State<profile_page> createState() => _profile_pageState();
@@ -50,32 +55,22 @@ class _profile_pageState extends State<profile_page> {
         appBar: AppBar(
           iconTheme: Theme.of(context).appBarTheme.iconTheme,
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          title: Text("Profile",style: TextStyle(color: Theme.of(context).textTheme.headline1!.color),),
+          title: Text("profile",style: TextStyle(color: Theme.of(context).textTheme.headline1!.color),).tr(),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
             child: SizedBox(
+              width: size.width,
           height: size.height,
           child: Stack(
             children: <Widget>[
               Pinned.fromPins(
-                Pin(start: -64.0, end: -11.2),
+                Pin(size: size.width),
                 Pin(size: 310.0, start: 0.0),
                 child: Stack(
                   children: <Widget>[
                     Pinned.fromPins(
-                      Pin(start: 64.0, end: 10.2),
-                      Pin(size: 261.0, start: 0.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0x00ffffff),
-                          border: Border.all(
-                              width: 1.0, color: const Color(0x00ffffff)),
-                        ),
-                      ),
-                    ),
-                    Pinned.fromPins(
-                      Pin(start: 64.0, end: 10.2),
+                      Pin(start: 0.0, end: 0.0),
                       Pin(size: size.height * 0.25, start: 0.0),
                       child: Container(
                         decoration: BoxDecoration(
@@ -87,25 +82,23 @@ class _profile_pageState extends State<profile_page> {
                     ),
                     Container(
                         width: size.width,
-                        margin: EdgeInsets.only(
-                            top: (size.height * 0.25) - 70.0, left: 64.0),
+                        margin: EdgeInsets.only(top: (size.height * 0.25) - 70.0),
                         child: get_svg_top_navbar(size.width,context)),
                   ],
                 ),
               ),
               Pinned.fromPins(
-                Pin(
-                    size: size.height * 0.15,
-                    middle: size.height > size.width ? 0.5017 : 0.0517),
+                Pin(size: size.height * 0.15, middle: size.height > size.width ? 0.5017 : 0.0517),
                 Pin(size: size.height * 0.15, start: size.height * 0.05),
                 child: Stack(
                   children: <Widget>[
-                    Stack(
+                    Center(child: Stack(
                       children: <Widget>[
                         SizedBox(
                           height: 100,
                           width: 100,
-                          child: Stack(children: [
+                          child: Stack(
+                              children: [
                             GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -193,8 +186,9 @@ class _profile_pageState extends State<profile_page> {
                           ]),
                         ),
                       ],
-                    ),
-                    Pinned.fromPins(Pin(size: size.height * 0.04, start: 0.0),
+                    )),
+                    Pinned.fromPins(
+                        Pin(size: size.height * 0.04, start: 0.0),
                         Pin(size: size.height * 0.04, end: 6.5),
                         child: IconButton(
                           onPressed: () async {
@@ -216,11 +210,11 @@ class _profile_pageState extends State<profile_page> {
                     Expanded(
                         flex: 1,
                         child: Pinned.fromPins(
-                          Pin(size: 79.0, start: 0.0),
+                          Pin(size: 100.0, start: 0.0),
                           Pin(start: 0.0, end: 0.0),
                           // ignore: prefer_const_constructors
                           child: Text(
-                            '* Language ',
+                            '*  ' + 'language'.tr(),
                             // ignore: prefer_const_constructors
                             style: TextStyle(
                               fontFamily: 'PMingLiU-ExtB',
@@ -231,13 +225,15 @@ class _profile_pageState extends State<profile_page> {
                           ),
                         )),
                     Expanded(
-                        flex: 1,
-                        child: Pinned.fromPins(Pin(size: 70.0, end: 0.0),
+                        flex: 3,
+                        child: Pinned.fromPins(
+                            context.locale == Locale('en')? Pin(size: 70.0, end: 0.0) :Pin(size: 70.0, start: 0.0),
                             Pin(size: 30.0, end: 2.0),
                             child: GestureDetector(
                               onTap: toggleSwitch,
                               child: SimpleSwitchCustome(toggle: _switched),
-                            ))),
+                            )
+                        )),
                   ],
                 ),
               ),
@@ -254,7 +250,7 @@ class _profile_pageState extends State<profile_page> {
                           Pin(start: 17.0, end: 0.0),
                           // ignore: prefer_const_constructors
                           child: Text(
-                            '* Dark Mode',
+                            '*  '+'darkmode'.tr(),
                             // ignore: prefer_const_constructors
                             style: TextStyle(
                               fontFamily: 'PMingLiU-ExtB',
@@ -267,7 +263,7 @@ class _profile_pageState extends State<profile_page> {
                     Expanded(
                         flex: 3,
                         child: Pinned.fromPins(
-                            Pin(size: 146.0, end: 0.0),
+                            context.locale == Locale('en')? Pin(size: 146.0, end: 0.0):Pin(size: 146.0, start: 0.0),
                             Pin(size: 35.0, middle: 0.9),
                             // ignore: prefer_const_constructors
                             child: ToggleButtonCustom())),
@@ -277,14 +273,34 @@ class _profile_pageState extends State<profile_page> {
               Pinned.fromPins(
                 Pin(start: 20.0, end: 30.0),
                 Pin(size: 20.0, middle: 0.8989),
-                child: Stack(
+                child: Row(
                   children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerRight,
+                    Expanded(
+                        flex: 1,
+                        child: Pinned.fromPins(
+                          Pin(size: 100.0, middle: 0.0),
+                          Pin(size: 30.0, middle: 0.5),
+                          // ignore: prefer_const_constructors
+                          child: Text(
+                            '*  '+'volume'.tr(),
+                            // ignore: prefer_const_constructors
+                            style: TextStyle(
+                              fontFamily: 'PMingLiU-ExtB',
+                              fontSize: 16,
+                              color: Theme.of(context).textTheme.headline2!.color,
+                            ),
+                            softWrap: false,
+                          ),
+                        )),
+                    Expanded(
+                flex:3,
+                child: Align(
+                      alignment:context.locale == Locale('en')? Alignment.centerRight:Alignment.centerLeft,
                       child: SizedBox(
                         width: 234.0,
                         height: 12.0,
                         child: Slider(
+                          activeColor: Colors.lightBlue,
                             min: 0.0,
                             max: 1.0,
                             value: _setVolumeValue,
@@ -294,51 +310,23 @@ class _profile_pageState extends State<profile_page> {
                               setState(() {});
                         }),
                       ),
-                    ),
-                    Pinned.fromPins(
-                      Pin(size: 61.0, start: 9.0),
-                      Pin(start: 0.0, end: 0.0),
-                      // ignore: prefer_const_constructors
-                      child: Text(
-                        'Volume',
-                        // ignore: prefer_const_constructors
-                        style: TextStyle(
-                          fontFamily: 'PMingLiU-ExtB',
-                          fontSize: 16,
-                          color: Theme.of(context).textTheme.headline2!.color,
-                        ),
-                        softWrap: false,
-                      ),
-                    ),
-                    Align(
-                      // ignore: prefer_const_constructors
-                      alignment: Alignment(-1.0, 0.647),
-                      child: Container(
-                        width: 3.0,
-                        height: 3.0,
-                        decoration: BoxDecoration(
-                          color: const Color(0xff707070),
-                          borderRadius: const BorderRadius.all(
-                              Radius.elliptical(9999.0, 9999.0)),
-                          border: Border.all(
-                              width: 1.0, color: const Color(0xff707070)),
-                        ),
-                      ),
-                    ),
+                    )),
                   ],
                 ),
               ),
               Pinned.fromPins(
                 Pin(start: 20.0, end: 48.0),
                 Pin(size: 20.0, middle: 0.7805),
-                child: Stack(
+                child: Row(
                   children: <Widget>[
-                    Pinned.fromPins(
-                      Pin(size: 43.0, start: 9.0),
-                      Pin(start: 0.0, end: 0.0),
+                    Expanded(
+                flex:1,
+                child: Pinned.fromPins(
+                      Pin(size: 100.0, middle: 0.0),
+                      Pin(size: 30.0, end: 0.0),
                       // ignore: prefer_const_constructors
                       child: Text(
-                        'Level',
+                        '*  '+'level'.tr(),
                         // ignore: prefer_const_constructors
                         style: TextStyle(
                           fontFamily: 'PMingLiU-ExtB',
@@ -347,28 +335,15 @@ class _profile_pageState extends State<profile_page> {
                         ),
                         softWrap: false,
                       ),
-                    ),
-                    Align(
-                      // ignore: prefer_const_constructors
-                      alignment: Alignment(-1.0, 0.647),
-                      child: Container(
-                        width: 3.0,
-                        height: 3.0,
-                        decoration: BoxDecoration(
-                          color: const Color(0xff707070),
-                          borderRadius: const BorderRadius.all(
-                              Radius.elliptical(9999.0, 9999.0)),
-                          border: Border.all(
-                              width: 1.0, color: const Color(0xff707070)),
-                        ),
-                      ),
-                    ),
-                    Pinned.fromPins(
-                      Pin(size: 8.0, end: 0.0),
+                    )),
+                    Expanded(
+                      flex: 3,
+                      child: Pinned.fromPins(
+                        context.locale == Locale('en')? Pin(size: size.width * 0.2, end: 0.0):Pin(size: size.width * 0.2, start: 0.0),
                       Pin(size: 16.0, start: 1.0),
                       // ignore: prefer_const_constructors
                       child: Text(
-                        '0',
+                        '${widget.Level}',
                         // ignore: prefer_const_constructors
                         style: TextStyle(
                           fontFamily: 'PMingLiU-ExtB',
@@ -378,7 +353,7 @@ class _profile_pageState extends State<profile_page> {
                         textAlign: TextAlign.center,
                         softWrap: false,
                       ),
-                    ),
+                    )),
                   ],
                 ),
               ),
@@ -388,6 +363,15 @@ class _profile_pageState extends State<profile_page> {
   }
 
   void toggleSwitch() {
+    if(_switched){
+      //In English
+      // ignore: prefer_const_constructors
+      context.setLocale(Locale('en'));
+    }else{
+      //In Arabic
+      // ignore: prefer_const_constructors
+      context.setLocale(Locale('ar'));
+    }
     setState(() {
       _switched = !_switched;
     });

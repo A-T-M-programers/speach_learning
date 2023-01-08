@@ -22,7 +22,7 @@ class Speech_To_Text {
   String _currentLocaleId = '';
   Map<String, String> type = {};
   List<String> wordsProblem = [];
-  final SpeechToText speech = SpeechToText();
+  final SpeechToText speech = new SpeechToText();
 
   int indexword = 0;
 
@@ -59,10 +59,11 @@ class Speech_To_Text {
     // _logEvent('start listening');
     lastWords = '';
     lastError = '';
+    speech.errorListener = errorListener;
     speech.listen(
         onResult: resultListener,
         listenFor: const Duration(seconds: 10),
-        pauseFor: const Duration(seconds: 3),
+        pauseFor: const Duration(seconds: 4),
         partialResults: true,
         localeId: _currentLocaleId,
         onSoundLevelChange: soundLevelListener,
@@ -92,30 +93,23 @@ class Speech_To_Text {
     // _logEvent('Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
     lastWords = '${result.recognizedWords} - ${result.finalResult}';
     List<String> l = result.recognizedWords.split(" ");
-    String checkWord =
-        text_read![indexword]["Name"]!.toLowerCase().split(',')[0];
+    String checkWord = text_read![indexword]["Name"]!.toLowerCase().split(',')[0];
     if (text_read!.isNotEmpty && checkWord == l.last.toLowerCase()) {
       text_read![indexword]["type"] = "1";
-      type = {
-        "Name": text_read![indexword]["Name"]!,
-        "type": text_read![indexword]["type"]!
-      };
+      type = {"Name": text_read![indexword]["Name"]!, "type": text_read![indexword]["type"]!,"Problem":"excellent","Level":'${bc.read<Bloc_CheckLevel>().CheckLevel()}'};
+      bc.read<Bloc_chang_color_Word>().chang_color_Word(type);
       indexword++;
-      text_read![indexword]["type"] = "3";
-      bc.read<Bloc_Controler>().chang_color_Word(type);
+      if(indexword < text_read!.length) {
+        text_read![indexword]["type"] = "3";
+        type = {"Name": text_read![indexword]["Name"]!, "type": text_read![indexword]["type"]!};
+        bc.read<Bloc_chang_color_Word>().chang_color_Word(type);
+      }
       cancelListening();
-    } else if (result.finalResult &&
-        text_read!.isNotEmpty &&
-        checkWord != l.last.toLowerCase()) {
+    } else if (result.finalResult && text_read!.isNotEmpty && checkWord != l.last.toLowerCase()) {
       text_read![indexword]["type"] = "0";
-      type = {
-        "Name": text_read![indexword]["Name"]!,
-        "type": text_read![indexword]["type"]!,
-        "Problem": "Match",
-        "ProblemWord": l.last
+      type = {"Name": text_read![indexword]["Name"]!, "type": text_read![indexword]["type"]!, "Problem": "Match", "ProblemWord": l.last
       };
-      wordsProblem.addAll([checkWord, l.last.toLowerCase(), "Their No Match"]);
-      bc.read<Bloc_Controler>().chang_color_Word(type);
+      bc.read<Bloc_chang_color_Word>().chang_color_Word(type);
     }
   }
 
@@ -148,7 +142,7 @@ class Speech_To_Text {
         break;
     }
     try {
-      bc.read<Bloc_Controler>().chang_color_Word(type);
+      bc.read<Bloc_chang_color_Word>().chang_color_Word(type);
       hasSpeech = false;
     } catch (e, s) {
       // ignore: avoid_print

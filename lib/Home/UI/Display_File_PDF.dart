@@ -43,8 +43,7 @@ class _Display_File_PDFState extends State<Display_File_PDF> {
                   Navigator.push(context, MaterialPageRoute(builder: (route) => read_page(text_read: value)));
                 });
               } on SocketException catch (_) {
-                bottomSheet
-                    .showbottomsheet(context, {"Problem": "err_Network"});
+                bottomSheet.showbottomsheet(context, {"Problem": "err_Network"});
                 // ignore: avoid_print
                 print('not connected');
               }
@@ -92,6 +91,8 @@ List<Map<String, String>> getListWords(String text) {
       wordsList.add({"Name": word, "type": "2"});
     }
   }
+  listWordPDF = [];
+  word = "";
   wordsList[0]["type"] = "3";
   return wordsList;
 }

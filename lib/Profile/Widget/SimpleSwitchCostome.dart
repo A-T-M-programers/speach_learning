@@ -26,8 +26,8 @@ class _SimpleSwitchCustomeState extends State<SimpleSwitchCustome> {
     ..scene(duration: const Duration(seconds: 1))
         .tween(_CustomSwitchParams.color, ColorTween(begin: Colors.red,end: Colors.green))
     ..scene(duration: const Duration(milliseconds: 500))
-        .tween(_CustomSwitchParams.text, ConstantTween('OFF'))
-        .thenTween(_CustomSwitchParams.text, ConstantTween('ON'),
+        .tween(_CustomSwitchParams.text, ConstantTween('EN'))
+        .thenTween(_CustomSwitchParams.text, ConstantTween('AR'),
         duration: const Duration(milliseconds: 500))
     ..scene(duration: const Duration(milliseconds: 500))
         .tween(_CustomSwitchParams.rotation, Tween(begin:(-2 * pi),end:0.0));

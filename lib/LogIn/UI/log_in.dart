@@ -1,4 +1,4 @@
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/blend_mask.dart';
@@ -21,11 +21,12 @@ class log_in extends StatefulWidget {
 
 // ignore: camel_case_types
 class _log_inState extends State<log_in> {
-
   // ignore: prefer_const_constructors
   Size size = Size(0.0, 0.0);
+
   // ignore: non_constant_identifier_names
   String arrow_left = "right";
+
   // ignore: non_constant_identifier_names
   bool is_arrow_left = false;
 
@@ -39,7 +40,6 @@ class _log_inState extends State<log_in> {
     button_draage = Button_Draage(icons: 1);
   }
 
-
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -48,12 +48,12 @@ class _log_inState extends State<log_in> {
       body: Stack(
         children: <Widget>[
           Pinned.fromPins(
-            Pin(start: -64.0, end: -11.2),
+            Pin(start: 0.0, end: 0.0),
             Pin(size: 310.0, start: 0.0),
             child: Stack(
               children: <Widget>[
                 Pinned.fromPins(
-                  Pin(start: 64.0, end: 10.2),
+                  Pin(start: 0.0, end: 0.0),
                   Pin(size: 261.0, start: 0.0),
                   child: Container(
                     decoration: BoxDecoration(
@@ -63,57 +63,59 @@ class _log_inState extends State<log_in> {
                     ),
                   ),
                 ),
-                Stack(
-                    children: [
-                      Pinned.fromPins(
-                        Pin(start: 0.0, end: 0.0),
-                        Pin(start: 0.0, size: size.height * 0.3),
-                        child:Stack(children: [ Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            border: Border.all(
-                                width: 1.0, color: Theme.of(context).cardColor),
-                          ),
-                        )]),
-                      ),
+                Stack(children: [
+                  Pinned.fromPins(
+                    Pin(start: 0.0, end: 0.0),
+                    Pin(start: 0.0, size: size.height * 0.3),
+                    child: Stack(children: [
                       Container(
-                        width: size.width,
-                        margin: EdgeInsets.only(top:(size.height * 0.3)-70.0,left: 64.0),
-                        child: get_svg_top_navbar(size.width,context),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          border: Border.all(
+                              width: 1.0, color: Theme.of(context).cardColor),
+                        ),
                       )
                     ]),
+                  ),
+                  Container(
+                    width: size.width,
+                    margin: EdgeInsets.only(top: (size.height * 0.3) - 70.0),
+                    child: get_svg_top_navbar(size.width, context),
+                  )
+                ]),
               ],
             ),
           ),
           Pinned.fromPins(
-            Pin(size: size.height * 0.3, middle: 0.5),
-            Pin(size: 36.0, middle: 0.1),
-            child: BlendMask(
-              blendMode: BlendMode.difference,
-              child: Text(
-                'speach learning',
-                style: TextStyle(
-                  fontFamily: 'Castellar',
-                  fontSize: size.height * 0.037,
-                  color: Theme.of(context).textTheme.headline4!.color,
-                ),
-                softWrap: false,
-              ),
-            ),
-          ),
-          Pinned.fromPins(
-            Pin(size: 122.0, middle: 0.55),
-            Pin(size: 122.0, middle: 0.02),
-            child: Text(
-              'sl',
-              style: TextStyle(
-                fontFamily: 'Castellar',
-                fontSize: size.height * 0.15,
-                color: Theme.of(context).textTheme.headline3!.color,
-              ),
-              softWrap: false,
-            ),
-          ),
+              Pin(size: size.height * 0.3, middle: 0.5),
+              Pin(size: 122.0, start: 10.0),
+              child: Stack(children: [
+                BlendMask(
+                    blendMode: BlendMode.difference,
+                    child: Center(
+                      heightFactor: 3.5,
+                      child: Text(
+                        'speach learning',
+                        style: TextStyle(
+                          fontFamily: 'Castellar',
+                          fontSize: size.height * 0.037,
+                          color: Theme.of(context).textTheme.headline4!.color,
+                        ),
+                        softWrap: false,
+                      ),
+                    )),
+                Center(
+                  heightFactor: 1,
+                    child: Text(
+                  'SL',
+                  style: TextStyle(
+                    fontFamily: 'Castellar',
+                    fontSize: size.height * 0.14,
+                    color: Theme.of(context).textTheme.headline3!.color,
+                  ),
+                  softWrap: false,
+                ))
+              ])),
           Align(
             // ignore: prefer_const_constructors
             alignment: Alignment(-0.008, 0.285),
@@ -219,16 +221,18 @@ class _log_inState extends State<log_in> {
             ),
           ),
           Pinned.fromPins(
-            Pin(size: (size.width * size.height) * 0.00046, middle: size.height > size.width? 0.5554:0.9754),
+            Pin(
+                size: (size.width * size.height) * 0.00046,
+                middle: size.height > size.width ? 0.5554 : 0.9754),
             Pin(size: (size.width * size.height) * 0.00035, end: 97.0),
             child: Stack(
               children: <Widget>[
                 SizedBox.expand(
                     child: SvgPicture.string(
-                      _svg_xqajra,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    )),
+                  _svg_xqajra,
+                  allowDrawingOutsideViewBox: true,
+                  fit: BoxFit.fill,
+                )),
                 Align(
                   // ignore: prefer_const_constructors
                   alignment: Alignment(-0.262, 0.0),
@@ -305,15 +309,15 @@ class _log_inState extends State<log_in> {
                 this.context.read<blocSplashScreen>().changSize(40.0);
               },
               axis: Axis.horizontal,
-              data:arrow_left,
+              data: arrow_left,
               child: button_draage.build(),
-              feedback:  button_draage.build(),
+              feedback: button_draage.build(),
               childWhenDragging: const SizedBox(),
             ),
-          ),Pinned.fromPins(
-              Pin(size: size.width * 0.4, start: 0.0),
+          ),
+          Pinned.fromPins(Pin(size: size.width * 0.4, start: 0.0),
               Pin(size: 46.0, end: 28.0),
-              child:DragTarget<String>(
+              child: DragTarget<String>(
                 builder: (BuildContext context, List<dynamic> accepted,
                     List<dynamic> rejected) {
                   return Container(
@@ -323,21 +327,24 @@ class _log_inState extends State<log_in> {
                       borderRadius: BorderRadius.all(Radius.circular(50.0)),
                     ),
                   );
-                }, onAccept: (data) {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    // ignore: prefer_const_constructors
-                    MaterialPageRoute(builder: (context) => Splash_Screen()),
-                        (route) => false);
-              },onWillAccept: (data){
-                return data == arrow_left;
-              },)),
+                },
+                onAccept: (data) {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      // ignore: prefer_const_constructors
+                      MaterialPageRoute(builder: (context) => Splash_Screen()),
+                      (route) => false);
+                },
+                onWillAccept: (data) {
+                  return data == arrow_left;
+                },
+              )),
           Align(
             // ignore: prefer_const_constructors
-            alignment: Alignment(0.14, -0.626),
+            alignment: context.locale == Locale('en') ? Alignment(0.14, -0.626) : Alignment(-0.17, -0.656),
             child: SizedBox(
-              width: 161.0,
-              height: 35.0,
+              width: 131.0,
+              height: 45.0,
               child: Text(
                 'welcome',
                 style: TextStyle(
@@ -346,107 +353,55 @@ class _log_inState extends State<log_in> {
                   color: const Color(0xffdcdcdc),
                 ),
                 softWrap: false,
-              ),
+              ).tr(),
             ),
           ),
           Align(
             // ignore: prefer_const_constructors
-            alignment: Alignment(0, -0.510),
+            alignment: context.locale == Locale('en') ? Alignment(0, -0.510) : Alignment(0, -0.490),
             child: SizedBox(
-              width: 138.0,
-              height: 48.0,
+              width: 105.0,
+              height: 68.0,
               child: Text(
-                'please press to\ncreate account\nor sign in',
+                'pleasepress',
                 style: TextStyle(
+                  height: 1.0,
                   fontFamily: 'Castellar',
-                  fontSize: size.height * 0.017,
+                  fontSize: (size.height + size.width) * 0.011,
                   color: const Color(0xffdcdcdc),
                 ),
-                softWrap: false,
+                softWrap: true,
                 textAlign: TextAlign.center,
-              ),
+              ).tr(),
             ),
           ),
           Pinned.fromPins(
-            Pin(size: size.height * 0.4,start: 47.0,),
-            Pin(size: 40.0, middle: size.height > size.width? 0.454:0.574),
+            Pin(
+              size: size.height * 0.4,
+              start: 47.0,
+            ),
+            Pin(size: 40.0, middle: size.height > size.width ? 0.454 : 0.574),
             child: ElevatedButton(
               style: ButtonStyle(
                 // ignore: prefer_const_constructors
-                textStyle: MaterialStateProperty.all(TextStyle(fontWeight: FontWeight.normal)),
+                textStyle: MaterialStateProperty.all(
+                    TextStyle(fontWeight: FontWeight.normal)),
                 backgroundColor: MaterialStateProperty.all(Colors.transparent),
                 // ignore: prefer_const_constructors
                 padding: MaterialStateProperty.all(EdgeInsets.all(0.0)),
                 foregroundColor: MaterialStateProperty.all(Colors.transparent),
                 shadowColor: MaterialStateProperty.all(Colors.transparent),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
-              ),
-                  onPressed: () {
-                    try {
-                      AlertDialogShow.showAlertDialog(context);
-                    // ignore: prefer_const_constructors
-                      Future.delayed(Duration(seconds: 1),() {
-                        Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(builder: (route)=>home_page()));
-                      });
-                    } catch (e, s) {
-                      print(s);
-                    }
-                  },
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                        color: const Color(0xfff6df82),
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(
-                            width: 1.0, color: const Color(0xfff6df82)),
-                        boxShadow: const [BoxShadow(color: Color(0xfff6df82),blurRadius: 10,spreadRadius: 1)]
-                    ),
-                  ),
-                  Align(
-                    // ignore: prefer_const_constructors
-                    alignment: Alignment(0.0, 0.0),
-                    child: SizedBox(
-                      child: Text(
-                        'Email',
-                        style: TextStyle(
-                          fontFamily: 'Cambria Math',
-                          fontSize: size.height * 0.03,
-                          color: const Color(0xff647793),
-                        ),
-                        softWrap: false,
-                      ),
-                    ),
-                  ),
-                  Pinned.fromPins(
-                      Pin(size: 24.0, start: 16.0),
-                      Pin(size: 24.0, middle: 0.5),
-                      child: CustomPaint(painter: GoogleLogoPainter(), size: const Size.square(0.0))
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Pinned.fromPins(
-            Pin(size: size.height*0.4, start: 47.0,),
-            Pin(size: 43.0, start:size.height> size.width? size.height * 0.5:size.height * 0.65),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                textStyle: MaterialStateProperty.all(TextStyle(fontWeight: FontWeight.normal)),
-                backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                padding: MaterialStateProperty.all(EdgeInsets.all(0.0)),
-                foregroundColor: MaterialStateProperty.all(Colors.transparent),
-                shadowColor: MaterialStateProperty.all(Colors.transparent),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0))),
               ),
               onPressed: () {
                 try {
                   AlertDialogShow.showAlertDialog(context);
                   // ignore: prefer_const_constructors
-                  Future.delayed(Duration(seconds: 1),() {
+                  Future.delayed(Duration(seconds: 1), () {
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (route)=>home_page()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (route) => home_page()));
                   });
                 } catch (e, s) {
                   print(s);
@@ -460,27 +415,106 @@ class _log_inState extends State<log_in> {
                         borderRadius: BorderRadius.circular(20.0),
                         border: Border.all(
                             width: 1.0, color: const Color(0xfff6df82)),
-                        boxShadow: const [BoxShadow(color: Color(0xfff6df82),blurRadius: 10,spreadRadius: 1)]
-                    ),
-                  ),
-                  Pinned.fromPins(
-                      Pin(size: 28.9, start: 10.0),
-                      Pin(start: 0.0, end: 0.0),
-                      child: const Icon(Icons.facebook_rounded,size: 35,color: Colors.blue,)
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Color(0xfff6df82),
+                              blurRadius: 10,
+                              spreadRadius: 1)
+                        ]),
                   ),
                   Align(
                     // ignore: prefer_const_constructors
                     alignment: Alignment(0.0, 0.0),
                     child: SizedBox(
                       child: Text(
-                        'Facebook',
+                        'email',
                         style: TextStyle(
                           fontFamily: 'Cambria Math',
                           fontSize: size.height * 0.03,
                           color: const Color(0xff647793),
                         ),
                         softWrap: false,
-                      ),
+                      ).tr(),
+                    ),
+                  ),
+                  Pinned.fromPins(Pin(size: 24.0, start: 16.0),
+                      Pin(size: 24.0, middle: 0.5),
+                      child: CustomPaint(
+                          painter: GoogleLogoPainter(),
+                          size: const Size.square(0.0))),
+                ],
+              ),
+            ),
+          ),
+          Pinned.fromPins(
+            Pin(
+              size: size.height * 0.4,
+              start: 47.0,
+            ),
+            Pin(
+                size: 43.0,
+                start: size.height > size.width
+                    ? size.height * 0.5
+                    : size.height * 0.65),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                textStyle: MaterialStateProperty.all(
+                    TextStyle(fontWeight: FontWeight.normal)),
+                backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                padding: MaterialStateProperty.all(EdgeInsets.all(0.0)),
+                foregroundColor: MaterialStateProperty.all(Colors.transparent),
+                shadowColor: MaterialStateProperty.all(Colors.transparent),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0))),
+              ),
+              onPressed: () {
+                try {
+                  AlertDialogShow.showAlertDialog(context);
+                  // ignore: prefer_const_constructors
+                  Future.delayed(Duration(seconds: 1), () {
+                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (route) => home_page()));
+                  });
+                } catch (e, s) {
+                  print(s);
+                }
+              },
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                        color: const Color(0xfff6df82),
+                        borderRadius: BorderRadius.circular(20.0),
+                        border: Border.all(
+                            width: 1.0, color: const Color(0xfff6df82)),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Color(0xfff6df82),
+                              blurRadius: 10,
+                              spreadRadius: 1)
+                        ]),
+                  ),
+                  Pinned.fromPins(
+                      Pin(size: 28.9, start: 10.0), Pin(start: 0.0, end: 0.0),
+                      child: const Icon(
+                        Icons.facebook_rounded,
+                        size: 35,
+                        color: Colors.blue,
+                      )),
+                  Align(
+                    // ignore: prefer_const_constructors
+                    alignment: Alignment(0.0, 0.0),
+                    child: SizedBox(
+                      child: Text(
+                        'facebook',
+                        style: TextStyle(
+                          fontFamily: 'Cambria Math',
+                          fontSize: size.height * 0.03,
+                          color: const Color(0xff647793),
+                        ),
+                        softWrap: false,
+                      ).tr(),
                     ),
                   ),
                 ],

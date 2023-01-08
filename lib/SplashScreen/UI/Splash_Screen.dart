@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +74,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                 ),
               ),
               Pinned.fromPins(
-                Pin(start: Width > Hieght? Width * 0.1 : Width * 0.17, end: -45.0),
+                context.locale == Locale('en')? Pin(start: Width > Hieght? Width * 0.1 : Width * 0.17, end: -45.0):Pin(start: -45.0, end:Width > Hieght? Width * 0.1 : Width * 0.17),
                 Pin(size: Hieght * 0.5, middle: Hieght >= Width ? 0.23 : 0.9),
                 child: Transform.rotate(
                   angle: 0.3491,
@@ -254,7 +255,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                     },
                   )),
               Pinned.fromPins(
-                Pin(start: Width > Hieght ? Width * 0.36 : Width * 0.2, end: 37.0),
+                context.locale == Locale('en')? Pin(start: Width > Hieght ? Width * 0.36 : Width * 0.2, end: 37.0):Pin(start: 37.0, end: Width > Hieght ? Width * 0.36 : Width * 0.2),
                 Pin(size: 42.0, start: 20.0),
                 child: const Text(
                   'Speech Learning',
