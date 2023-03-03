@@ -42,13 +42,13 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     Width = MediaQuery.of(context).size.width;
     Hieght = MediaQuery.of(context).size.height;
     return Scaffold(
-        backgroundColor: const Color(0xffd4af37),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         body: SafeArea(
           child: Stack(
             children: <Widget>[
               Pinned.fromPins(
                 Pin(start: -1.1, end: 0.0),
-                Pin(size: 261.0, start: 0.0),
+                Pin(size: Hieght, start: 0.0),
                 child: Stack(
                   children: <Widget>[
                     Container(
@@ -59,23 +59,27 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                       ),
                     ),
                     Pinned.fromPins(
-                      Pin(start: 0.0, end: 0.1),
-                      Pin(size: 62.0, start: 0.0),
+                      Pin(start: 0.0, end: 0.0),
+                      Pin(size: Hieght * 0.18, start: 0.0),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xff888579),
+                          color: Theme.of(context).appBarTheme.backgroundColor,
                           border: Border.all(
-                              width: 1.0, color: const Color(0xff888579)),
+                              width: 1.0, color: Theme.of(context).appBarTheme.backgroundColor!),
                         ),
                       ),
                     ),
-                    get_svg_top_navbar(Width,context),
+                    Container(
+                      width: Width,
+                      margin: EdgeInsets.only(top: (Hieght * 0.18) - 70.0),
+                      child: get_svg_top_navbar(Width, context),
+                    )
                   ],
                 ),
               ),
               Pinned.fromPins(
                 context.locale == Locale('en')? Pin(start: Width > Hieght? Width * 0.1 : Width * 0.17, end: -45.0):Pin(start: -45.0, end:Width > Hieght? Width * 0.1 : Width * 0.17),
-                Pin(size: Hieght * 0.5, middle: Hieght >= Width ? 0.23 : 0.9),
+                Pin(size: Hieght * 0.5, middle: Hieght >= Width ? 0.28 : 0.9),
                 child: Transform.rotate(
                   angle: 0.3491,
                   child: Text(
@@ -221,10 +225,10 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                   Pin(size: 50.0, end: 26.0),
                       child: Draggable<String>(
                     onDragStarted: () {
-                      this.context.read<blocSplashScreen>().changSize(54.0);
+                      context.read<blocSplashScreen>().changSize(54.0);
                     },
                     onDragEnd: (val) {
-                      this.context.read<blocSplashScreen>().changSize(40.0);
+                      context.read<blocSplashScreen>().changSize(40.0);
                     },
                     axis: Axis.horizontal,
                     data: arrow_right,
@@ -233,7 +237,8 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                     childWhenDragging: const SizedBox(),
                   )),
               Pinned.fromPins(
-                  Pin(size: Width * 0.4, end: 0.0), Pin(size: 46.0, end: 28.0),
+                  Pin(size: Width * 0.4, end: 0.0),
+                  Pin(size: 46.0, end: 28.0),
                   child: DragTarget<String>(
                     builder: (BuildContext context, List<dynamic> accepted,
                         List<dynamic> rejected) {
@@ -288,7 +293,7 @@ Widget get_svg_top_navbar(double width,BuildContext context) {
           _svg_p8cx,
           allowDrawingOutsideViewBox: true,
           fit: BoxFit.fill,
-          color: Theme.of(context).cardColor,
+          color: Theme.of(context).appBarTheme.backgroundColor,
         ),
       ),
     )));

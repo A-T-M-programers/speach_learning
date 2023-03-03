@@ -4,6 +4,7 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/blend_mask.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/AlertDialog.dart';
+import 'package:speach_learning/Process_Class/User.dart';
 import '../../SplashScreen/UI/ButtonDrage.dart';
 import '../../SplashScreen/UI/Splash_Screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -70,9 +71,9 @@ class _log_inState extends State<log_in> {
                     child: Stack(children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
+                          color: Theme.of(context).appBarTheme.backgroundColor,
                           border: Border.all(
-                              width: 1.0, color: Theme.of(context).cardColor),
+                              width: 1.0, color: Theme.of(context).appBarTheme.backgroundColor!),
                         ),
                       )
                     ]),
@@ -341,7 +342,7 @@ class _log_inState extends State<log_in> {
               )),
           Align(
             // ignore: prefer_const_constructors
-            alignment: context.locale == Locale('en') ? Alignment(0.14, -0.626) : Alignment(-0.17, -0.656),
+            alignment: Alignment(0.0, -0.656),
             child: SizedBox(
               width: 131.0,
               height: 45.0,
@@ -353,6 +354,7 @@ class _log_inState extends State<log_in> {
                   color: const Color(0xffdcdcdc),
                 ),
                 softWrap: false,
+                textAlign: TextAlign.center,
               ).tr(),
             ),
           ),
@@ -385,6 +387,7 @@ class _log_inState extends State<log_in> {
               style: ButtonStyle(
                 // ignore: prefer_const_constructors
                 textStyle: MaterialStateProperty.all(
+                    // ignore: prefer_const_constructors
                     TextStyle(fontWeight: FontWeight.normal)),
                 backgroundColor: MaterialStateProperty.all(Colors.transparent),
                 // ignore: prefer_const_constructors
@@ -399,11 +402,13 @@ class _log_inState extends State<log_in> {
                   AlertDialogShow.showAlertDialog(context);
                   // ignore: prefer_const_constructors
                   Future.delayed(Duration(seconds: 1), () {
+                    User(typeUser: TypeUser.Admin, user: {"id":"0","Name":"Tofiq Daowd","Email":"tofikdaowd@gmail.com","Link-Image":"","Lan-App":"en","Them-App":"1","Volume":"0.5","Study-Lan":"en","Level":"0","Is-Admob":"0"});
                     Navigator.pop(context);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (route) => home_page()));
                   });
                 } catch (e, s) {
+                  // ignore: avoid_print
                   print(s);
                 }
               },
@@ -459,9 +464,10 @@ class _log_inState extends State<log_in> {
             child: ElevatedButton(
               style: ButtonStyle(
                 textStyle: MaterialStateProperty.all(
+                    // ignore: prefer_const_constructors
                     TextStyle(fontWeight: FontWeight.normal)),
                 backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                padding: MaterialStateProperty.all(EdgeInsets.all(0.0)),
+                padding: MaterialStateProperty.all(const EdgeInsets.all(0.0)),
                 foregroundColor: MaterialStateProperty.all(Colors.transparent),
                 shadowColor: MaterialStateProperty.all(Colors.transparent),
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -472,11 +478,13 @@ class _log_inState extends State<log_in> {
                   AlertDialogShow.showAlertDialog(context);
                   // ignore: prefer_const_constructors
                   Future.delayed(Duration(seconds: 1), () {
+                    User(typeUser: TypeUser.User, user: {"id":"0","Name":"Tofiq Daowd","Email":"tofikdaowd@gmail.com","Link-Image":"","Lan-App":"en","Them-App":"1","Volume":"0.5","Study-Lan":"en","Level":"0","Is-Admob":"0"});
                     Navigator.pop(context);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (route) => home_page()));
                   });
                 } catch (e, s) {
+                  // ignore: avoid_print
                   print(s);
                 }
               },

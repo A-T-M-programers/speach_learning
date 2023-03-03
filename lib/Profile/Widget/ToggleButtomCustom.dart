@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:speach_learning/AlertDialog.dart';
+import 'package:speach_learning/Process_Class/User.dart';
 import 'package:speach_learning/Profile/bloc/ChangeThemeBloc.dart';
 
 class ToggleButtonCustom extends StatefulWidget {
@@ -12,7 +14,14 @@ class ToggleButtonCustom extends StatefulWidget {
 
 class _ToggleButtonCustomState extends State<ToggleButtonCustom> {
 
-  final List<bool> _isSelected = [false,true];
+  late List<bool> _isSelected;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _isSelected = [User.themApp,!User.themApp];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +69,14 @@ class _ToggleButtonCustomState extends State<ToggleButtonCustom> {
             // checking for the index value
             if (index == newIndex) {
               // one button is always set to tru-e
-              _isSelected[index] = true;
-              if(index == 0){
-                changeThemeBloc.onDarkThemeChange();
-              }else{
-                changeThemeBloc.onLightThemeChange();
+              if(index == 0 && _isSelected[index] != true){
+                _isSelected[index] = true;
+                User.setThemApp(true);
+                AlertDialogShow.loadFutureFunction(context,changeThemeBloc.onDarkThemeChange,null);
+              }else if(_isSelected[index] != true){
+                _isSelected[index] = true;
+                User.setThemApp(false);
+                AlertDialogShow.loadFutureFunction(context,changeThemeBloc.onLightThemeChange,null);
               }
             } else {
               // other two will be set to false and not selected

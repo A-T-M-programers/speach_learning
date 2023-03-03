@@ -28,8 +28,8 @@ class Text_To_Speech{
   String? language;
   String? engine;
   double volume = 1.0;
-  double pitch = 1.3;
-  double rate = 0.5;
+  double pitch = 1.7;
+  double rate = 0.44100;
   bool isCurrentLanguageInstalled = false;
 
   TtsState ttsState = TtsState.stopped;

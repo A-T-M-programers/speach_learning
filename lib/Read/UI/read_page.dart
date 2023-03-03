@@ -3,23 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/AlertDialog.dart';
-import 'package:speach_learning/Read/UI/BottomSheet.dart';
-import 'package:speach_learning/Read/UI/signal_Ui.dart';
+import 'package:speach_learning/Process_Class/PhraseItem.dart';
+import 'package:speach_learning/Read/Widget/BottomSheet.dart';
+import 'package:speach_learning/Read/Widget/signal_Ui.dart';
 import 'package:speach_learning/Read/Widget/SingleChildListTextView.dart';
 import 'package:speach_learning/Read/controle/Speech_To_Text.dart';
+import 'package:speach_learning/Read/controle/Text_To_Speech.dart';
 
 import '../bloc/Bloc_Controler_Read.dart';
 
 // ignore: camel_case_types, must_be_immutable
 class read_page extends StatefulWidget{
   // ignore: non_constant_identifier_names
-  read_page({Key? key, this.text_read}) : super(key: key);
+  read_page({Key? key,this.listPhrase}) : super(key: key);
 
   @override
   State<read_page> createState() => _read_pageState();
 
   // ignore: non_constant_identifier_names
-  List<Map<String, String>>? text_read;
+  List<PhraseItem>? listPhrase = [];
 }
 
 // ignore: camel_case_types
@@ -28,8 +30,10 @@ class _read_pageState extends State<read_page> with TickerProviderStateMixin{
 
   // ignore: non_constant_identifier_names
   Speech_To_Text? speech_to_text;
+  // ignore: non_constant_identifier_names
+  Text_To_Speech text_to_speech = Text_To_Speech();
   bool _isShowBottomSheet = false;
-  int displayWords = 0;
+  int displayWords = 0,count = 0;
   Size size = const Size(0.0, 0.0);
 
   // ignore: non_constant_identifier_names
@@ -42,17 +46,32 @@ class _read_pageState extends State<read_page> with TickerProviderStateMixin{
   @override
   initState() {
     super.initState();
-    speech_to_text = Speech_To_Text(text_read: widget.text_read, bc: context);
+    speech_to_text = Speech_To_Text(text_read: widget.listPhrase, bc: context);
     speech_to_text!.initSpeechState();
-    displayWords =
-        widget.text_read!.length > 20 ? 20 : widget.text_read!.length;
+    text_to_speech.initTts();
+    for (var element in widget.listPhrase!) {
+      count += element.count;
+      for(var word in element.listWord){
+        if(widget.listPhrase!.indexOf(element) < 1) {
+          if (word.uwrb.type == "3") {
+            break;
+          }else if(word.uwrb.type != "2"){
+            continue;
+          } else {
+            word.uwrb.setType("3");
+            break;
+          }
+        }
+      }
+    }
+    displayWords = count > 20 ? 20 : count;
   }
 
   @override
   void dispose() {
     speech_to_text = null;
     displayWords = 0;
-    widget.text_read = [];
+    widget.listPhrase = [];
     super.dispose();
   }
 
@@ -113,12 +132,9 @@ class _read_pageState extends State<read_page> with TickerProviderStateMixin{
                     ],
                     onChanged: (value) {
                       AlertDialogShow.showAlertDialog(context);
-                      context
-                          .read<Bloc_change_Language>()
-                          .change_Language(value.toString());
                       change_Language = value.toString();
-                      Future.delayed(
-                          Duration(seconds: 1), () => Navigator.pop(context));
+                      context.read<Bloc_change_Language>().change_Language(change_Language);
+                      Future.delayed(const Duration(seconds: 1), () => Navigator.pop(context));
                     },
                   );
                 })),
@@ -146,18 +162,50 @@ class _read_pageState extends State<read_page> with TickerProviderStateMixin{
                 border: Border.all(width: 0.0, color: Colors.white38),
               ),
               child: SingleChildListTextView(
-                  text_read: widget.text_read,
+                  listPhraseItem: widget.listPhrase,
                   lan: lan,
-                  change_Language: change_Language),
+                  change_Language: change_Language,
+              count: count,),
             ),
           ),
           Pinned.fromPins(
-            Pin(size: 14 * (size.width * 0.05), start: size.width * 0.24),
+            Pin(size:45, end:  20.0),
+            Pin(size: 45.0, end: 28.0),
+            child: Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50.0),
+                color: const Color(0xffd4af37)
+              ),
+              child: IconButton(
+                // ignore: prefer_const_constructors
+                icon:Icon(Icons.volume_up_rounded),
+                iconSize: 30.0,
+                color: Colors.white70,
+                onPressed: (){
+                  try {
+                    String text = "";
+                    // ignore: avoid_function_literals_in_foreach_calls
+                    for(var element in widget.listPhrase!){
+                    for (var value in element.listWord) {
+                      text += " " + value.content;
+                    }
+                    }
+                    text_to_speech.speak(text,change_Language == "English(US)" ? lan.first : lan.last );
+                  } catch (e, s) {
+                    print(s);
+                  }
+              },),
+            ),
+          ),
+          Pinned.fromPins(
+            Pin(size: 14 * (size.width * 0.05), middle: 0.6),
             Pin(size: 84.0, end: 12.0),
             child: signal_Ui_controler(speech_to_text: speech_to_text),
           ),
           Pinned.fromPins(
-            Pin(size: 45.0, start: 26.0),
+            Pin(size: 45.0, start: 20.0),
             Pin(size: 45.0, end: 28.0),
             child: Stack(
               children: <Widget>[
@@ -190,32 +238,58 @@ class _read_pageState extends State<read_page> with TickerProviderStateMixin{
                             child: BlocListener<Bloc_chang_color_Word, dynamic>(
                               listenWhen: (previos, next) {
                                 if (next is Map<String, String> &&
-                                    next["Problem"] != null &&
+                                    (next["Problem"] != null || next["id-Word"] != null) &&
                                     previos != next) {
                                   return true;
                                 } else {
                                   return false;
                                 }
                               },
-                              listener: (context, type) {
-                                if (type is Map<String, String> && !_isShowBottomSheet) {
-                                  if (type["Problem"] != null && type["Level"] != null && type["Level"] != "0") {
-                                    AlertDialogShow.showAlertDialogNextLevel(context, type["Level"]!,this);
-                                  }else if(type["Problem"] != null){
-                                    BlocProvider.of<Bloc_changeStateBottomSheet>(context).changeStateBottomSheet(true);
-                                    bottomSheet.showbottomsheet(this.context, type);
+                              listener: (context, state) {
+                                try {
+                                  if (state["id-Word"] != null) {
+                                    for (var elementPhrase in widget.listPhrase!) {
+                                      if (!elementPhrase.containWordById(state["id-Word"])) continue;
+                                      for (var elementWord in elementPhrase.listWord) {
+                                        if (elementWord.id != state["id-Word"]) continue;
+                                        elementWord.uwrb.setType(state["type"]);
+                                        if (state["type"] == "4" && (elementPhrase.listWord.indexOf(elementWord) + 1) < elementPhrase.listWord.length) {
+                                          elementPhrase.listWord[elementPhrase.listWord.indexOf(elementWord) + 1].uwrb.setType("3");
+                                        }
+                                      }
+                                      if (!(elementPhrase.listWord.any((element) => element.uwrb.type == "3") || elementPhrase.listWord.any((element) => element.uwrb.type == "2") || elementPhrase.listWord.any((element) => element.uwrb.type == "0")) && state["type"] == "1") {
+                                        if (elementPhrase.listWord.any((element) => element.uwrb.type == "4")) {
+                                          elementPhrase.uprb.setType("4");
+                                        } else {
+                                          elementPhrase.uprb.setType("2");
+                                        }
+                                        int index = widget.listPhrase!.indexOf(elementPhrase);
+                                        if (widget.listPhrase!.length > index + 1) {
+                                          widget.listPhrase![index + 1].uprb.setType("1");
+                                        }
+                                      }
+                                    }
                                   }
+                                  if (state is Map<String, String> && !_isShowBottomSheet) {
+                                    if (state["Problem"] != null && state["Level"] != null && state["Level"] != "0") {
+                                      AlertDialogShow.showAlertDialogNextLevel(
+                                          context, state["Level"]!, this);
+                                    } else if (state["Problem"] != null) {
+                                      BlocProvider.of<
+                                          Bloc_changeStateBottomSheet>(context).changeStateBottomSheet(true);
+                                      bottomSheet.showbottomsheet(this.context, state);
+                                    }
+                                  }
+                                  speech_to_text!.setTextRead(widget.listPhrase);
+                                }catch(e){
+                                  // ignore: avoid_print
+                                  print("Error in Page read_page ===> $e");
                                 }
                               },
                               child: IconButton(
                                   icon: const Icon(Icons.mic),
                                   onPressed: () {
-                                    if(widget.text_read!.last["type"] != "1") {
-                                      speech_to_text!.startListening();
-                                    }else{
-                                      BlocProvider.of<Bloc_changeStateBottomSheet>(context).changeStateBottomSheet(true);
-                                      bottomSheet.showbottomsheet(this.context, {"Problem":"final"});
-                                    }
+                                    speech_to_text!.startListening();
                                   },
                                   color: Colors.white70,
                                   iconSize: 30,

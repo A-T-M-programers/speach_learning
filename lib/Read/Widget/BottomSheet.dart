@@ -6,7 +6,7 @@ import 'package:speach_learning/Read/bloc/Bloc_Controler_Read.dart';
 
 // ignore: camel_case_types
 class bottomSheet {
-  static void showbottomsheet(context, Map<String, String> level) {
+  static void showbottomsheet(context, Map<String, String> state) {
     Size size = MediaQuery.of(context).size;
     Future.delayed(Duration.zero, () {
       showModalBottomSheet(
@@ -17,8 +17,13 @@ class bottomSheet {
               elevation: 6,
               backgroundColor: const Color(0xffeeece4),
               enableDrag: false,
+              isDismissible: false,
               builder: (bc) {
-                return Container(
+                return WillPopScope(
+                  onWillPop: () async {
+                    return false;
+                  },
+                    child: Container(
                   decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.7),
                       borderRadius: const BorderRadius.only(
@@ -36,14 +41,14 @@ class bottomSheet {
                       ),
                       ListTile(
                         leading: SizedBox(
-                            height: 60.0,
+                            height: 80.0,
                             width: size.width * 0.9,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  level["Name"] != null
-                                      ? level["Name"].toString()
+                                  state["Name"] != null && state["Problem"] != "final"
+                                      ? state["Name"].toString()
                                       : "",
                                   style:
                                       const TextStyle(color: Colors.lightBlue),
@@ -51,22 +56,21 @@ class bottomSheet {
                                 const SizedBox(
                                   width: 10.0,
                                 ),
-                                Expanded(
-                                    flex: 1,
-                                    child:  Text(
-                                  ErrorListen.getError(level["Problem"].toString()),
-                                  style: const TextStyle(
-                                    color: Colors.black54,
-                                  ),
-                                  softWrap: true,
-                                )),
+                                SizedBox(
+                                    width: size.width * 0.5,
+                                    child: Text(
+                                      ErrorListen.getError(state["Problem"].toString()),
+                                      style: const TextStyle(
+                                        color: Colors.black54,
+                                      ),
+                                      softWrap: true,
+                                      textAlign: TextAlign.center,
+                                    )),
                                 const SizedBox(
                                   width: 10.0,
                                 ),
                                 Text(
-                                  level["ProblemWord"] != null
-                                      ? level["ProblemWord"].toString()
-                                      : "",
+                                  state["ProblemWord"] != null ? state["ProblemWord"].toString() : "",
                                   style: const TextStyle(color: Colors.red),
                                 )
                               ],
@@ -75,6 +79,9 @@ class bottomSheet {
                       ListTile(
                         onTap: () {
                           Navigator.pop(bc);
+                          if(state["Problem"].toString() == "final"){
+                            Navigator.pop(context);
+                          }
                         },
                         title: Container(
                             margin: const EdgeInsets.only(bottom: 20.0),
@@ -92,13 +99,12 @@ class bottomSheet {
                       )
                     ],
                   ),
-                );
+                ));
               },
               context: context)
           .whenComplete(() {
         try {
-          BlocProvider.of<Bloc_changeStateBottomSheet>(context)
-              .changeStateBottomSheet(false);
+          BlocProvider.of<Bloc_changeStateBottomSheet>(context).changeStateBottomSheet(false);
         } catch (e, s) {
           // ignore: avoid_print
           print(s);

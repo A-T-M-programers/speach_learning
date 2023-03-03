@@ -1,11 +1,12 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:speach_learning/AlertDialog.dart';
-import 'package:speach_learning/Process_Class/Filter_Text.dart';
-import 'package:speach_learning/Read/UI/BottomSheet.dart';
+import 'package:speach_learning/Process_Class/PhraseItem.dart';
+import 'package:speach_learning/Process_Class/User.dart';
+import 'package:speach_learning/Process_Class/Word.dart';
+import 'package:speach_learning/Read/Widget/BottomSheet.dart';
 import 'package:speach_learning/Read/UI/read_page.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
@@ -38,9 +39,10 @@ class _Display_File_PDFState extends State<Display_File_PDF> {
               try {
                 await AlertDialogShow.showAlertDialog(context);
                 getFile().then((value){
+                  // ignore: avoid_print
                   print("value");
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (route) => read_page(text_read: value)));
+                  Navigator.push(context, MaterialPageRoute(builder: (route) => read_page(listPhrase: value)));
                 });
               } on SocketException catch (_) {
                 bottomSheet.showbottomsheet(context, {"Problem": "err_Network"});
@@ -64,7 +66,7 @@ class _Display_File_PDFState extends State<Display_File_PDF> {
     );
   }
 
-  Future<List<Map<String, String>>> getFile() async {
+  Future<List<PhraseItem>> getFile() async {
     final result = await compute(InternetAddress.lookup,'example.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       // ignore: avoid_print
@@ -75,24 +77,41 @@ class _Display_File_PDFState extends State<Display_File_PDF> {
       //Dispose the document.
       document.dispose();
 
-      return await compute<String,List<Map<String,String>>>( (message) => getListWords(message),text);
+      return await compute<String,List<PhraseItem>>( (message) => getListWords(message),text);
     }
     return [];
   }
 
 }
-List<Map<String, String>> getListWords(String text) {
-  List<String> listWordPDF = text.split(" ");
-  List<Map<String, String>> wordsList = [];
-  String word = "";
-  for (int i = 0; i < listWordPDF.length; i++) {
-    word = Filter_Text.substring(listWordPDF[i].trim());
-    if (word != "") {
-      wordsList.add({"Name": word, "type": "2"});
-    }
-  }
-  listWordPDF = [];
-  word = "";
-  wordsList[0]["type"] = "3";
-  return wordsList;
+List<PhraseItem> getListWords(String text) {
+  List<String> listPhrasePDF = text.replaceAll('.',',').replaceAll('?', ',').split(',');
+  List<PhraseItem> listPhraseItem = List.generate(listPhrasePDF.length,
+          (index) => PhraseItem(data:
+          {
+            "id":"$index",
+            "Type":"Normal",
+            "Index":index,
+            "Word-Count":listPhrasePDF[index].split(RegExp(r'(\w+)')).length,
+            "List-Word":List.generate(listPhrasePDF[index].split(RegExp(r'(\w+)')).length,
+                    (indexword) => Word(data:
+                    {
+                      "id":"$indexword",
+                      "Content":listPhrasePDF[index].split(RegExp(r'(\w+)'))[indexword].trim(),
+                      "Trans":"",
+                      "Index":indexword,
+                      "PhraseNumber":index,
+                      "Type":"Pronoun",
+                      "Word-In-Phrase":"",
+                      "Trans-In-Phrase":"",
+                      "UWRB":UWRB(data: {"id-User":User.id,"Type":"2"})
+                    })),
+            "List-PWRB":List.generate(listPhrasePDF[index].split(RegExp(r'(\w+)')).length,
+                    (indexword) => PWRB(data: {
+                      "id-Phrase":"$index",
+                      "id-Word":"$indexword",
+                      "Index":indexword
+                    })),
+          "UPRB":UPRB(data: {"id-Phrase":"$index","Type":"0"})
+          }));
+  return listPhraseItem;
 }

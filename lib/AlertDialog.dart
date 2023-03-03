@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AlertDialogShow{
   static showAlertDialog(BuildContext context){
@@ -108,9 +109,50 @@ class AlertDialogShow{
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+  static loadFutureFunction(BuildContext context,Function method,List? listArgument){
+
+    // ignore: prefer_const_constructors
+    AlertDialog alert = AlertDialog(
+        backgroundColor: Colors.transparent,
+        elevation: 0.1,
+        actions: [
+          Center(
+            child: FutureBuilder(
+                future: Function.apply(method,listArgument),
+                builder: (cont,AsyncSnapshot snapshot){
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator(color: Colors.white,strokeWidth: 2.0,backgroundColor: Colors.transparent,);
+                  } else if(snapshot.connectionState == ConnectionState.done) {
+                    if(snapshot.hasError){
+                      return Text("theirisproblem",style: TextStyle(color: Theme.of(context).textTheme.headline1!.color,backgroundColor: Colors.transparent),).tr();
+                    }else if(snapshot.hasData) {
+                      Future.delayed(const Duration(milliseconds: 500),(){
+                        Navigator.pop(context);
+                      });
+                      return snapshot.data!;
+                    }else{
+                      Future.delayed(const Duration(milliseconds: 500),(){
+                        Navigator.pop(context);
+                      });
+                      return const CircularProgressIndicator(color: Colors.white,strokeWidth: 2.0,backgroundColor: Colors.transparent,);
+                    }
+                  }else if(snapshot.connectionState == ConnectionState.none){
+                    Future.delayed(const Duration(milliseconds: 500),(){
+                      Navigator.pop(context);
+                    });
+                    return const CircularProgressIndicator(color: Colors.white,strokeWidth: 2.0,backgroundColor: Colors.transparent,);
+                  }else{
+                    return Text("theirisproblem",style: TextStyle(color: Theme.of(context).textTheme.headline1!.color,backgroundColor: Colors.transparent),).tr();
+                  }
+            }),
+          )]);
+    showDialog(
+      barrierColor: Colors.transparent,
+      barrierDismissible: false,
+      context:context,
+      builder:(BuildContext context){
+        return alert;
+      },
+    );
   }
 }

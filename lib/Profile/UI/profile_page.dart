@@ -1,8 +1,13 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:speach_learning/AlertDialog.dart';
+import 'package:speach_learning/Home/Bloc/BlocHome.dart';
+import 'package:speach_learning/Process_Class/User.dart';
 import 'package:speach_learning/Profile/Widget/SimpleSwitchCostome.dart';
 import 'package:speach_learning/Profile/Widget/ToggleButtomCustom.dart';
 import 'package:speach_learning/Profile/model/GetPhoto.dart';
@@ -27,18 +32,19 @@ class profile_page extends StatefulWidget {
 class _profile_pageState extends State<profile_page> {
   // ignore: prefer_const_constructors
   Size size = Size(0.0, 0.0);
-  bool _switched = false;
+  late bool _switched;
   double _setVolumeValue = 0;
+  // ignore: prefer_const_constructors
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    VolumeController().listener((volume) {
-      setState(() => _setVolumeValue = volume);
-    });
+    _setVolumeValue = User.volume;
 
-    VolumeController().getVolume().then((volume) => _setVolumeValue = volume);
+    VolumeController().setVolume(_setVolumeValue);
+
+    _switched = User.lanApp == "en" ? true : false;
   }
   @override
   void dispose() {
@@ -59,10 +65,12 @@ class _profile_pageState extends State<profile_page> {
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-            child: SizedBox(
+            child:  SizedBox(
               width: size.width,
           height: size.height,
-          child: Stack(
+          child: Directionality(
+            textDirection: ui.TextDirection.ltr,
+            child: Stack(
             children: <Widget>[
               Pinned.fromPins(
                 Pin(size: size.width),
@@ -74,9 +82,9 @@ class _profile_pageState extends State<profile_page> {
                       Pin(size: size.height * 0.25, start: 0.0),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
+                          color: Theme.of(context).appBarTheme.backgroundColor,
                           border: Border.all(
-                              width: 1.0, color: const Color(0xff888579)),
+                              width: 1.0, color: Theme.of(context).appBarTheme.backgroundColor!),
                         ),
                       ),
                     ),
@@ -227,7 +235,7 @@ class _profile_pageState extends State<profile_page> {
                     Expanded(
                         flex: 3,
                         child: Pinned.fromPins(
-                            context.locale == Locale('en')? Pin(size: 70.0, end: 0.0) :Pin(size: 70.0, start: 0.0),
+                            Pin(size: 70.0, end: 0.0),
                             Pin(size: 30.0, end: 2.0),
                             child: GestureDetector(
                               onTap: toggleSwitch,
@@ -241,12 +249,12 @@ class _profile_pageState extends State<profile_page> {
                 Pin(start: 20.0, end: 21.0),
                 Pin(size: 40.0, middle: 0.6532),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Expanded(
                         flex: 1,
-                        child: Center(
-                            child: Pinned.fromPins(
-                          Pin(size: 100.0, start: 0.0),
+                        child: Pinned.fromPins(
+                          Pin(size: 120.0, start: 0.0),
                           Pin(start: 17.0, end: 0.0),
                           // ignore: prefer_const_constructors
                           child: Text(
@@ -259,11 +267,11 @@ class _profile_pageState extends State<profile_page> {
                             ),
                             softWrap: false,
                           ),
-                        ))),
+                        )),
                     Expanded(
-                        flex: 3,
+                        flex: 2,
                         child: Pinned.fromPins(
-                            context.locale == Locale('en')? Pin(size: 146.0, end: 0.0):Pin(size: 146.0, start: 0.0),
+                            Pin(size: 146.0, end: 0.0),
                             Pin(size: 35.0, middle: 0.9),
                             // ignore: prefer_const_constructors
                             child: ToggleButtonCustom())),
@@ -295,7 +303,7 @@ class _profile_pageState extends State<profile_page> {
                     Expanded(
                 flex:3,
                 child: Align(
-                      alignment:context.locale == Locale('en')? Alignment.centerRight:Alignment.centerLeft,
+                      alignment:Alignment.centerRight,
                       child: SizedBox(
                         width: 234.0,
                         height: 12.0,
@@ -307,6 +315,7 @@ class _profile_pageState extends State<profile_page> {
                             onChanged: (value){
                               _setVolumeValue = value;
                               VolumeController().setVolume(value);
+                              User.setVolume(_setVolumeValue);
                               setState(() {});
                         }),
                       ),
@@ -339,11 +348,11 @@ class _profile_pageState extends State<profile_page> {
                     Expanded(
                       flex: 3,
                       child: Pinned.fromPins(
-                        context.locale == Locale('en')? Pin(size: size.width * 0.2, end: 0.0):Pin(size: size.width * 0.2, start: 0.0),
+                        Pin(size: size.width * 0.2, end: 0.0),
                       Pin(size: 16.0, start: 1.0),
                       // ignore: prefer_const_constructors
                       child: Text(
-                        '${widget.Level}',
+                        '${User.level}',
                         // ignore: prefer_const_constructors
                         style: TextStyle(
                           fontFamily: 'PMingLiU-ExtB',
@@ -359,18 +368,23 @@ class _profile_pageState extends State<profile_page> {
               ),
             ],
           ),
-        )));
+        ))));
   }
 
   void toggleSwitch() {
-    if(_switched){
+    // ignore: prefer_const_constructors
+    if(!_switched){
       //In English
       // ignore: prefer_const_constructors
-      context.setLocale(Locale('en'));
+      AlertDialogShow.loadFutureFunction(context,context.setLocale,[Locale("en")]);
+      User.setLanApp("en");
+      context.read<Bloc_Change_Lan>().changeLan();
     }else{
       //In Arabic
       // ignore: prefer_const_constructors
-      context.setLocale(Locale('ar'));
+      AlertDialogShow.loadFutureFunction(context,context.setLocale,[Locale("ar")]);
+      User.setLanApp("ar");
+      context.read<Bloc_Change_Lan>().changeLan();
     }
     setState(() {
       _switched = !_switched;

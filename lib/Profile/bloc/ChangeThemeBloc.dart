@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speach_learning/Process_Class/ChangeThemeEvent.dart';
 import 'package:speach_learning/Process_Class/ChangeThemeState.dart';
+import 'package:speach_learning/Process_Class/User.dart';
 
 class ChangeThemeBloc extends Bloc<ChangeThemeEvent, ChangeThemeState> {
   ChangeThemeBloc(ChangeThemeState initialState) : super(initialState);
@@ -68,4 +69,4 @@ class ChangeThemeBloc extends Bloc<ChangeThemeEvent, ChangeThemeState> {
   }
 }
 
-final ChangeThemeBloc changeThemeBloc = ChangeThemeBloc(ChangeThemeState.lightTheme());
+final ChangeThemeBloc changeThemeBloc = ChangeThemeBloc(User.themApp ? ChangeThemeState.darkTheme() : ChangeThemeState.lightTheme());

@@ -301,6 +301,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.2"
+  info_popup:
+    dependency: "direct main"
+    description:
+      name: info_popup
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.6"
   intl:
     dependency: transitive
     description:

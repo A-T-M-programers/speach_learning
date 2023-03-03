@@ -1,18 +1,23 @@
-import 'dart:io';
-
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:speach_learning/AddLevel/BlocLevel/Bloc_Add_Level.dart';
+import 'package:speach_learning/AddLevel/UI/AddLevel.dart';
 import 'package:speach_learning/AlertDialog.dart';
+import 'package:speach_learning/Home/Bloc/BlocHome.dart';
+import 'package:speach_learning/Home/widget/ButtonLevel.dart';
+import 'package:speach_learning/Process_Class/Level.dart';
+import 'package:speach_learning/Process_Class/PhraseItem.dart';
+import 'package:speach_learning/Process_Class/User.dart';
+import 'package:speach_learning/Process_Class/Word.dart';
 import 'package:speach_learning/Profile/UI/profile_page.dart';
+import 'package:speach_learning/Read/UI/read_page.dart';
+import 'package:speach_learning/Read/Widget/SingleChildListTextView.dart';
 import 'package:speach_learning/Read/bloc/Bloc_Controler_Read.dart';
 
-import '../../AddText/UI/add_page.dart';
+import '../../PhraseUI/UI/add_page.dart';
 import '../Controle/Get_File_PDF.dart';
-import 'Display_File_PDF.dart';
 
 // ignore: camel_case_types
 class home_page extends StatefulWidget {
@@ -30,20 +35,332 @@ class _home_pageState extends State<home_page> {
   // ignore: prefer_const_constructors
   Size size = Size(0.0, 0.0);
 
-  TextEditingController search = TextEditingController();
-
   // ignore: non_constant_identifier_names
   Get_File_PDF get_file_pdf = Get_File_PDF();
 
-  List<Map<String, String>> books = [];
-
-  // ignore: non_constant_identifier_names
-  int _Level = 0;
+  List<Level> listLevel = [];
+  List<PhraseItem> listPhraseItem = [];
+  double pressEveluation = 5;
+  Map<Level, bool> isSelect = {};
+  int countSelect = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    listLevel = [
+      Level(data: {
+        "id": "0",
+        "id-Lan": "0",
+        "Content": "Level 1",
+        "Trans-Content": "المستوى 1",
+        "Index": 0,
+        "Type": User.typeUser == TypeUser.Admin ? "start" : "start",
+        "Phrase-Count": 2,
+        "List-Phrase-Item": [
+          PhraseItem(data: {
+            "id": "0",
+            "Type": "Question",
+            "Index": 0,
+            "Word-Count": 3,
+            "id-Level": "0",
+            "Level": 0,
+            "List-Word": [
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "0",
+                "Content": "How",
+                "Trans": "كيف",
+                "Index": 0,
+                "PhraseNumber": 0,
+                "Type": "H-Question",
+                "Word-In-Phrase": "How",
+                "Trans-In-Phrase": "كيف",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "1",
+                "Content": "are",
+                "Trans": "فعل مساعد",
+                "Index": 1,
+                "PhraseNumber": 0,
+                "Type": "Verb-Be",
+                "Word-In-Phrase": "How are",
+                "Trans-In-Phrase": "كيف",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "5",
+                "Content": "you",
+                "Trans": "انت",
+                "Index": 2,
+                "PhraseNumber": 0,
+                "Type": "Pronoun",
+                "Word-In-Phrase": "How are you",
+                "Trans-In-Phrase": "كيف حالك",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              })
+            ],
+            "List-PWRB": [
+              PWRB(data: {"id-Phrase": "0", "id-Word": "0", "Index": 0}),
+              PWRB(data: {"id-Phrase": "0", "id-Word": "1", "Index": 1}),
+              PWRB(data: {"id-Phrase": "0", "id-Word": "5", "Index": 2})
+            ],
+            "UPRB": UPRB(data: {"id-Phrase": "0", "Type":User.typeUser == TypeUser.Admin ? "1" : "1"})
+          }),
+          PhraseItem(data: {
+            "id": "1",
+            "Type": "Normal",
+            "Index": 1,
+            "Word-Count": 2,
+            "id-Level": "0",
+            "Level": 0,
+            "List-Word": [
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "3",
+                "Content": "Hello",
+                "Trans": "مرحبا",
+                "Index": 3,
+                "PhraseNumber": 1,
+                "Type": "Noun",
+                "Word-In-Phrase": "Hello",
+                "Trans-In-Phrase": "مرحبا",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "4",
+                "Content": "world",
+                "Trans": "عالم",
+                "Index": 4,
+                "PhraseNumber": 1,
+                "Type": "Noun",
+                "Word-In-Phrase": "Hello world",
+                "Trans-In-Phrase": "مرحبا بالعالم",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+            ],
+            "List-PWRB": [
+              PWRB(data: {"id-Phrase": "0", "id-Word": "3", "Index": 0}),
+              PWRB(data: {"id-Phrase": "0", "id-Word": "4", "Index": 1}),
+            ],
+            "UPRB": UPRB(data: {"id-Phrase": "0", "Type":User.typeUser == TypeUser.Admin ? "1" : "0"})
+          }),
+        ]
+      }),
+      Level(data: {
+        "id": "1",
+        "id-Lan": "0",
+        "Content": "Level 2",
+        "Trans-Content": "المستوى 2",
+        "Index": 1,
+        "Type": User.typeUser == TypeUser.Admin ? "start" : "",
+        "Phrase-Count": 2,
+        "List-Phrase-Item": [
+          PhraseItem(data: {
+            "id": "2",
+            "Type": "Question",
+            "Index": 0,
+            "Word-Count": 3,
+            "id-Level": "1",
+            "Level": 1,
+            "List-Word": [
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "6",
+                "Content": "How",
+                "Trans": "كيف",
+                "Index": 0,
+                "PhraseNumber": 2,
+                "Type": "H-Question",
+                "Word-In-Phrase": "How",
+                "Trans-In-Phrase": "كيف",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "7",
+                "Content": "are",
+                "Trans": "فعل مساعد",
+                "Index": 1,
+                "PhraseNumber": 2,
+                "Type": "Verb-Be",
+                "Word-In-Phrase": "How are",
+                "Trans-In-Phrase": "كيف",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "8",
+                "Content": "you",
+                "Trans": "انت",
+                "Index": 2,
+                "PhraseNumber": 2,
+                "Type": "Pronoun",
+                "Word-In-Phrase": "How are you",
+                "Trans-In-Phrase": "كيف حالك",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              })
+            ],
+            "List-PWRB": [
+              PWRB(data: {"id-Phrase": "2", "id-Word": "6", "Index": 0}),
+              PWRB(data: {"id-Phrase": "2", "id-Word": "7", "Index": 1}),
+              PWRB(data: {"id-Phrase": "2", "id-Word": "8", "Index": 2})
+            ],
+            "UPRB": UPRB(data: {"id-Phrase": "2", "Type":User.typeUser == TypeUser.Admin ? "1" : "0"})
+          }),
+          PhraseItem(data: {
+            "id": "3",
+            "Type": "Normal",
+            "Index": 1,
+            "Word-Count": 2,
+            "id-Level": "1",
+            "Level": 1,
+            "List-Word": [
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "9",
+                "Content": "Hello",
+                "Trans": "مرحبا",
+                "Index": 3,
+                "PhraseNumber": 3,
+                "Type": "Noun",
+                "Word-In-Phrase": "Hello",
+                "Trans-In-Phrase": "مرحبا",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "10",
+                "Content": "world",
+                "Trans": "عالم",
+                "Index": 4,
+                "PhraseNumber": 3,
+                "Type": "Noun",
+                "Word-In-Phrase": "Hello world",
+                "Trans-In-Phrase": "مرحبا بالعالم",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+            ],
+            "List-PWRB": [
+              PWRB(data: {"id-Phrase": "3", "id-Word": "9", "Index": 0}),
+              PWRB(data: {"id-Phrase": "3", "id-Word": "10", "Index": 1}),
+            ],
+            "UPRB": UPRB(data: {"id-Phrase": "3", "Type":User.typeUser == TypeUser.Admin ? "1" : "0"})
+          }),
+        ]
+      }),
+      Level(data: {
+        "id": "2",
+        "id-Lan": "0",
+        "Content": "Level 3",
+        "Trans-Content": "المستوى 3",
+        "Index": 2,
+        "Type": User.typeUser == TypeUser.Admin ? "start" : "",
+        "Phrase-Count": 2,
+        "List-Phrase-Item": [
+          PhraseItem(data: {
+            "id": "4",
+            "Type": "Question",
+            "Index": 0,
+            "Word-Count": 3,
+            "id-Level": "2",
+            "Level": 2,
+            "List-Word": [
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "11",
+                "Content": "How",
+                "Trans": "كيف",
+                "Index": 0,
+                "PhraseNumber": 4,
+                "Type": "H-Question",
+                "Word-In-Phrase": "How",
+                "Trans-In-Phrase": "كيف",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "12",
+                "Content": "are",
+                "Trans": "فعل مساعد",
+                "Index": 1,
+                "PhraseNumber": 4,
+                "Type": "Verb-Be",
+                "Word-In-Phrase": "How are",
+                "Trans-In-Phrase": "كيف",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "13",
+                "Content": "you",
+                "Trans": "انت",
+                "Index": 2,
+                "PhraseNumber": 4,
+                "Type": "Pronoun",
+                "Word-In-Phrase": "How are you",
+                "Trans-In-Phrase": "كيف حالك",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              })
+            ],
+            "List-PWRB": [
+              PWRB(data: {"id-Phrase": "4", "id-Word": "11", "Index": 0}),
+              PWRB(data: {"id-Phrase": "4", "id-Word": "12", "Index": 1}),
+              PWRB(data: {"id-Phrase": "4", "id-Word": "13", "Index": 2})
+            ],
+            "UPRB": UPRB(data: {"id-Phrase": "4", "Type":User.typeUser == TypeUser.Admin ? "1" : "1"})
+          }),
+          PhraseItem(data: {
+            "id": "5",
+            "Type": "Normal",
+            "Index": 1,
+            "Word-Count": 2,
+            "id-Level": "2",
+            "Level": 2,
+            "List-Word": [
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "14",
+                "Content": "Hello",
+                "Trans": "مرحبا",
+                "Index": 3,
+                "PhraseNumber": 5,
+                "Type": "Noun",
+                "Word-In-Phrase": "Hello",
+                "Trans-In-Phrase": "مرحبا",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+              // ignore: prefer_const_literals_to_create_immutables
+              Word(data: {
+                "id": "15",
+                "Content": "world",
+                "Trans": "عالم",
+                "Index": 4,
+                "PhraseNumber": 5,
+                "Type": "Noun",
+                "Word-In-Phrase": "Hello world",
+                "Trans-In-Phrase": "مرحبا بالعالم",
+                "UWRB": UWRB(data: {"id-User": User.id, "Type": "2"})
+              }),
+            ],
+            "List-PWRB": [
+              PWRB(data: {"id-Phrase": "5", "id-Word": "14", "Index": 0}),
+              PWRB(data: {"id-Phrase": "5", "id-Word": "15", "Index": 1}),
+            ],
+            "UPRB": UPRB(data: {"id-Phrase": "5", "Type":User.typeUser == TypeUser.Admin ? "1" : "0"})
+          }),
+        ]
+      }),
+    ];
+
+    isSelect = Map.fromIterables(
+        List.generate(listLevel.length, (index) => listLevel[index]),
+        List.generate(listLevel.length, (index) => false));
   }
 
   @override
@@ -51,131 +368,181 @@ class _home_pageState extends State<home_page> {
     size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+          leading: const SizedBox(),
+          actions: [
+            BlocListener<BlocSelectLevel, Map<String, dynamic>>(
+                listener: (bc, state) {
+                  if (state["id-Level"] != null && state["is-Select"] != null) {
+                    countSelect = 0;
+                    for (var element in isSelect.keys) {
+                      if (element.id == state["id-Level"]) {
+                        isSelect[element] = state["is-Select"];
+                      }
+                      countSelect =
+                          isSelect[element]! ? countSelect + 1 : countSelect;
+                    }
+                    setState(() {});
+                  }
+                },
+                child: isSelect.containsValue(true)
+                    ? Row(
+                        children: [
+                          Expanded(
+                              flex: 0,
+                              child: IconButton(
+                                onPressed: () {
+                                  try {
+                                    for (var element in isSelect.keys) {
+                                      if (isSelect[element]!) {
+                                        context.read<BlocSelectLevel>().changeUnSelect({"id-Level":element.id,"Un-Select":false});
+                                        listLevel.removeAt(listLevel.indexOf(element));
+                                      }
+                                    }
+                                    isSelect.removeWhere((key, value) => value);
+                                    setState(() {});
+                                  }catch(e){
+                                    // ignore: avoid_print
+                                    print(e);
+                                  }
+                                },
+                                icon: const Icon(Icons.delete_rounded),
+                              )),
+                          20.pw,
+                          countSelect <= 1
+                              ? Expanded(
+                                  flex: 0,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.push(context,MaterialPageRoute(
+                                          builder: (route) =>
+                                              BlocProvider<Bloc_Add_Level>(
+                                                create: (BuildContext bc) =>
+                                                    Bloc_Add_Level(),
+                                                // ignore: prefer_const_constructors
+                                                child: AddLevel(
+                                                  listLevel: listLevel,
+                                                  indexUpdate: listLevel.indexOf(isSelect.keys.firstWhere((element) => isSelect[element]!)),
+                                                ),
+                                              )) );
+                                    },
+                                    icon: const Icon(Icons.note_alt_rounded),
+                                  ))
+                              : const SizedBox(),
+                          20.pw
+                        ],
+                      )
+                    : const SizedBox()),
+          ],
+          centerTitle: true,
+          title: SizedBox(
+              width: 50,
+              height: 50,
+              child: Stack(children: [
+                Pinned.fromPins(
+                  Pin(size: 45.0, start: 0.0),
+                  Pin(size: 40.0, start: 0.0),
+                  child: SvgPicture.string(
+                    _svg_oxph2,
+                    allowDrawingOutsideViewBox: true,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                // appeared level user on top layer
+                //*
+                Pinned.fromPins(
+                  Pin(size: 45.0, middle: 0.2),
+                  Pin(size: 40.0, middle: 1.8),
+                  child: Text.rich(
+                    // ignore: prefer_const_constructors
+                    TextSpan(
+                      text: '${User.level}',
+                      style: const TextStyle(
+                        fontFamily: 'PMingLiU-ExtB',
+                        fontSize: 11,
+                        color: Color(0xff707070),
+                      ),
+                    ),
+                    textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false),
+                    textAlign: TextAlign.center,
+                    softWrap: false,
+                  ),
+                )
+              ]))),
       body: SafeArea(
           child: Stack(
         children: <Widget>[
           Padding(
-            // ignore: prefer_const_constructors
-            padding: EdgeInsets.fromLTRB(26.0, 83.0, 10.0, 0.0),
-            child: SingleChildScrollView(
-              primary: false,
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 20,
-                runSpacing: 20,
-                children: books.map((itemData) {
-                  return SizedBox(
-                    width: 110.0,
-                    height: 160.0,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        // ignore: prefer_const_constructors
-                        textStyle: MaterialStateProperty.all(
-                            TextStyle(fontWeight: FontWeight.normal)),
-                        backgroundColor:
-                        MaterialStateProperty.all(Colors.transparent),
-                        // ignore: prefer_const_constructors
-                        padding: MaterialStateProperty.all(EdgeInsets.all(0.0)),
-                        foregroundColor:
-                        MaterialStateProperty.all(Colors.transparent),
-                        shadowColor:
-                        MaterialStateProperty.all(Colors.transparent),
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0))),
-                      ),
-                      onPressed: () {
-                        try {
-                          AlertDialogShow.showAlertDialog(context);
-                          // ignore: prefer_const_constructors
-                          Future.delayed(Duration(seconds: 1), () {
-                            Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (route) => Display_File_PDF(file: File(itemData["Path"]!))));
-                          });
-                        } catch (e, s) {
-                          print(s);
+              // ignore: prefer_const_constructors
+              padding: EdgeInsets.fromLTRB(26.0, 25.0, 10.0, 0.0),
+              child: SingleChildScrollView(
+                primary: false,
+                child: BlocListener<Bloc_CheckLevel, Map<String, String>>(
+                  listener: (bc, state) {
+                    bool checkSkipped = false;
+                    int nextIndexLevel = 0;
+                    if (state["id-Word"] != null) {
+                      for (var level in listLevel) {
+                        nextIndexLevel++;
+                        checkSkipped = false;
+                        if (level.listPhraseItem
+                            .any((element) => element.uprb.type == "4")) {
+                          checkSkipped = true;
+                        } else {
+                          checkSkipped = false;
                         }
-                      },
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xffe2e0d5)),
-                            ),
-                          ),
-                          Pinned.fromPins(
-                            Pin(start: 6.0, end: 6.7),
-                            Pin(size: 107.0, start: 9.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xffffffff),
-                                border: Border.all(
-                                    width: 1.0, color: const Color(0x00707070)),
-                              ),
-                              child: PDFView(
-                                filePath: itemData["Path"],
-                                enableSwipe: false,
-                                defaultPage: 0,
-                              ),
-                            ),
-                          ),
-                          Pinned.fromPins(
-                            Pin(size: 80.0, middle: 0.5),
-                            Pin(size: 30.0, end: 05.0),
-                            child: Text(
-                              itemData["Name"]!,
-                              style: TextStyle(
-                                fontFamily: 'Sakkal Majalla',
-                                fontSize: 10,
-                                color: Theme.of(context).textTheme.headline2!.color,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              softWrap: true,
-                            ),
-                          ),
-                          Pinned.fromPins(
-                            Pin(start: 5.9, end: 6.9),
-                            Pin(size: 97.0, start: 9.0),
-                            child: Container(
-                              decoration: BoxDecoration(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-          Pinned.fromPins(
-            Pin(start: 0.0, end: 0.0),
-            Pin(size: 53.0, start: 0.0),
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).appBarTheme.backgroundColor,
+                        for (var phrase in level.listPhraseItem) {
+                          for (var word in phrase.listWord) {
+                            if (word.id == state["id-Word"]) {
+                              if (level.listPhraseItem.last == phrase &&
+                                  phrase.listWord.last == word) {
+                                User.setLevel(phrase.level + 1);
+                                if (checkSkipped) {
+                                  level.setType("skip");
+                                } else {
+                                  level.setType("complete");
+                                }
+                                if (nextIndexLevel < listLevel.length) {
+                                  if (listLevel[nextIndexLevel].type == "") {
+                                    listLevel[nextIndexLevel].setType("start");
+                                    listLevel[nextIndexLevel]
+                                        .listPhraseItem
+                                        .first
+                                        .uprb
+                                        .setType("1");
+                                    listLevel[nextIndexLevel]
+                                        .listPhraseItem
+                                        .first
+                                        .listWord
+                                        .first
+                                        .uwrb
+                                        .setType("3");
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    setState(() {});
+                  },
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 20,
+                    runSpacing: 20,
+                    children: listLevel.map((itemData) {
+                      return BlocBuilder<BlocSelectLevel, Map<String, dynamic>>(
+                          builder: (bc, state) {
+                        return ButtonLevel(
+                          level: itemData,
+                        );
+                      });
+                    }).toList(),
                   ),
                 ),
-                Pinned.fromPins(
-                  Pin(size: 124.0, end: 19.5),
-                  Pin(size: 28.5, middle: 0.5306),
-                  child: TextFormField(
-                    style: TextStyle(color: Theme.of(context).textTheme.headline1!.color),
-                    enabled: true,
-                    controller: search,
-                    decoration: InputDecoration(
-                        icon: Icon(Icons.search,color: Theme.of(context).appBarTheme.iconTheme!.color,),
-                        hintText: "search".tr(),
-                        hintStyle: TextStyle(color: Theme.of(context).textTheme.headline1!.color),),
-                    onChanged: (value) {},
-                  ),
-                ),
-              ],
-            ),
-          ),
+              )),
           Pinned.fromPins(
             Pin(start: 0.0, end: 0.0),
             Pin(size: 86.0, end: -1.0),
@@ -190,7 +557,7 @@ class _home_pageState extends State<home_page> {
                       style: ButtonStyle(
                         // ignore: prefer_const_constructors
                         textStyle: MaterialStateProperty.all(
-                            TextStyle(fontWeight: FontWeight.normal)),
+                            const TextStyle(fontWeight: FontWeight.normal)),
                         backgroundColor:
                             MaterialStateProperty.all(Colors.transparent),
                         // ignore: prefer_const_constructors
@@ -211,9 +578,11 @@ class _home_pageState extends State<home_page> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (route) => profile_page(Level: _Level,)));
+                                    builder: (route) =>
+                                        profile_page(Level: User.level)));
                           });
                         } catch (e, s) {
+                          // ignore: avoid_print
                           print(s);
                         }
                       },
@@ -252,6 +621,9 @@ class _home_pageState extends State<home_page> {
                     ),
                   ),
                 ),
+
+                // Add Page Button
+                //*
                 Align(
                   alignment: Alignment.bottomLeft,
                   child: SizedBox(
@@ -282,7 +654,12 @@ class _home_pageState extends State<home_page> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (route) => add_page()));
+                                    builder: (route) => add_page(
+                                          listPhraseItem: listLevel
+                                              .firstWhere((element) =>
+                                                  element.type == "start")
+                                              .listPhraseItem,
+                                        )));
                           });
                         } catch (e, s) {
                           // ignore: avoid_print
@@ -304,20 +681,28 @@ class _home_pageState extends State<home_page> {
                           Align(
                             // ignore: prefer_const_constructors
                             alignment: Alignment(-0.054, -0.029),
-                            child: SizedBox(
-                              width: 26.0,
-                              height: 26.0,
-                              child: SvgPicture.string(
-                                _svg_yb3s61,
-                                allowDrawingOutsideViewBox: true,
-                              ),
-                            ),
+                            child: User.typeUser == TypeUser.Admin
+                                ? const Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 35.0,
+                                  )
+                                : const Icon(
+                                    Icons.library_books,
+                                    color: Colors.white,
+                                    size: 35.0,
+                                  ),
                           ),
                         ],
                       ),
                     ),
                   ),
                 ),
+                //*/
+
+                // if user == admin appeared + to add book
+                // else user == study user transfer to read page
+                //*
                 Align(
                   alignment: Alignment.topCenter,
                   child: SizedBox(
@@ -327,12 +712,14 @@ class _home_pageState extends State<home_page> {
                       children: <Widget>[
                         Container(
                           decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
+                            color:
+                                Theme.of(context).appBarTheme.backgroundColor,
                             borderRadius: const BorderRadius.all(
                                 Radius.elliptical(9999.0, 9999.0)),
                             border: Border.all(
                                 width: 6.0,
-                                color: Theme.of(context).scaffoldBackgroundColor,
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
                                 strokeAlign: StrokeAlign.outside),
                           ),
                         ),
@@ -340,34 +727,77 @@ class _home_pageState extends State<home_page> {
                           child: IconButton(
                             padding: const EdgeInsets.all(0.0),
                             iconSize: 40,
-                            color: Theme.of(context).appBarTheme.iconTheme!.color,
+                            color:
+                                Theme.of(context).appBarTheme.iconTheme!.color,
                             onPressed: () async {
-                              try {
-                                File? file = await get_file_pdf.pickFile();
-                                if (file != null) {
-                                  setState(() {
-                                    books.add({
-                                      "Name": file.path
-                                          .split("/")
-                                          .last
-                                          .replaceFirst(".pdf", ""),
-                                      "Path": file.path
-                                    });
-                                  });
+                              if (User.typeUser == TypeUser.Admin) {
+                                try {
+                                  // File? file = await get_file_pdf.pickFile();
+                                  // if (file != null) {
+                                  //   setState(() {
+                                  //     listLevel.add({
+                                  //       "Name": file.path
+                                  //           .split("/")
+                                  //           .last
+                                  //           .replaceFirst(".pdf", ""),
+                                  //       "Path": file.path
+                                  //     });
+                                  //   });
+                                  //   Navigator.push(context, MaterialPageRoute(builder: (route) => Display_File_PDF(file: file,)));
+                                  // }
+                                  // ignore: prefer_const_constructors
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (route) => Display_File_PDF(
-                                                file: file,
+                                          builder: (route) =>
+                                              BlocProvider<Bloc_Add_Level>(
+                                                create: (BuildContext bc) =>
+                                                    Bloc_Add_Level(),
+                                                // ignore: prefer_const_constructors
+                                                child: AddLevel(
+                                                  listLevel: listLevel,
+                                                ),
                                               )));
+                                } catch (e, s) {
+                                  // ignore: avoid_print
+                                  print(s);
                                 }
-                              } catch (e, s) {
-                                print(s);
+                              } else {
+                                try {
+                                  listPhraseItem = listLevel
+                                      .firstWhere(
+                                          (element) => element.type == "start")
+                                      .listPhraseItem;
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  if (listPhraseItem.isNotEmpty &&
+                                      listPhraseItem.contains(
+                                          listPhraseItem.firstWhere((element) =>
+                                              element.uprb.type == "1"))) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (route) =>
+                                                read_page(listPhrase: [
+                                                  listPhraseItem.firstWhere(
+                                                      (element) =>
+                                                          element.uprb.type ==
+                                                          "1")
+                                                ])));
+                                  }
+                                } catch (e) {
+                                  // ignore: avoid_print
+                                  print(e);
+                                }
                               }
                             },
-                            icon: const Icon(
-                              Icons.add,
-                            ),
+                            icon: User.typeUser == TypeUser.Admin
+                                ? const Icon(
+                                    Icons.add,
+                                  )
+                                : const Icon(
+                                    Icons.electric_bolt_rounded,
+                                    size: 25.0,
+                                  ),
                             tooltip: "Add File",
                           ),
                         ),
@@ -375,53 +805,11 @@ class _home_pageState extends State<home_page> {
                     ),
                   ),
                 ),
+                //*/
               ],
             ),
           ),
-          Pinned.fromPins(
-            Pin(size: 45.0, start: 20.0),
-            Pin(size: 36.0, start: 8.5),
-            child: SvgPicture.string(
-              _svg_oxph2,
-              allowDrawingOutsideViewBox: true,
-              fit: BoxFit.fill,
-            ),
-          ),
-          Pinned.fromPins(
-            Pin(size: 20.0, start: 33.0),
-            Pin(size: 14.0, start: 25.0),
-            child:BlocListener<Bloc_CheckLevel,int>(
-              listener: (context,level){
-              if(level == 20){
-                _Level++;
-              }
-            },
-            // ignore: prefer_const_constructors
-            child: Text.rich(
-              // ignore: prefer_const_constructors
-              TextSpan(
-                style: const TextStyle(
-                  fontFamily: 'PMingLiU-ExtB',
-                  fontSize: 11,
-                  color: Color(0xff707070),
-                ),
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  // ignore: prefer_const_constructors
-                  TextSpan(
-                    text: '$_Level',
-                    style: const TextStyle(
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
-              textHeightBehavior:
-                  const TextHeightBehavior(applyHeightToFirstAscent: false),
-              textAlign: TextAlign.center,
-              softWrap: false,
-            ),
-          )),
+          //*/
         ],
       )),
     );
@@ -431,9 +819,6 @@ class _home_pageState extends State<home_page> {
 // ignore: constant_identifier_names
 const String _svg_hznry0 =
     '<svg viewBox="0.0 0.0 27.0 27.0" ><path transform="translate(-4.5, -4.5)" d="M 29.25 31.5 C 29.25 31.5 31.5 31.5 31.5 29.25 C 31.5 27 29.25 20.25 18 20.25 C 6.75 20.25 4.5 27 4.5 29.25 C 4.5 31.5 6.75 31.5 6.75 31.5 L 29.25 31.5 Z M 6.76099967956543 29.37599945068359 L 6.76099967956543 29.37100028991699 L 6.76099967956543 29.37599945068359 Z M 6.798999786376953 29.25 L 29.19999885559082 29.25 C 29.21070671081543 29.24861335754395 29.22137641906738 29.24694633483887 29.23199844360352 29.24499893188477 L 29.24999809265137 29.2400016784668 C 29.24799728393555 28.68700218200684 28.90399742126465 27.0210018157959 27.37799835205078 25.49600219726562 C 25.9109992980957 24.03000068664551 23.14999961853027 22.5 18 22.5 C 12.84799957275391 22.5 10.0890007019043 24.03000068664551 8.621999740600586 25.49699974060059 C 7.095999717712402 27.02299880981445 6.75499963760376 28.6870002746582 6.75 29.24099922180176 C 6.766301155090332 29.24417114257812 6.782635688781738 29.24717140197754 6.798999786376953 29.25 Z M 29.24099922180176 29.37599945068359 L 29.24099922180176 29.37100028991699 L 29.24099922180176 29.37599945068359 Z M 18 15.75 C 20.48528099060059 15.75 22.5 13.73528099060059 22.5 11.25 C 22.5 8.764719009399414 20.48528099060059 6.75 18 6.75 C 15.51471900939941 6.75 13.5 8.764719009399414 13.5 11.25 C 13.5 13.73528099060059 15.51471900939941 15.75 18 15.75 Z M 24.75 11.25 C 24.75 14.9779224395752 21.7279224395752 18 18 18 C 14.2720775604248 18 11.25 14.9779224395752 11.25 11.25 C 11.25 7.522077560424805 14.2720775604248 4.5 18 4.5 C 21.7279224395752 4.5 24.75 7.522078037261963 24.75 11.25 Z" fill="#fbefef" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-// ignore: constant_identifier_names
-const String _svg_yb3s61 =
-    '<svg viewBox="87.5 902.9 26.0 26.0" ><path transform="translate(82.52, 897.94)" d="M 30 17 L 19 17 L 19 6 C 19 5.447715282440186 18.55228424072266 5 18 5 C 17.44771575927734 5 17 5.447715282440186 17 6 L 17 17 L 6 17 C 5.447715282440186 17 5 17.44771575927734 5 18 C 4.990014553070068 18.2629508972168 5.094343185424805 18.5173511505127 5.286075115203857 18.69757843017578 C 5.477806568145752 18.8778076171875 5.738167762756348 18.96621704101562 5.999999523162842 18.94000244140625 L 17 18.94000053405762 L 17 30 C 17 30.55228424072266 17.44771575927734 31 18 31 C 18.55228424072266 31 19 30.55228424072266 19 30 L 19 19 L 30 19 C 30.55228424072266 19 31 18.55228424072266 31 18 C 31 17.44771575927734 30.55228424072266 17 30 17 Z" fill="#fbf9f9" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
 // ignore: constant_identifier_names
 const String _svg_oxph2 =
     '<svg viewBox="139.3 8.5 45.0 36.0" ><path transform="translate(139.3, 8.5)" d="M 37.125 31.5 L 7.875 31.5 C 7.256249904632568 31.5 6.75 32.00624847412109 6.75 32.625 L 6.75 34.875 C 6.75 35.49375152587891 7.256249904632568 36 7.875 36 L 37.125 36 C 37.74375152587891 36 38.25 35.49375152587891 38.25 34.875 L 38.25 32.625 C 38.25 32.00624847412109 37.74375152587891 31.5 37.125 31.5 Z M 41.625 9 C 39.76171875 9 38.25 10.51171875 38.25 12.375 C 38.25 12.87421894073486 38.36249923706055 13.33828163146973 38.55937576293945 13.76718711853027 L 33.46875 16.81875038146973 C 32.38593673706055 17.46562576293945 30.98671913146973 17.10000038146973 30.36093711853027 16.00312614440918 L 24.63046836853027 5.9765625 C 25.3828125 5.357812404632568 25.875 4.4296875 25.875 3.375 C 25.875 1.51171875 24.36328125 0 22.5 0 C 20.63671875 0 19.125 1.51171875 19.125 3.375 C 19.125 4.4296875 19.6171875 5.357812404632568 20.36953163146973 5.9765625 L 14.63906288146973 16.00312423706055 C 14.01328182220459 17.09999847412109 12.60703182220459 17.46562385559082 11.53125 16.81874847412109 L 6.447656154632568 13.76718616485596 C 6.637499809265137 13.34531116485596 6.757030963897705 12.87421703338623 6.757030963897705 12.37499904632568 C 6.757030963897705 10.51171779632568 5.245312213897705 8.999999046325684 3.382030963897705 8.999999046325684 C 1.518749713897705 8.999999046325684 0 10.51171875 0 12.375 C 0 14.23828125 1.51171875 15.75 3.375 15.75 C 3.557812452316284 15.75 3.740624904632568 15.72187519073486 3.916406154632568 15.69375038146973 L 9 29.25 L 36 29.25 L 41.08359527587891 15.69375038146973 C 41.25937652587891 15.72187519073486 41.44218826293945 15.75 41.625 15.75 C 43.48828125 15.75 45 14.23828125 45 12.375 C 45 10.51171875 43.48828125 9 41.625 9 Z" fill="#d9df30" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';

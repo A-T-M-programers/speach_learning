@@ -38,7 +38,7 @@ class _SimpleSwitchCustomeState extends State<SimpleSwitchCustome> {
 Widget build(BuildContext context) {
   return CustomAnimationBuilder<Movie>(
     // control of the animation
-    control: widget.toggle ? Control.play : Control.playReverse,
+    control: widget.toggle ? Control.playReverse : Control.play,
     // the relative position where animation will start
     startPosition: widget.toggle ? 1.0 : 0.0,
     // define unique key

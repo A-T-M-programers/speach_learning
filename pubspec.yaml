@@ -50,6 +50,7 @@ dependencies:
   volume_controller: ^2.0.6
   shared_preferences: ^2.0.15
   easy_localization: ^3.0.1
+  info_popup: ^2.4.6
 
 dev_dependencies:
   flutter_test:

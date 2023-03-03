@@ -1,5 +1,8 @@
 import 'dart:math';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:speach_learning/Process_Class/PhraseItem.dart';
+import 'package:speach_learning/Process_Class/Word.dart';
 import 'package:speach_learning/Read/bloc/Bloc_Controler_Read.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -20,17 +23,23 @@ class Speech_To_Text {
   String lastError = '';
   String lastStatus = '';
   String _currentLocaleId = '';
-  Map<String, String> type = {};
   List<String> wordsProblem = [];
-  final SpeechToText speech = new SpeechToText();
+  final SpeechToText speech = SpeechToText();
 
   int indexword = 0;
+  int indexPhrase = 0;
 
   // ignore: non_constant_identifier_names
-  List<Map<String, String>>? text_read;
+  List<PhraseItem>? text_read;
+  Word? word;
+  Word? nextWord;
 
   // ignore: non_constant_identifier_names
-  Speech_To_Text({required this.text_read, required this.bc});
+  Speech_To_Text({this.word,this.nextWord,this.text_read, required this.bc});
+
+  void setTextRead(List<PhraseItem>? listPhrase){
+    text_read = listPhrase;
+  }
 
   Future<void> initSpeechState() async {
     // _logEvent('Initialize');
@@ -56,6 +65,26 @@ class Speech_To_Text {
   }
 
   void startListening() {
+    indexPhrase = 0;
+    indexword = 0;
+    if(text_read != null) {
+      for (var phrase in text_read!) {
+        indexword = 0;
+        for (var word in phrase.listWord) {
+          if (word.uwrb.type == "1" || word.uwrb.type == "4") {
+            indexword++;
+          }
+        }
+        if (indexword == phrase.count && indexPhrase < text_read!.length) {
+          indexPhrase++;
+        }
+      }
+      if (indexPhrase == text_read!.length) {
+        if (indexword == text_read!.last.count) {
+          indexPhrase = indexword = 0;
+        }
+      }
+    }
     // _logEvent('start listening');
     lastWords = '';
     lastError = '';
@@ -70,19 +99,19 @@ class Speech_To_Text {
         cancelOnError: true,
         listenMode: ListenMode.search,
         onDevice: _onDevice,
-        sampleRate: 1);
+        sampleRate: 44100);
   }
 
-  void stopListening() {
+  void stopListening() async {
     // _logEvent('stop');
-    speech.stop();
+    await speech.stop();
     level = 0.0;
     hasSpeech = false;
   }
 
-  void cancelListening() {
+  void cancelListening() async {
     // _logEvent('cancel');
-    speech.cancel();
+    await speech.cancel();
     level = 0.0;
     hasSpeech = false;
   }
@@ -91,26 +120,107 @@ class Speech_To_Text {
   /// available after `listen` is called.
   void resultListener(SpeechRecognitionResult result) {
     // _logEvent('Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
-    lastWords = '${result.recognizedWords} - ${result.finalResult}';
-    List<String> l = result.recognizedWords.split(" ");
-    String checkWord = text_read![indexword]["Name"]!.toLowerCase().split(',')[0];
-    if (text_read!.isNotEmpty && checkWord == l.last.toLowerCase()) {
-      text_read![indexword]["type"] = "1";
-      type = {"Name": text_read![indexword]["Name"]!, "type": text_read![indexword]["type"]!,"Problem":"excellent","Level":'${bc.read<Bloc_CheckLevel>().CheckLevel()}'};
-      bc.read<Bloc_chang_color_Word>().chang_color_Word(type);
-      indexword++;
-      if(indexword < text_read!.length) {
-        text_read![indexword]["type"] = "3";
-        type = {"Name": text_read![indexword]["Name"]!, "type": text_read![indexword]["type"]!};
-        bc.read<Bloc_chang_color_Word>().chang_color_Word(type);
+    //check all words in the list text_read
+    if(result.recognizedWords != "") {
+      if (text_read != null && indexPhrase < text_read!.length) {
+        lastWords = '${result.recognizedWords} - ${result.finalResult}';
+        List<String> l = result.recognizedWords.split(" ");
+        Word checkWord = text_read![indexPhrase].listWord[indexword];
+        if (text_read!.isNotEmpty && checkWord.content.toLowerCase() == l.last.toLowerCase()) {
+          if (checkWord.uwrb.type == "1" && result.finalResult) {
+            ScaffoldMessenger.of(bc).showSnackBar(SnackBar(content: const Text("excellent", style: TextStyle(color: Colors.white70),).tr(), backgroundColor: Colors.black87,));
+            return;
+          } else if (checkWord.uwrb.type != "1") {
+            callBlockUpdateState({"id-Word": checkWord.id, "type": "1" /*,"Problem":"excellent"*/});
+            bc.read<Bloc_CheckLevel>().CheckLevel({"id-Word":checkWord.id});
+          }
+          indexword++;
+          if (indexword < text_read![indexPhrase].count) {
+            Word nextWord = text_read![indexPhrase].listWord[indexword];
+            if(nextWord.uwrb.type != "1") {
+              callBlockUpdateState({"id-Word": nextWord.id, "type": "3"});
+            }
+          } else if (indexPhrase < (text_read!.length - 1)) {
+            indexPhrase++;
+            indexword = 0;
+            Word nextWord = text_read![indexPhrase].listWord[indexword];
+            if(nextWord.uwrb.type != "1") {
+              callBlockUpdateState({
+                "id-Word": nextWord.id,
+                "type": "3",
+                "index-Phrase-Plus": '$indexPhrase'
+              });
+            }else{
+              callBlockUpdateState({"index-Phrase-Plus": '$indexPhrase'});
+            }
+          } else {
+            callBlockUpdateState({"Problem": "final"});
+            cancelListening();
+          }
+        } else if (text_read!.isNotEmpty &&
+            checkWord.content.toLowerCase() != l.last.toLowerCase() &&
+            l.last != "") {
+          Word previos = text_read![indexPhrase].listWord.firstWhere((word) =>
+          text_read![indexPhrase].listPWRB
+              .firstWhere((element) => element.index == (indexword - 1))
+              .iDWord == word.id);
+          if (result.finalResult && checkWord.uwrb.type == "3" &&
+              previos.content.toLowerCase() == l.last) {
+            callBlockUpdateState({
+              "Name": previos.content,
+              "id-Word": previos.id,
+              "type": previos.uwrb.type,
+              "Problem": "continue"
+            });
+            return;
+          }
+          callBlockUpdateState({
+            "Name": checkWord.content,
+            "id-Word": checkWord.id,
+            "type": "0",
+            "Problem": "Match",
+            "ProblemWord": l.last
+          });
+          cancelListening();
+        }
       }
-      cancelListening();
-    } else if (result.finalResult && text_read!.isNotEmpty && checkWord != l.last.toLowerCase()) {
-      text_read![indexword]["type"] = "0";
-      type = {"Name": text_read![indexword]["Name"]!, "type": text_read![indexword]["type"]!, "Problem": "Match", "ProblemWord": l.last
-      };
-      bc.read<Bloc_chang_color_Word>().chang_color_Word(type);
+      //check only one word
+      else if (word != null) {
+        lastWords = '${result.recognizedWords} - ${result.finalResult}';
+        List<String> l = result.recognizedWords.split(" ");
+        if (word!.content.toLowerCase() == l.last.toLowerCase()) {
+          if (word!.uwrb.type == "1") {
+            ScaffoldMessenger.of(bc).showSnackBar(SnackBar(content: Text("excellent", style: TextStyle(color: Theme.of(bc).textTheme.headline2!.color),).tr(), backgroundColor: Theme.of(bc).dialogBackgroundColor,));
+            return;
+          }
+          callBlockUpdateState({
+            "id-Word": word!.id,
+            "type": "1" /*,"Problem":"excellent"*/,
+          });
+          bc.read<Bloc_CheckLevel>().CheckLevel({"id-Word":word!.id});
+          if (nextWord != null && nextWord!.uwrb.type != "1") {
+            callBlockUpdateState({"id-Word": nextWord!.id, "type": "3"});
+          } else {
+            callBlockUpdateState({"Problem": "final"});
+            cancelListening();
+          }
+        } else if (word!.content.toLowerCase() != l.last.toLowerCase() &&
+            l.last != "") {
+          callBlockUpdateState({
+            "Name": word!.content,
+            "id-Word": word!.id,
+            "type": "0",
+            "Problem": "Match",
+            "ProblemWord": l.last
+          });
+          cancelListening();
+        }
+      }
     }
+  }
+
+  void callBlockUpdateState(Map<String, String> state) {
+    bc.read<Bloc_chang_color_Word>().chang_color_Word(state);
   }
 
   void soundLevelListener(double level) {
@@ -130,19 +240,18 @@ class Speech_To_Text {
   void showError(String lastError) {
     // ignore: avoid_print
     print(lastError);
-    switch (lastError) {
-      case 'error_network':
-        type = {"Problem": "err_Network"};
-        break;
-      case 'error_speech_timeout':
-        type = {"Problem": "err_speech"};
-        break;
-      case 'error_no_match':
-        type = {"Problem": "err_speech"};
-        break;
-    }
     try {
-      bc.read<Bloc_chang_color_Word>().chang_color_Word(type);
+      switch (lastError) {
+        case 'error_network':
+          callBlockUpdateState({"Problem": "err_Network"});
+          break;
+        case 'error_speech_timeout':
+          callBlockUpdateState({"Problem": "err_speech"});
+          break;
+        case 'error_no_match':
+          callBlockUpdateState({"Problem": "err_speech"});
+          break;
+      }
       hasSpeech = false;
     } catch (e, s) {
       // ignore: avoid_print
@@ -156,11 +265,11 @@ class Speech_To_Text {
     lastStatus = '$status';
   }
 
-  // void _logEvent(String eventDescription) {
-  //   if (_logEvents) {
-  //     var eventTime = DateTime.now().toIso8601String();
-  //     // ignore: avoid_print
-  //     print('$eventTime $eventDescription');
-  //   }
-  // }
+// void _logEvent(String eventDescription) {
+//   if (_logEvents) {
+//     var eventTime = DateTime.now().toIso8601String();
+//     // ignore: avoid_print
+//     print('$eventTime $eventDescription');
+//   }
+// }
 }

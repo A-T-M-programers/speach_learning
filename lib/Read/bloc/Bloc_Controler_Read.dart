@@ -42,19 +42,10 @@ class Bloc_changeStateBottomSheet extends Cubit<bool>{
   void changeStateBottomSheet(bool isShow) => emit(isShow);
 }
 // ignore: camel_case_types
-class Bloc_CheckLevel extends Cubit<int>{
-  // ignore: non_constant_identifier_names
-  int Level = 0;
+class Bloc_CheckLevel extends Cubit<Map<String,String>>{
 
-  Bloc_CheckLevel():super(0);
+  Bloc_CheckLevel():super({});
 
   // ignore: non_constant_identifier_names
-  int CheckLevel() {
-    emit(state <= 20 ? state + 1 : 0);
-    if(state == 20){
-      Level++;
-      return Level;
-    }
-    return 0;
-  }
+  void CheckLevel(Map<String,String> data) => emit(data);
 }
