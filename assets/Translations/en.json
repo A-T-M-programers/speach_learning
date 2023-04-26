@@ -41,5 +41,15 @@
   "update": "Update",
   "updatelevel": "Level Update",
   "addphrase": "Phrase Add",
-  "updatephrase": "Phrase Update"
+  "updatephrase": "Phrase Update",
+  "addwordhere": "Add Word Here ...",
+  "word": "Word",
+  "addtranswordhere": "Add Word Translate Here ...",
+  "transword": "Word Translate",
+  "wordinphrase": "Word inside phrase",
+  "transinphraes": "Full Translate",
+  "addword": "Word add",
+  "cancel": "Cancel",
+  "deleteSure" : "Are you sure \nThis action cannot undo",
+  "next": "Next"
 }

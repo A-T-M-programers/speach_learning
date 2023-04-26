@@ -1,9 +1,14 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 
-// ignore: camel_case_types
-class Bloc_Add_Phrase extends Cubit<Map<String,String>>{
-  Bloc_Add_Phrase():super({});
+class BlocOffsetSlideTransition extends Cubit<Map<int,Offset>>{
+  // ignore: prefer_const_constructors
+  BlocOffsetSlideTransition():super({0:Offset(0.0, 0.0)});
 
-  void addContent(String str) => emit({"content":str});
-  void addTransContent(String str) => emit({"trans":str});
+  void offsetSlideTransition(Map<int,Offset> data) => emit(data);
+}
+class BlocAddPhrase extends Cubit<Map>{
+  BlocAddPhrase():super({});
+
+  void changeState(Map data) => emit(data);
 }

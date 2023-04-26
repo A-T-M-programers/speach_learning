@@ -2,27 +2,35 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/PhraseUI/bloc/BlocShowCheckBox.dart';
-import 'package:speach_learning/Home/Bloc/BlocHome.dart';
-import 'package:speach_learning/Process_Class/User.dart';
-import 'Process_Class/ChangeThemeState.dart';
-import 'Profile/bloc/ChangeThemeBloc.dart';
+import 'package:speach_learning/Presentation/Home/Bloc/BlocHome.dart';
+import 'package:speach_learning/Presentation/Home/UI/home_page.dart';
+import 'package:speach_learning/Presentation/Profile/controler/ProfileBloc.dart';
+import 'package:speach_learning/Presentation/SplashScreen/controler/blocSplashScreen.dart';
+import 'package:speach_learning/core/global/themeApp/ThemeApp.dart';
+import 'package:speach_learning/core/services/services_locator.dart';
+import 'Presentation/Home/controler/home_bloc.dart';
+import 'Presentation/Home/controler/home_event.dart';
+import 'Presentation/LogIn/controler/log_in_bloc.dart';
+import 'Presentation/Profile/controler/ProfileState.dart';
+import 'Presentation/SplashScreen/UI/Splash_Screen.dart';
 import 'Read/bloc/Bloc_Controler_Read.dart';
-import 'SplashScreen/UI/Splash_Screen.dart';
-import 'SplashScreen/bloc/blocSplashScreen.dart';
+import 'core/utils/enums.dart';
 
 void main() async {
+  ServicesLocator().init();
+  ServicesLocator().initParticipants();
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  User(typeUser: TypeUser.User, user: {"id":"0","Name":"Tofiq Daowd","Email":"tofikdaowd@gmail.com","Link-Image":"","Lan-App":"en","Them-App":"1","Volume":"0.5","Study-Lan":"en","Level":"0","Is-Admob":"0"});
-  runApp(EasyLocalization(
-      // ignore: prefer_const_literals_to_create_immutables, prefer_const_constructors
-      supportedLocales: [Locale('en'), Locale('ar')],
-      path: 'assets/translations', // <-- change the path of the translation files
-      // ignore: prefer_const_constructors
-      fallbackLocale: Locale('en'),
-      // ignore: prefer_const_constructors
-      child: MyApp()
-  ),
+  runApp(
+    EasyLocalization(
+        // ignore: prefer_const_literals_to_create_immutables, prefer_const_constructors
+        supportedLocales: [Locale('en'), Locale('ar')],
+        path: 'assets/translations',
+        // <-- change the path of the translation files
+        // ignore: prefer_const_constructors
+        fallbackLocale: Locale('en'),
+        // ignore: prefer_const_constructors
+        child: MyApp()),
   );
 }
 
@@ -70,19 +78,73 @@ class MyApp extends StatelessWidget {
           BlocProvider<BlocSelectLevel>(
             create: (BuildContext context) => BlocSelectLevel(),
           ),
+          BlocProvider<BlocPhraseManage>(
+              create: (BuildContext context) => BlocPhraseManage()),
+          BlocProvider(create: (BuildContext context) {
+            return sl<LogInBloc>()..add(GetParticipantIdEvent());
+          }),
+          BlocProvider(create: (BuildContext context) {
+            return sl<ProfileParticipantBloc>();
+          }),
+          BlocProvider(create: (BuildContext context) {
+            return sl<HomeBloc>()..add(GetAllSectionsEvent());
+          })
         ],
-        child:BlocBuilder(
-        bloc: changeThemeBloc,
-    builder: (BuildContext context, ChangeThemeState state) {
-    return MaterialApp(
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-          debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
-          theme: state.themeData,
-          // ignore: prefer_const_constructors
-          home: Splash_Screen(),
-        );}));
+        child: BlocBuilder<ProfileParticipantBloc, ParticipantState>(
+          builder: (context, state) {
+            return MaterialApp(
+                localizationsDelegates: context.localizationDelegates,
+                supportedLocales: context.supportedLocales,
+                locale: context.locale,
+                debugShowCheckedModeBanner: false,
+                theme: state.themeData ?? kLightTheme,
+                // ignore: prefer_const_constructors
+                home: const CheckAnyPage());
+          },
+        ));
+  }
+}
+
+class CheckAnyPage extends StatelessWidget {
+  const CheckAnyPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LogInBloc, LogInState>(buildWhen: (previos, current) {
+      if (previos != current) {
+        if (previos.requestState == current.requestState) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    }, builder: (context, state) {
+      switch (state.requestState) {
+        case RequestState.loading:
+          return Container(
+              alignment: Alignment.center,
+              height: 50,
+              width: 50,
+              child: const CircularProgressIndicator(
+                color: Colors.white54,
+              ));
+        case RequestState.loaded:
+          if (state.participantsId != 0) {
+            context.read<HomeBloc>().add(GetParticipantDomainEvent(id: state.participantsId));
+            return home_page(idParticipant: state.participantsId,);
+          } else {
+            return Splash_Screen();
+          }
+        case RequestState.error:
+          return Center(
+              child: Text(
+            state.message,
+            style:
+                TextStyle(color: Theme.of(context).textTheme.headline2!.color),
+          ));
+      }
+    });
   }
 }

@@ -5,22 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/PhraseUI/Widget/Add_Page/ListPhraseItem.dart';
-import 'package:speach_learning/PhraseUI/Widget/Add_Page/PhraseManageList.dart';
 import 'package:speach_learning/PhraseUI/Widget/Add_Page/SearchBar.dart';
 import 'package:speach_learning/PhraseUI/bloc/BlocShowCheckBox.dart';
+import 'package:speach_learning/Presentation/SplashScreen/UI/Splash_Screen.dart';
+import 'package:speach_learning/Process_Class/Level.dart';
 import 'package:speach_learning/Process_Class/PhraseItem.dart';
-import 'package:speach_learning/Process_Class/User.dart';
 import 'package:speach_learning/Read/Widget/BottomSheet.dart';
 import 'package:speach_learning/Read/UI/read_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../SplashScreen/UI/Splash_Screen.dart';
 
 // ignore: camel_case_types
 class add_page extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
-  add_page({Key? key,required this.listPhraseItem}) : super(key: key);
+  add_page({Key? key,required this.level}) : super(key: key);
 
-  final List<PhraseItem> listPhraseItem;
+  final Level level;
 
   @override
   State<add_page> createState() => _add_pageState();
@@ -29,7 +28,6 @@ class add_page extends StatefulWidget {
 // ignore: camel_case_types, must_be_immutable
 class _add_pageState extends State<add_page> {
   Size size = const Size(0.0, 0.0);
-  TextEditingController read = TextEditingController();
 
   @override
   void initState() {
@@ -45,9 +43,9 @@ class _add_pageState extends State<add_page> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           actions: [
-            User.typeUser == TypeUser.Admin? PhraseManageList(list: widget.listPhraseItem,) : const SizedBox(),
+            // User.typeUser == TypeUser.Admin? PhraseManageList(level: widget.level,) : const SizedBox(),
             SearchBar(
-              listPhraseItem: widget.listPhraseItem,
+              listPhraseItem: widget.level.listPhraseItem,
             ),
           ],
         ),
@@ -60,8 +58,38 @@ class _add_pageState extends State<add_page> {
                   Pin(start: 0.0, end: 0.0),
                   Pin(start: 0.0, end: 0.0),
                   child: BlocBuilder<BlocUpdateShowListPhrase,List<PhraseItem>?>(
-                      builder: (context,state) => SingleChildScrollView(
-                    child: ListPhraseItem(list: (state!.isNotEmpty && state != widget.listPhraseItem) ? state : widget.listPhraseItem),
+                    buildWhen: (previos,next){
+                      if(previos != next){
+                        if(next != null){
+                          widget.level.setListPhrase(next);
+                          return true;
+                        }
+                        return false;
+                      }else{
+                        return false;
+                      }
+                    },
+                      builder: (context,state) =>
+                        //   BlocBuilder<BlocPhraseManage,Map>(
+                        // buildWhen: (previos,next){
+                        //   try {
+                        //     if (previos != next) {
+                        //       if (next.containsKey("Delete")) {
+                        //         widget.level.listPhraseItem.removeWhere((element) => element.iD == next["Delete"]["id-Phrase"]);
+                        //         return true;
+                        //       }
+                        //       return false;
+                        //     } else {
+                        //       return false;
+                        //     }
+                        //   }catch(e){
+                        //     print("Error in Phrase Manage in add_page Page ===>" + e.toString());
+                        //     return false;
+                        //   }
+                        // },
+                        //   builder: (bc,manage)=>
+                              SingleChildScrollView(
+                    child: ListPhraseItem(list: widget.level.listPhraseItem),
                   ))),
               Stack(
                 children: <Widget>[
@@ -118,12 +146,12 @@ class _add_pageState extends State<add_page> {
                 if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
                   // ignore: avoid_print
                   print('connected');
-                  if (widget.listPhraseItem.isNotEmpty && (widget.listPhraseItem.contains(widget.listPhraseItem.firstWhere((element) => element.uprb.type == "1" || User.typeUser == TypeUser.Admin)))) {
+                  if (widget.level.listPhraseItem.isNotEmpty && (widget.level.listPhraseItem.contains(widget.level.listPhraseItem.firstWhere((element) => element.uprb.type == "1")))) {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (route) => read_page(listPhrase:
-                              widget.listPhraseItem.where((element) => (element.uprb.type == "1" || User.typeUser == TypeUser.Admin)).toList())));
+                              widget.level.listPhraseItem.where((element) => element.uprb.type == "1").toList())));
                   }
                 }
               } on SocketException catch (_) {

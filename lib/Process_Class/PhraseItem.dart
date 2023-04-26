@@ -1,17 +1,25 @@
+import 'package:speach_learning/Process_Class/WordOrPhraseType.dart';
+
 import 'Word.dart';
 
 class PhraseItem{
   late String _iD;
   String get iD => _iD;
 
-  late String _type;
-  String get type => _type;
+  late WordOrPhraseType _type;
+  WordOrPhraseType get type => _type;
+  void setType(WordOrPhraseType wordOrPhraseType){
+    _type = wordOrPhraseType;
+  }
 
   late int _index;
   int get index => _index;
 
   late int _count;
   int get count => _count;
+  void setCount(int count){
+    _count = count;
+  }
 
   late String _idLevel;
   String get idLevel => _idLevel;
@@ -74,8 +82,6 @@ class PWRB{
   }
 }
 class UPRB{
-  late String _idPhrase;
-  String get idPhrase => _idPhrase;
 
   late String _type;
   String get type => _type;
@@ -84,7 +90,6 @@ class UPRB{
   }
 
   UPRB({required Map data}){
-    _idPhrase = data["id-Phrase"];
     _type = data["Type"];
   }
 }

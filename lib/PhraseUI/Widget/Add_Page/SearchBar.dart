@@ -71,7 +71,7 @@ class _SearchBarState extends State<SearchBar> {
   void searchAI(String value){
     List<PhraseItem> list = [];
     for(var phraseItem in widget.listPhraseItem){
-      if(phraseItem.type.toLowerCase().contains(value.toLowerCase())){
+      if(phraseItem.type.content.toLowerCase().contains(value.toLowerCase())){
         list.add(phraseItem);
       }else{
         if(phraseItem.listWord.last.wordInPhrase.toLowerCase().contains(value.toLowerCase())){

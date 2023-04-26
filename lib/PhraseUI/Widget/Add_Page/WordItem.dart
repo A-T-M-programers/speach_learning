@@ -22,7 +22,7 @@ class _WordItemState extends State<WordItem> {
     showDuration: const Duration(seconds: 5),
     triggerMode: TooltipTriggerMode.tap,
     richMessage: TextSpan(
-      text: widget.word.content + "  =  " + widget.word.trans,
+      text: widget.word.content + "  =  " + (widget.word.trans.isNotEmpty ? widget.word.trans : widget.word.type.trans),
       children: [
         TextSpan(
           text: widget.word.content != widget.word.wordInPhrase ? "\n" + widget.word.wordInPhrase + "  =  " + widget.word.transInPhrase : "" ,

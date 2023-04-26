@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:speach_learning/ThemeApp.dart';
+import 'package:speach_learning/core/global/themeApp/ThemeApp.dart';
 
 class ChangeThemeState {
   final ThemeData themeData;

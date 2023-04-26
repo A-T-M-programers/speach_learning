@@ -104,7 +104,7 @@ class _SingleChildListTextViewState extends State<SingleChildListTextView> {
             displayWords = type;
           }
           return FutureBuilder(
-              future: compute(buildListPhrase, [displayWords,widget.listPhraseItem,widget.change_Language,widget.lan,text_to_speech]),
+              future:buildListPhrase([displayWords,widget.listPhraseItem,widget.change_Language,widget.lan,text_to_speech,context]),
               builder: (context, AsyncSnapshot<Widget> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Visibility(
@@ -143,18 +143,18 @@ class _SingleChildListTextViewState extends State<SingleChildListTextView> {
         }));
   }
 
-  static Widget buildListPhrase(data) {
+  Future<Widget> buildListPhrase(data) async {
     return Center(child: Directionality(
         textDirection: TextDirection.ltr,
         child:  Wrap(
       spacing: 5,
       runSpacing: 5,
-      children: List.generate(data[1].length, (index) => buildListText([data[1][index].listWord.length,data[1][index].listWord,data[2],data[3],data[4],data[1][index].type])),
+      children: List.generate(data[1].length, (index) => buildListText([data[1][index].listWord.length,data[1][index].listWord,data[2],data[3],data[4],data[1][index].type,data[5]])),
     )));
   }
 
   // ignore: non_constant_identifier_names
-  static Widget buildListText(data) {
+  Widget buildListText(data) {
     return Row(
       mainAxisSize: MainAxisSize.min,
         children: [
@@ -174,13 +174,13 @@ class _SingleChildListTextViewState extends State<SingleChildListTextView> {
       ),
     3.pw,
       Text(
-        Filter_Text.addMark(data[5]),
-        style: const TextStyle(
+        Filter_Text.addMark(data[5].content),
+        style:TextStyle(
           color: Colors.transparent,
           fontWeight: FontWeight.bold,
           shadows: [
             BoxShadow(
-                color: Colors.black54,
+                color: Theme.of(data[6]).textTheme.headline2!.color!,
                 offset: Offset(0, 3))
           ],
         ),

@@ -79,9 +79,9 @@ class bottomSheet {
                       ListTile(
                         onTap: () {
                           Navigator.pop(bc);
-                          if(state["Problem"].toString() == "final"){
-                            Navigator.pop(context);
-                          }
+                          // if(state["Problem"].toString() == "final"){
+                          //   Navigator.pop(context);
+                          // }
                         },
                         title: Container(
                             margin: const EdgeInsets.only(bottom: 20.0),

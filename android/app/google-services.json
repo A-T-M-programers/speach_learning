@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "768692554041",
+    "project_id": "speech-learning-60a30",
+    "storage_bucket": "speech-learning-60a30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768692554041:android:bbc7517ff1e7039e9900e8",
+        "android_client_info": {
+          "package_name": "com.example.speach_learning"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768692554041-rvkk8suev1f3mttmfumelj2nn86urch3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.speach_learning",
+            "certificate_hash": "db44ae29793e3929091e17f5ef5eeb84ef62b7fb"
+          }
+        },
+        {
+          "client_id": "768692554041-69if3he4s4gqvc50v7i5dki6oafi1f82.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUjWJM0wjxf_Al0b-oVedSDayPlBg0KTU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768692554041-69if3he4s4gqvc50v7i5dki6oafi1f82.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

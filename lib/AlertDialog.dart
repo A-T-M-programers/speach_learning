@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class AlertDialogShow{
   static showAlertDialog(BuildContext context){
@@ -155,4 +154,57 @@ class AlertDialogShow{
       },
     );
   }
+  static yesOrNoDialog(context,String title,String content) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 10.0,
+            shape: OutlineInputBorder(borderSide: BorderSide(strokeAlign: StrokeAlign.outside,width: 1.5,color: Theme.of(context).textTheme.headline2!.color!),borderRadius: BorderRadius.circular(20.0)),
+            backgroundColor: Theme.of(context).textTheme.headline6!.color,
+            actionsAlignment: MainAxisAlignment.center,
+            title: Text(title,style: TextStyle(color: Theme.of(context).textTheme.headline4!.color),).tr(),
+            content: Text(content,
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.headline2!.color,
+                  fontSize: 14
+              ),
+            ).tr(),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text(
+                  'cancel',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16
+                  ),
+                ).tr(),
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.red)
+                ),
+              ),
+              const SizedBox(
+                width: 50,
+              ),
+              ElevatedButton(
+                child: const Text(
+                  'alright',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16
+                  ),
+                ).tr(),
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+              )
+            ],
+          );
+        }
+    );
+  }
+
 }

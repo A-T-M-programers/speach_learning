@@ -35,6 +35,7 @@ class _read_pageState extends State<read_page> with TickerProviderStateMixin{
   bool _isShowBottomSheet = false;
   int displayWords = 0,count = 0;
   Size size = const Size(0.0, 0.0);
+  IconData iconMic = Icons.mic;
 
   // ignore: non_constant_identifier_names
   String change_Language = "English(US)";
@@ -168,7 +169,7 @@ class _read_pageState extends State<read_page> with TickerProviderStateMixin{
               count: count,),
             ),
           ),
-          Pinned.fromPins(
+      BlocBuilder<Bloc_chang_color_Word, dynamic>(builder:(bs,state) => iconMic == Icons.mic ? Pinned.fromPins(
             Pin(size:45, end:  20.0),
             Pin(size: 45.0, end: 28.0),
             child: Container(
@@ -198,31 +199,29 @@ class _read_pageState extends State<read_page> with TickerProviderStateMixin{
                   }
               },),
             ),
-          ),
-          Pinned.fromPins(
+          ) : const SizedBox()),
+      BlocBuilder<Bloc_chang_color_Word, dynamic>(builder:(bc,state) => iconMic == Icons.mic ? Pinned.fromPins(
             Pin(size: 14 * (size.width * 0.05), middle: 0.6),
             Pin(size: 84.0, end: 12.0),
             child: signal_Ui_controler(speech_to_text: speech_to_text),
-          ),
-          Pinned.fromPins(
-            Pin(size: 45.0, start: 20.0),
+          ) : const SizedBox()),
+      BlocBuilder<Bloc_chang_color_Word, dynamic>(builder:(bc,state) => Pinned.fromPins(
+            Pin(size: iconMic == Icons.mic ? 48.0 : 90.0, start: 20.0),
             Pin(size: 45.0, end: 28.0),
             child: Stack(
               children: <Widget>[
-                Container(
+                BlocBuilder<Bloc_changeStateBottomSheet, bool>(builder:(bc,state) =>  Container(
                   decoration: BoxDecoration(
                       color: const Color(0xffd4af37),
-                      borderRadius: const BorderRadius.all(
-                          Radius.elliptical(9999.0, 9999.0)),
+                      borderRadius: iconMic == Icons.mic ? BorderRadius.all(Radius.elliptical(9999.0, 9999.0)) : BorderRadius.circular(10.0),
                       border: Border.all(
                           width: 1.0, color: const Color(0xffd4af37)),
                       boxShadow: const [
                         BoxShadow(color: Colors.white70, blurRadius: 10)
                       ]),
-                ),
-                Center(
-                    child: SizedBox(
-                        width: 32.0,
+                )),
+    SizedBox(
+                        width: iconMic == Icons.mic ? 48 : 90.0,
                         height: 32.0,
                         child: BlocListener<Bloc_changeStateBottomSheet, bool>(
                             listenWhen: (previos, next) {
@@ -235,72 +234,82 @@ class _read_pageState extends State<read_page> with TickerProviderStateMixin{
                             listener: (context, type) {
                               _isShowBottomSheet = type;
                             },
-                            child: BlocListener<Bloc_chang_color_Word, dynamic>(
-                              listenWhen: (previos, next) {
-                                if (next is Map<String, String> &&
-                                    (next["Problem"] != null || next["id-Word"] != null) &&
-                                    previos != next) {
+                            child: BlocBuilder<Bloc_chang_color_Word, dynamic>(
+                              buildWhen: (previos, next) {
+                                if (next is Map<String, String> && (next["Problem"] != null || next["id-Word"] != null) && previos != next) {
+                                  try {
+                                    if (next["id-Word"] != null) {
+                                      for (var elementPhrase in widget.listPhrase!) {
+                                        if (!elementPhrase.containWordById(next["id-Word"]!)) continue;
+                                        for (var elementWord in elementPhrase.listWord) {
+                                          if (elementWord.id != next["id-Word"]) continue;
+                                          elementWord.uwrb.setType(next["type"]!);
+                                          if (next["type"]! == "4" && (elementPhrase.listWord.indexOf(elementWord) + 1) < elementPhrase.listWord.length) {
+                                            elementPhrase.listWord[elementPhrase.listWord.indexOf(elementWord) + 1].uwrb.setType("3");
+                                          }
+                                        }
+                                        if (!(elementPhrase.listWord.any((element) => element.uwrb.type == "3") || elementPhrase.listWord.any((element) => element.uwrb.type == "2") || elementPhrase.listWord.any((element) => element.uwrb.type == "0")) && next["type"] == "1") {
+                                          if (elementPhrase.listWord.any((element) => element.uwrb.type == "4")) {
+                                            elementPhrase.uprb.setType("4");
+                                          } else {
+                                            elementPhrase.uprb.setType("2");
+                                          }
+                                          int index = widget.listPhrase!.indexOf(elementPhrase);
+                                          if (widget.listPhrase!.length > index + 1) {
+                                            widget.listPhrase![index + 1].uprb.setType("1");
+                                          }
+                                        }
+                                      }
+                                    }
+                                    if (!_isShowBottomSheet) {
+                                      if (next["Problem"] != null && next["Level"] != null && next["Level"] != "0") {
+                                        AlertDialogShow.showAlertDialogNextLevel(context, next["Level"]!, this);
+                                        if(next["Problem"] == "final"){
+                                          iconMic = Icons.arrow_forward_rounded;
+                                        }
+                                      } else if (next["Problem"] != null) {
+                                        BlocProvider.of<Bloc_changeStateBottomSheet>(context).changeStateBottomSheet(true);
+                                        bottomSheet.showbottomsheet(this.context, next);
+                                        if(next["Problem"] == "final"){
+                                          iconMic = Icons.arrow_forward_rounded;
+                                        }
+                                      }
+                                    }
+                                    speech_to_text!.setTextRead(widget.listPhrase);
+                                  }catch(e){
+                                    // ignore: avoid_print
+                                    print("Error in Page read_page ===> $e");
+                                  }
                                   return true;
                                 } else {
                                   return false;
                                 }
                               },
-                              listener: (context, state) {
-                                try {
-                                  if (state["id-Word"] != null) {
-                                    for (var elementPhrase in widget.listPhrase!) {
-                                      if (!elementPhrase.containWordById(state["id-Word"])) continue;
-                                      for (var elementWord in elementPhrase.listWord) {
-                                        if (elementWord.id != state["id-Word"]) continue;
-                                        elementWord.uwrb.setType(state["type"]);
-                                        if (state["type"] == "4" && (elementPhrase.listWord.indexOf(elementWord) + 1) < elementPhrase.listWord.length) {
-                                          elementPhrase.listWord[elementPhrase.listWord.indexOf(elementWord) + 1].uwrb.setType("3");
-                                        }
-                                      }
-                                      if (!(elementPhrase.listWord.any((element) => element.uwrb.type == "3") || elementPhrase.listWord.any((element) => element.uwrb.type == "2") || elementPhrase.listWord.any((element) => element.uwrb.type == "0")) && state["type"] == "1") {
-                                        if (elementPhrase.listWord.any((element) => element.uwrb.type == "4")) {
-                                          elementPhrase.uprb.setType("4");
-                                        } else {
-                                          elementPhrase.uprb.setType("2");
-                                        }
-                                        int index = widget.listPhrase!.indexOf(elementPhrase);
-                                        if (widget.listPhrase!.length > index + 1) {
-                                          widget.listPhrase![index + 1].uprb.setType("1");
-                                        }
-                                      }
-                                    }
-                                  }
-                                  if (state is Map<String, String> && !_isShowBottomSheet) {
-                                    if (state["Problem"] != null && state["Level"] != null && state["Level"] != "0") {
-                                      AlertDialogShow.showAlertDialogNextLevel(
-                                          context, state["Level"]!, this);
-                                    } else if (state["Problem"] != null) {
-                                      BlocProvider.of<
-                                          Bloc_changeStateBottomSheet>(context).changeStateBottomSheet(true);
-                                      bottomSheet.showbottomsheet(this.context, state);
-                                    }
-                                  }
-                                  speech_to_text!.setTextRead(widget.listPhrase);
-                                }catch(e){
-                                  // ignore: avoid_print
-                                  print("Error in Page read_page ===> $e");
-                                }
-                              },
-                              child: IconButton(
-                                  icon: const Icon(Icons.mic),
+                              builder: (context, state) {
+                              return Row(
+                                  children: [
+                              iconMic != Icons.mic ? Container(padding: const EdgeInsets.only(left: 5.0,right: 5.0) ,alignment: Alignment.bottomCenter , child: const Text("next",style: TextStyle(color: Colors.white70,),).tr()) : const SizedBox(),
+                                    IconButton(
+                                  icon: Icon(iconMic,color: Colors.white70,size: 30,),
                                   onPressed: () {
-                                    speech_to_text!.startListening();
+                                    if(iconMic == Icons.mic) {
+                                      speech_to_text!.startListening();
+                                    }else if(iconMic == Icons.arrow_forward_rounded){
+
+                                    }
                                   },
-                                  color: Colors.white70,
-                                  iconSize: 30,
-                                  padding: const EdgeInsets.only(
-                                      left: 1.0, top: 2.0),
+                                style: ButtonStyle(
+                                  padding: MaterialStateProperty.all(const EdgeInsets.all(0.0)),
+                                  backgroundColor: MaterialStateProperty.all(Colors.transparent)
                                 ),
+                                ),
+                                  ]);
+                              },
                               ),
-                            ))),
+                            )),
               ],
             ),
-          ),
+          )),
         ],
       ),
     );

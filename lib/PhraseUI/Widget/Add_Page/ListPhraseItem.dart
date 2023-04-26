@@ -17,25 +17,31 @@ class ListPhraseItem extends StatefulWidget {
 
 class _ListPhraseItemState extends State<ListPhraseItem> {
   late bool listIsShowCheckBox;
-  late List<bool> listIsSelected;
+  late Map<String,bool> listIsSelected;
 
   Size size = const Size(0.0, 0.0);
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     listIsShowCheckBox = false;
-    listIsSelected = List.generate(widget.list.length, (index) => false);
+    listIsSelected = Map.fromIterables(List.generate(widget.list.length, (index) => widget.list[index].iD), List.generate(widget.list.length, (index) => false));
+  }
+
+  @override
+  void dispose() {
+    listIsShowCheckBox = false;
+    listIsSelected = {};
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    return BlocBuilder<BlocShowCheckBox, Map<int, bool>>(
+    return BlocBuilder<BlocShowCheckBox, Map<String, bool>>(
         buildWhen: (previous, current) {
       listIsSelected[current.keys.first] = current.values.first;
-      if (listIsSelected.contains(true)) {
+      if (listIsSelected.values.contains(true)) {
         if (listIsShowCheckBox) {
           return false;
         }

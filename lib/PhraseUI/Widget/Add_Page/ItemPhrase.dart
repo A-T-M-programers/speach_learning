@@ -1,11 +1,12 @@
+import 'dart:ui' as ui;
 import 'package:adobe_xd/adobe_xd.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/PhraseUI/Widget/Add_Page/WordItem.dart';
 import 'package:speach_learning/PhraseUI/bloc/BlocShowCheckBox.dart';
 import 'package:speach_learning/Process_Class/Filter_Text.dart';
 import 'package:speach_learning/Process_Class/PhraseItem.dart';
-import 'package:speach_learning/Process_Class/User.dart';
 import 'package:speach_learning/Read/UI/read_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -38,7 +39,7 @@ class _ItemPhraseState extends State<ItemPhrase> {
     more = widget.phraseItem.uprb.type == "0";
     equal = widget.phraseItem.uprb.type == "1";
     return Directionality(
-        textDirection: TextDirection.ltr,
+        textDirection: ui.TextDirection.ltr,
         child: Center(
             child: SizedBox(
                 width: size.width * 0.95,
@@ -47,22 +48,20 @@ class _ItemPhraseState extends State<ItemPhrase> {
                   widget.isLongPress && (less || equal)
                       ? Expanded(
                           flex: 0,
-                          child: BlocBuilder<BlocShowCheckBox, Map<int, bool>>(
+                          child: BlocBuilder<BlocShowCheckBox, Map<String, bool>>(
                               buildWhen: (previous, current) {
-                                if (current.keys.first == widget.index) {
+                                if (current.keys.first == widget.phraseItem.iD) {
                                   isSelected = current.values.first;
                                   return true;
                                 }
                                 return false;
                               },
                               builder: (bc, isShow) => Checkbox(
+                                side: BorderSide(color: Theme.of(context).textTheme.headline2!.color!),
                                   value: isSelected,
                                   onChanged: (value) {
                                     isSelected = value!;
-                                    context
-                                        .read<BlocShowCheckBox>()
-                                        .showCheckBox(
-                                            {widget.index: isSelected});
+                                    context.read<BlocShowCheckBox>().showCheckBox({widget.phraseItem.iD: isSelected});
                                   })))
                       : const SizedBox(),
                   Expanded(
@@ -78,10 +77,10 @@ class _ItemPhraseState extends State<ItemPhrase> {
                               isSelected = true;
                             }
                             if (less || equal) {
-                              context.read<BlocShowCheckBox>().showCheckBox({widget.index: isSelected});
+                              context.read<BlocShowCheckBox>().showCheckBox({widget.phraseItem.iD: isSelected});
                             }
                           },
-                          trailing: User.typeUser == TypeUser.User && more
+                          trailing: more
                               ? const SizedBox()
                               : IconButton(
                                   splashColor: Colors.lightGreenAccent,
@@ -112,7 +111,7 @@ class _ItemPhraseState extends State<ItemPhrase> {
                                   },
                                 ),
                           title: Text(
-                            widget.phraseItem.type,
+                            context.locale == Locale("en") ? widget.phraseItem.type.content : widget.phraseItem.type.trans,
                             style: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
@@ -190,20 +189,13 @@ class _ItemPhraseState extends State<ItemPhrase> {
                                   children: List.generate(
                                       widget.phraseItem.count,
                                       (index) => WordItem(
-                                          word: widget.phraseItem.listWord
-                                              .firstWhere((element) =>
-                                                  element.id ==
-                                                  widget.phraseItem.listPWRB
-                                                      .firstWhere((element) =>
-                                                          element.index ==
-                                                          index)
-                                                      .iDWord))),
+                                          word: widget.phraseItem.listWord.firstWhere((element) => element.id == widget.phraseItem.listPWRB.firstWhere((element) => element.index == index).iDWord))),
                                 ),
                                 const SizedBox(
                                   width: 3.0,
                                 ),
                                 Text(
-                                  Filter_Text.addMark(widget.phraseItem.type),
+                                  Filter_Text.addMark(widget.phraseItem.type.content),
                                   style: TextStyle(
                                     color: Colors.transparent,
                                     fontWeight: FontWeight.bold,

@@ -7,7 +7,7 @@ class ToolTipMessage{
 
   static TextSpan buildtextSpan(BuildContext context,Word word) {
     return TextSpan(
-      text: word.content + "  =  " + word.trans,
+      text: word.content + "  =  " + (word.trans.isNotEmpty ? word.trans : word.type.trans),
       children: [
         TextSpan(
           text: word.content != word.wordInPhrase ? "\n" + word.wordInPhrase + "  =  " + word.transInPhrase : "",

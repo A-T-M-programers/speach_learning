@@ -25,7 +25,7 @@
   "choosephrase": "اختر الجملة التي تريد قرائتها من الأسفل",
   "skip": "تخطي",
   "read": "قراءة الكلمة",
-  "start": "ابدأ",
+  "start": "بدأ",
   "lock": "مقفل",
   "again": "إعادة",
   "notSkipped": "لا يمكن تخطي هذه الكلمة",
@@ -41,5 +41,15 @@
   "update": "تعديل",
   "updatelevel": "تعديل مستوى",
   "updatephrase": "تعديل جملة",
-  "addphrase": "إضافة جملة"
+  "addphrase": "إضافة جملة",
+  "word": "الكلمة",
+  "addwordhere": "ادخل الكلمة هنا",
+  "transword": "ترجمة الكلمة",
+  "addtranswordhere": "ادخل ترجمة الكلمة هنا ...",
+  "wordinphrase": "الكلمة داخل الجملة",
+  "transinphraes": "ترجمة كاملة",
+  "addword": "اضافة كلمة",
+  "cancel": "رجوع",
+  "deleteSure" : "هل انت متأكد \nلن تستطيع استرجاعها",
+  "next": "التالي"
 }

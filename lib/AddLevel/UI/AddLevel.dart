@@ -86,8 +86,10 @@ class _AddLevelState extends State<AddLevel> {
                 widget.listLevel.add(level);
                 // ignore: avoid_print
                 print("Add Level : ${widget.listLevel.length}");
+                context.read<BlocManageLevel>().changeManageLevel({"Add":{"Level":level}});
               }
             }
+            Navigator.pop(context);
           }catch(e){
             // ignore: avoid_print
             print("Error ===> $e");
