@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/Presentation/LogIn/UI/log_in.dart';
-import 'package:speach_learning/Presentation/Profile/controler/ProfileBloc.dart';
 import 'package:speach_learning/Presentation/SplashScreen/controler/blocSplashScreen.dart';
-import 'package:speach_learning/core/services/services_locator.dart';
 
 import 'ButtonDrage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -253,7 +251,7 @@ class Splash_Screen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const log_in()));
+                              builder: (context) => log_in()));
                     },
                     onWillAccept: (data) {
                       return data == arrow_right;

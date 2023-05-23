@@ -11,8 +11,8 @@ class ViewVolumeProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileParticipantBloc, ParticipantState>(
-      buildWhen: (previos,current) => previos.requestState != current.requestState,
+    return BlocBuilder<ProfileBloc, ParticipantState>(
+      buildWhen: (previos,current) => previos.volume != current.volume || previos.requestState != current.requestState,
         builder: (context, state) {
       switch (state.requestState) {
         case RequestState.loading:
@@ -38,7 +38,7 @@ class ViewVolumeProfile extends StatelessWidget {
             value: volume,
             onChanged: (value) {
               if(checkLoaded) {
-                context.read<ProfileParticipantBloc>().add(SetVolumeParticipantEvent(volume: value));
+                context.read<ProfileBloc>().add(SetVolumeParticipantEvent(volume: value));
               }
             }),
       ),

@@ -3,33 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/blend_mask.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:speach_learning/AlertDialog.dart';
-import 'package:speach_learning/Domain/Entity/Dialects.dart';
-import 'package:speach_learning/Domain/Entity/Lang.dart';
-import 'package:speach_learning/Domain/Entity/Participants.dart';
+import 'package:speach_learning/core/global/static/AlertDialog.dart';
 import 'package:speach_learning/Presentation/Home/UI/home_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:speach_learning/Presentation/Home/controler/home_bloc.dart';
-import 'package:speach_learning/Presentation/Home/controler/home_event.dart';
-import 'package:speach_learning/Presentation/Profile/controler/ProfileBloc.dart';
-import 'package:speach_learning/Presentation/Profile/controler/ProfileEvent.dart';
+import 'package:speach_learning/Presentation/LogIn/component/view_email_button.dart';
 import 'package:speach_learning/Presentation/SplashScreen/UI/ButtonDrage.dart';
 import 'package:speach_learning/Presentation/SplashScreen/UI/Splash_Screen.dart';
 import 'package:speach_learning/Presentation/SplashScreen/controler/blocSplashScreen.dart';
-import 'package:speach_learning/core/services/services_locator.dart';
-import 'package:speach_learning/core/utils/enums.dart';
-import 'package:speach_learning/core/utils/google_auth.dart';
 
-// ignore: camel_case_types
-class log_in extends StatefulWidget {
-  const log_in({Key? key}) : super(key: key);
 
-  @override
-  State<log_in> createState() => _log_inState();
-}
-
-// ignore: camel_case_types
-class _log_inState extends State<log_in> {
+// ignore: camel_case_types, must_be_immutable
+class log_in extends StatelessWidget {
+  log_in({Key? key}) : super(key: key);
   // ignore: prefer_const_constructors
   Size size = Size(0.0, 0.0);
 
@@ -40,14 +25,7 @@ class _log_inState extends State<log_in> {
   bool is_arrow_left = false;
 
   // ignore: non_constant_identifier_names
-  late Button_Draage button_draage;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    button_draage = Button_Draage(icons: 1);
-  }
+  late Button_Draage button_draage = Button_Draage(icons: 1);
 
   @override
   Widget build(BuildContext context) {
@@ -314,10 +292,10 @@ class _log_inState extends State<log_in> {
             Pin(size: 50.0, end: 26.0),
             child: Draggable(
               onDragStarted: () {
-                this.context.read<blocSplashScreen>().changSize(54.0);
+                context.read<blocSplashScreen>().changSize(54.0);
               },
               onDragEnd: (val) {
-                this.context.read<blocSplashScreen>().changSize(40.0);
+                context.read<blocSplashScreen>().changSize(40.0);
               },
               axis: Axis.horizontal,
               data: arrow_left,
@@ -367,8 +345,8 @@ class _log_inState extends State<log_in> {
           Align(
             // ignore: prefer_const_constructors
             alignment: context.locale == Locale('en')
-                ? Alignment(0, -0.510)
-                : Alignment(0, -0.490),
+                ? const Alignment(0, -0.510)
+                : const Alignment(0, -0.490),
             child: SizedBox(
               width: 105.0,
               height: 68.0,
@@ -391,100 +369,7 @@ class _log_inState extends State<log_in> {
               start: 47.0,
             ),
             Pin(size: 40.0, middle: size.height > size.width ? 0.454 : 0.574),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                // ignore: prefer_const_constructors
-                textStyle: MaterialStateProperty.all(
-                    // ignore: prefer_const_constructors
-                    TextStyle(fontWeight: FontWeight.normal)),
-                backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                // ignore: prefer_const_constructors
-                padding: MaterialStateProperty.all(EdgeInsets.all(0.0)),
-                foregroundColor: MaterialStateProperty.all(Colors.transparent),
-                shadowColor: MaterialStateProperty.all(Colors.transparent),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0))),
-              ),
-              onPressed: () {
-                try {
-                  AlertDialogShow.showAlertDialog(context);
-                  // ignore: prefer_const_constructors
-                  Future.delayed(Duration(seconds: 1), () async {
-                    final response =
-                        await sl<GoogleAuth>().getAuthParticipant();
-                    response.fold((l) => {print(l.message)}, (r) {
-                      if (r != null) {
-                        context.read<ProfileParticipantBloc>().add(SetParticipantEvent(
-                                participants: Participants(
-                                    id: 1,
-                                    name: r.displayName ?? "",
-                                    email: r.email,
-                                    imageParticipant: ImageParticipant(
-                                        linkImage: r.photoUrl ?? "",
-                                        stateImage: r.photoUrl != null
-                                            ? StateImage.remote
-                                            : StateImage.local),
-                                    langApp: 1,
-                                    themApp: ThemeApp.light,
-                                    isAdmob: false,
-                                    learnWordCount: 0,
-                                    learnPhraseCount: 0,
-                                    dialects: const Dialects(
-                                        id: 0,
-                                        locale: "en-US",
-                                        key: "en-us-x-tpf-local",
-                                        lang: Lang(id: 1, name: "English")))));
-                        int idParticipant = context.read<ProfileParticipantBloc>().state.participants!.id;
-                        context.read<HomeBloc>().add(GetParticipantDomainEvent(id: idParticipant));
-                        Navigator.pop(context);
-                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (route) => home_page(idParticipant: idParticipant,)), (route) => false);
-                      }
-                    });
-                  });
-                } catch (e, s) {
-                  // ignore: avoid_print
-                  print(s);
-                }
-              },
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                        color: const Color(0xfff6df82),
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(
-                            width: 1.0, color: const Color(0xfff6df82)),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Color(0xfff6df82),
-                              blurRadius: 10,
-                              spreadRadius: 1)
-                        ]),
-                  ),
-                  Align(
-                    // ignore: prefer_const_constructors
-                    alignment: Alignment(0.0, 0.0),
-                    child: SizedBox(
-                      child: Text(
-                        'email',
-                        style: TextStyle(
-                          fontFamily: 'Cambria Math',
-                          fontSize: size.height * 0.03,
-                          color: const Color(0xff647793),
-                        ),
-                        softWrap: false,
-                      ).tr(),
-                    ),
-                  ),
-                  Pinned.fromPins(Pin(size: 24.0, start: 16.0),
-                      Pin(size: 24.0, middle: 0.5),
-                      child: CustomPaint(
-                          painter: GoogleLogoPainter(),
-                          size: const Size.square(0.0))),
-                ],
-              ),
-            ),
-          ),
+            child: ViewEmailButton()),
           Pinned.fromPins(
             Pin(
               size: size.height * 0.4,
@@ -509,17 +394,7 @@ class _log_inState extends State<log_in> {
               ),
               onPressed: () {
                 try {
-                  AlertDialogShow.showAlertDialog(context);
-                  // ignore: prefer_const_constructors
-                  Future.delayed(Duration(seconds: 1), () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (route) => home_page(
-                                  idParticipant: 1,
-                                )));
-                  });
+
                 } catch (e, s) {
                   // ignore: avoid_print
                   print(s);
@@ -568,47 +443,6 @@ class _log_inState extends State<log_in> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class GoogleLogoPainter extends CustomPainter {
-  @override
-  // ignore: avoid_renaming_method_parameters
-  bool shouldRepaint(_) => true;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final length = size.width;
-    final verticalOffset = (size.height / 2) - (length / 2);
-    final bounds = Offset(0, verticalOffset) & Size.square(length);
-    final center = bounds.center;
-    final arcThickness = size.width / 4.5;
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = arcThickness;
-
-    void drawArc(double startAngle, double sweepAngle, Color color) {
-      final _paint = paint..color = color;
-      canvas.drawArc(bounds, startAngle, sweepAngle, false, _paint);
-    }
-
-    drawArc(3.5, 1.9, Colors.red);
-    drawArc(2.5, 1.0, Colors.amber);
-    drawArc(0.9, 1.6, Colors.green.shade600);
-    drawArc(-0.18, 1.1, Colors.blue.shade600);
-
-    canvas.drawRect(
-      Rect.fromLTRB(
-        center.dx,
-        center.dy - (arcThickness / 2),
-        bounds.centerRight.dx + (arcThickness / 2) - 4,
-        bounds.centerRight.dy + (arcThickness / 2),
-      ),
-      paint
-        ..color = Colors.blue.shade600
-        ..style = PaintingStyle.fill
-        ..strokeWidth = 0,
     );
   }
 }

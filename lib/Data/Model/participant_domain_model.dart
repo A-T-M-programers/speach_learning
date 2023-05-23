@@ -5,6 +5,7 @@ class ParticipantDomainModel extends DomainParticipant {
     required super.idParticipant,
     required super.idDomain,
     required super.stateDomain,
+    required super.name
   });
 
   factory ParticipantDomainModel.fromJson(Map<String, dynamic> json) =>
@@ -12,5 +13,6 @@ class ParticipantDomainModel extends DomainParticipant {
           idParticipant: json["participant_id"],
           idDomain: json["domain_id"],
           stateDomain: json["status"],
+          name: json["name"],
           );
 }

@@ -19,7 +19,7 @@ class show_photo extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
         backgroundColor: Colors.transparent,
-        body: BlocBuilder<ProfileParticipantBloc, ParticipantState>(
+        body: BlocBuilder<ProfileBloc, ParticipantState>(
             builder: (context, state) {
           switch (state.requestState) {
             case RequestState.loading:

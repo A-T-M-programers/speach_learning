@@ -8,12 +8,15 @@ class DomainParticipant extends Equatable {
 
   final StateDomain stateDomain;
 
+  final String name;
+
   const DomainParticipant(
       {required this.idParticipant,
        required this.idDomain,
        required this.stateDomain,
+       required this.name,
        });
 
   @override
-  List<Object> get props => [idParticipant,idDomain,stateDomain];
+  List<Object> get props => [idParticipant,idDomain,stateDomain,name];
 }

@@ -51,16 +51,16 @@ class get_photo {
   // }
 
   /// Get Image
-  static Future _getImage(ImageSource imageSource,BuildContext context) async {
+  static Future _getImage(ImageSource imageSource,BuildContext context,int id) async {
     XFile? pickedFile = await ImagePicker().pickImage(source: imageSource);
     if (pickedFile != null) {
-      Navigator.push(context, MaterialPageRoute(builder: (route)=> EditPhotoPage(image:XFile(pickedFile.path))));
+      Navigator.push(context, MaterialPageRoute(builder: (route)=> EditPhotoPage(image:XFile(pickedFile.path,),id: id,)));
     } else {
 
     }
   }
 
-  static showSelectionDialog(BuildContext context) {
+  static showSelectionDialog(BuildContext context,int id) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -74,7 +74,7 @@ class get_photo {
                       child: const Icon(
                         Icons.photo, color: Colors.lightBlueAccent, size: 70,),
                       onTap: () async {
-                        await _getImage(ImageSource.gallery,context);
+                        await _getImage(ImageSource.gallery,context,id);
                         // Navigator.pop(context, 'Ok');
                       },
                     ),
@@ -84,7 +84,7 @@ class get_photo {
                         Icons.camera_alt_rounded, color: Colors.redAccent,
                         size: 70,),
                       onTap: () async {
-                        await _getImage(ImageSource.camera,context);
+                        await _getImage(ImageSource.camera,context,id);
                         // Navigator.pop(context, 'Ok');
                       },
                     )

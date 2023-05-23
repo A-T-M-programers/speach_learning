@@ -1,3 +1,4 @@
+
 import 'package:speach_learning/Domain/Entity/Participants.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
@@ -19,10 +20,10 @@ class ParticipantModel extends Participants {
 
   factory ParticipantModel.fromJson(Map<String, dynamic> json) =>
       ParticipantModel(
-          id: 1 /*json["id"]*/,
+          id: json["id"],
           name: json["name"],
           email: json["email"],
-          imageParticipant: ImageParticipant(linkImage: json["link_image"], stateImage: json["link_image"] != "" ? StateImage.remote : StateImage.local),
+          imageParticipant: ImageParticipant(linkImage: json["avatar"] ?? "" , stateImage: json["avatar"] != null ? StateImage.remote : StateImage.local),
           langApp: json["lang_app"],
           themApp: json["theme_app"] == "D" ? ThemeApp.dark : ThemeApp.light,
           isAdmob: json["is_admob"] == 0 ? false : true,

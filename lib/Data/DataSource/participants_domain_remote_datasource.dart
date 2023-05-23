@@ -16,6 +16,6 @@ class ParticipantDomainRemoteDataSource extends BaseParticipantDomainDataSource{
     // }else{
     //   throw ServerException(errorMessageModel: ErrorMessageModel.fromJson(response.data));
     // }
-    return const DomainParticipant(idParticipant: 0, idDomain: 0, stateDomain: StateDomain.start);
+    return const DomainParticipant(idParticipant: 0, idDomain: 0, stateDomain: StateDomain.start,name: "EN");
   }
 }

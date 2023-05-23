@@ -1,42 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:speach_learning/Presentation/Home/widget/ToolTipButtonLevel.dart';
-import 'package:speach_learning/Process_Class/Level.dart';
+import 'package:speach_learning/Domain/Entity/Level.dart';
 
 // ignore: must_be_immutable
-class LevelMap extends StatefulWidget {
-  LevelMap({Key? key, required this.listLevel, required this.rightOut})
+class LevelMap extends StatelessWidget {
+  LevelMap({Key? key, required this.listLevel, required this.rightOut,required this.idParticipant})
       : super(key: key);
-
+  final int idParticipant;
   final List<Level> listLevel;
   bool rightOut;
 
   @override
-  State<LevelMap> createState() => _LevelMapState();
-}
-
-class _LevelMapState extends State<LevelMap> {
-  @override
   Widget build(BuildContext context) {
     return Column(
-      children: getListLevelButtonMap(),
+      children: getListLevelButtonMap(context),
     );
   }
 
-  List<Widget> getListLevelButtonMap() {
+  List<Widget> getListLevelButtonMap(BuildContext context) {
     List<Widget> list = [];
     double width = 0.1;
-    for (var level in widget.listLevel) {
-      if (widget.rightOut) {
-        if (widget.listLevel.length <= 1) {
-          // ignore: prefer_const_constructors
-          list.add(Align(alignment: Alignment(0, 0), child: ToolTipButtonLevel(level: level)));
+    for (var level in listLevel) {
+      if (rightOut) {
+        if (listLevel.length <= 1) {
+          list.add(Align(alignment: const Alignment(0, 0), child: ToolTipButtonLevel(level: level,idParticipant: idParticipant,)));
           return list;
         } else {
           list.add(Container(
               alignment: Alignment(width,0.0),
-              child: ToolTipButtonLevel(level: level)));
+              child: ToolTipButtonLevel(level: level,idParticipant: idParticipant,)));
           width = width + 0.1;
-          for (int i = 0; i < 5 && level != widget.listLevel.last; i++) {
+          for (int i = 0; i < 5 && level != listLevel.last; i++) {
             list.add(Container(
               alignment:Alignment(width,0.0),
               child: Container(
@@ -51,23 +45,23 @@ class _LevelMapState extends State<LevelMap> {
             width = width + 0.03;
           }
           if(width > 0.6){
-            widget.rightOut = false;
+            rightOut = false;
           }
           width = width + 0.1;
         }
       } else {
-        if (widget.listLevel.length <= 1) {
+        if (listLevel.length <= 1) {
           // ignore: prefer_const_constructors
           list.add(Align(
-              alignment: Alignment(0, 0),
-              child: ToolTipButtonLevel(level: level)));
+              alignment: const Alignment(0, 0),
+              child: ToolTipButtonLevel(level: level,idParticipant: idParticipant,)));
           return list;
         } else {
           list.add(Align(
               alignment: Alignment(width,0.0),
-              child: ToolTipButtonLevel(level: level)));
+              child: ToolTipButtonLevel(level: level,idParticipant: idParticipant,)));
           width = width - 0.1;
-          for (int i = 0; i < 5 && level != widget.listLevel.last; i++) {
+          for (int i = 0; i < 5 && level != listLevel.last; i++) {
             list.add(Container(
               alignment: Alignment(width,0.0),
               child: Container(
@@ -82,7 +76,7 @@ class _LevelMapState extends State<LevelMap> {
             width = width - 0.03;
           }
           if(-width > 0.5 ){
-            widget.rightOut = true;
+            rightOut = true;
           }
           width = width - 0.1;
         }

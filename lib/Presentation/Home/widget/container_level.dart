@@ -1,37 +1,30 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:speach_learning/Domain/Entity/Domains.dart';
 
 import 'level_map.dart';
 
-class ContainerLevel extends StatefulWidget {
+class ContainerLevel extends StatelessWidget {
   // ignore: prefer_const_constructors_in_immutables
-  ContainerLevel({Key? key,required this.section}) : super(key: key);
-
+  ContainerLevel({Key? key,required this.section,required this.idParticipant}) : super(key: key);
+  final int idParticipant;
   final Domains section;
 
-  @override
-  State<ContainerLevel> createState() => _ContainerLevelState();
-}
-
-class _ContainerLevelState extends State<ContainerLevel> {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-    ListTile(
-      tileColor: Theme.of(context).appBarTheme.backgroundColor,
+     ListTile(
+      shape: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Theme.of(context).textTheme.headline3!.color!,width: 0.5)),
+      tileColor: section.getColor(context),
       textColor: Theme.of(context).textTheme.headline2!.color,
-      // ignore: prefer_const_constructors
       title: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text(context.locale == const Locale("en") ? widget.section.title : widget.section.domainLanguage.titleTrans)),
-      // ignore: prefer_const_constructors
+          child: Text(section.title)),
       subtitle:Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Text(context.locale == const Locale("en") ? widget.section.description : widget.section.domainLanguage.descriptionTrans)),
+        child: Text(section.description)),
     ),
-        SizedBox(height: widget.section.listLevel.length * 130,child:LevelMap(listLevel: widget.section.listLevel,rightOut: true,))
+        SizedBox(height: section.listLevel.length * 130,child:LevelMap(idParticipant: idParticipant,listLevel: section.listLevel,rightOut: true,))
       ],
     );
   }

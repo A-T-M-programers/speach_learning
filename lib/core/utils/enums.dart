@@ -20,5 +20,6 @@ enum StateImage{
 }
 enum BottomSheetOption{
   profile,
+  home,
   empty,
 }

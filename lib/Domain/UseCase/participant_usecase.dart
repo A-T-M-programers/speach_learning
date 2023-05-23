@@ -1,43 +1,83 @@
 import 'package:dartz/dartz.dart';
 import 'package:speach_learning/Domain/Entity/Participants.dart';
 import 'package:speach_learning/Domain/Repository/repository_participant.dart';
+import 'package:speach_learning/Presentation/LogIn/controler/log_in_bloc.dart';
+import 'package:speach_learning/Presentation/Profile/controler/ProfileEvent.dart';
 import 'package:speach_learning/core/error/failure.dart';
+import 'package:speach_learning/core/usecases/base_useCase.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
-class ParticipantUseCase{
-  final BaseParticipantRepository baseParticipantRepository;
+class SetThemeAppParticipantUseCase extends BaseUseCase<ThemeApp,SetThemeAppParticipantEvent> {
+  final BaseParticipantRepository<ThemeApp,SetThemeAppParticipantEvent> baseParticipantRepository;
 
-  ParticipantUseCase(this.baseParticipantRepository);
+  SetThemeAppParticipantUseCase(this.baseParticipantRepository);
 
-  Future<Either<Failure,ThemeApp>> executeSetThemeAppParticipant(ThemeApp mode,int id) async {
-    return await baseParticipantRepository.setThemeAppParticipant(mode,id);
+  @override
+  Future<Either<Failure, ThemeApp>> call(SetThemeAppParticipantEvent param) async {
+    return await baseParticipantRepository(param);
   }
+}
 
-  Future<Either<Failure,int>> executeSetLangParticipant(int lang,int id) async {
-    return await baseParticipantRepository.setLangParticipant(lang,id);
+class SetLangParticipantUseCase extends BaseUseCase<int,SetLangParticipantEvent> {
+  final BaseParticipantRepository<int,SetLangParticipantEvent> baseParticipantRepository;
+
+  SetLangParticipantUseCase(this.baseParticipantRepository);
+
+  @override
+  Future<Either<Failure, int>> call(SetLangParticipantEvent param) async {
+    return await baseParticipantRepository(param);
   }
+}
 
-  Future<Either<Failure,String>> executeGetLangParticipant() async {
-    return await baseParticipantRepository.getLangParticipant();
+class SetPhotoParticipantUseCase extends BaseUseCase<String,SetPhotoParticipantEvent> {
+  final BaseParticipantRepository<String,SetPhotoParticipantEvent> baseParticipantRepository;
+
+  SetPhotoParticipantUseCase(this.baseParticipantRepository);
+
+  @override
+  Future<Either<Failure, String>> call(SetPhotoParticipantEvent param) async {
+    return await baseParticipantRepository(param);
   }
+}
+class SetParticipantUseCase extends BaseUseCase<int,SetParticipantEvent> {
+  final BaseParticipantRepository<int,SetParticipantEvent> baseParticipantRepository;
 
-  Future<Either<Failure,String>> executeSetPhotoParticipant(String photoPath,int id) async {
-    return await baseParticipantRepository.setPhotoParticipant(photoPath,id);
+  SetParticipantUseCase(this.baseParticipantRepository);
+
+  @override
+  Future<Either<Failure, int>> call(SetParticipantEvent param) async {
+    return await baseParticipantRepository(param);
   }
+}
+class GetParticipantWithIdUseCase extends BaseUseCase<Participants,GetParticipantEvent> {
+  final BaseParticipantRepository<Participants,GetParticipantEvent> baseParticipantRepository;
 
-  Future<Either<Failure,String>> executeGetPhotoParticipant() async {
-    return await baseParticipantRepository.getPhotoParticipant();
+  GetParticipantWithIdUseCase(this.baseParticipantRepository);
+
+  @override
+  Future<Either<Failure, Participants>> call(GetParticipantEvent param) async {
+    return await baseParticipantRepository(param);
   }
+}
 
-  Future<Either<Failure,Participants>> executeSetParticipant(Participants participants) async {
-    return await baseParticipantRepository.setParticipant(participants);
+class GetParticipantWithEmailUseCase extends BaseUseCase<int,GetParticipantWithEmailEvent> {
+  final BaseParticipantRepository<int,GetParticipantWithEmailEvent> baseParticipantRepository;
+
+  GetParticipantWithEmailUseCase(this.baseParticipantRepository);
+
+  @override
+  Future<Either<Failure, int>> call(GetParticipantWithEmailEvent param) async {
+    return await baseParticipantRepository(param);
   }
+}
 
-  Future<Either<Failure,int>> executeGetParticipantId() async {
-    return await baseParticipantRepository.getParticipantId();
-  }
+class GetParticipantIdUseCase extends BaseUseCase<int,GetParticipantIdEvent> {
+  final BaseParticipantRepository<int,GetParticipantIdEvent> baseParticipantRepository;
 
-  Future<Either<Failure,Participants>> executeGetParticipantWithId(int id) async {
-    return await baseParticipantRepository.getParticipantWithId(id);
+  GetParticipantIdUseCase(this.baseParticipantRepository);
+
+  @override
+  Future<Either<Failure, int>> call(GetParticipantIdEvent param) async {
+    return await baseParticipantRepository(param);
   }
 }

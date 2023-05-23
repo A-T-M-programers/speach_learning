@@ -1,24 +1,32 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:speach_learning/PhraseUI/bloc/BlocShowCheckBox.dart';
-import 'package:speach_learning/Presentation/Home/Bloc/BlocHome.dart';
-import 'package:speach_learning/Presentation/Home/UI/home_page.dart';
+import 'package:speach_learning/Presentation/PhraseUI/controler/phrase_bloc.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileBloc.dart';
+import 'package:speach_learning/Presentation/Read/controler/read_bloc.dart';
+import 'package:speach_learning/Presentation/Route/UI/route.dart';
+import 'package:speach_learning/Presentation/Route/controler/route_page_bloc.dart';
 import 'package:speach_learning/Presentation/SplashScreen/controler/blocSplashScreen.dart';
 import 'package:speach_learning/core/global/themeApp/ThemeApp.dart';
 import 'package:speach_learning/core/services/services_locator.dart';
 import 'Presentation/Home/controler/home_bloc.dart';
 import 'Presentation/Home/controler/home_event.dart';
+import 'Presentation/LoadingPage/Ui/loading_page.dart';
 import 'Presentation/LogIn/controler/log_in_bloc.dart';
+import 'Presentation/PhraseUI/bloc/BlocShowCheckBox.dart';
 import 'Presentation/Profile/controler/ProfileState.dart';
+import 'Presentation/Read/bloc/Bloc_Controler_Read.dart';
 import 'Presentation/SplashScreen/UI/Splash_Screen.dart';
-import 'Read/bloc/Bloc_Controler_Read.dart';
+import 'core/error/ui_error.dart';
 import 'core/utils/enums.dart';
 
 void main() async {
-  ServicesLocator().init();
-  ServicesLocator().initParticipants();
+  ServicesLocator servicesLocator = ServicesLocator();
+  servicesLocator.init();
+  servicesLocator.initParticipants();
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   runApp(
@@ -30,7 +38,8 @@ void main() async {
         // ignore: prefer_const_constructors
         fallbackLocale: Locale('en'),
         // ignore: prefer_const_constructors
-        child: MyApp()),
+        child: MyApp()
+    ),
   );
 }
 
@@ -72,25 +81,29 @@ class MyApp extends StatelessWidget {
           BlocProvider<BlocUpdateShowListPhrase>(
             create: (BuildContext context) => BlocUpdateShowListPhrase([]),
           ),
-          BlocProvider<Bloc_Change_Lan>(
-            create: (BuildContext context) => Bloc_Change_Lan(),
-          ),
-          BlocProvider<BlocSelectLevel>(
-            create: (BuildContext context) => BlocSelectLevel(),
-          ),
           BlocProvider<BlocPhraseManage>(
               create: (BuildContext context) => BlocPhraseManage()),
           BlocProvider(create: (BuildContext context) {
             return sl<LogInBloc>()..add(GetParticipantIdEvent());
           }),
           BlocProvider(create: (BuildContext context) {
-            return sl<ProfileParticipantBloc>();
+            return sl<ProfileBloc>();
           }),
           BlocProvider(create: (BuildContext context) {
-            return sl<HomeBloc>()..add(GetAllSectionsEvent());
+            return sl<HomeBloc>();
+          }),
+          BlocProvider(create: (BuildContext context) {
+            return sl<PhraseBloc>();
+          }),
+          BlocProvider(create: (BuildContext context) {
+            return sl<RoutePageBloc>();
+          }),
+          BlocProvider(create: (BuildContext context) {
+            return sl<ReadBloc>();
           })
         ],
-        child: BlocBuilder<ProfileParticipantBloc, ParticipantState>(
+        child: BlocBuilder<ProfileBloc, ParticipantState>(
+          buildWhen: (previos,current) => previos.requestState != current.requestState,
           builder: (context, state) {
             return MaterialApp(
                 localizationsDelegates: context.localizationDelegates,
@@ -110,40 +123,34 @@ class CheckAnyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LogInBloc, LogInState>(buildWhen: (previos, current) {
-      if (previos != current) {
-        if (previos.requestState == current.requestState) {
-          return false;
-        } else {
-          return true;
-        }
-      } else {
-        return false;
-      }
-    }, builder: (context, state) {
+    return BlocBuilder<LogInBloc, LogInState>(
+        buildWhen: (previos, current) => previos.requestState != current.requestState,
+    builder: (context, state) {
       switch (state.requestState) {
         case RequestState.loading:
-          return Container(
-              alignment: Alignment.center,
-              height: 50,
-              width: 50,
-              child: const CircularProgressIndicator(
-                color: Colors.white54,
-              ));
+          return const LoadingPage();
         case RequestState.loaded:
           if (state.participantsId != 0) {
-            context.read<HomeBloc>().add(GetParticipantDomainEvent(id: state.participantsId));
-            return home_page(idParticipant: state.participantsId,);
+            context.read<RoutePageBloc>().add( const TransitionRoutePageEvent(BottomSheetOption.home));
+            return RoutePage(idParticipant: state.participantsId,);
           } else {
             return Splash_Screen();
           }
         case RequestState.error:
-          return Center(
-              child: Text(
-            state.message,
-            style:
-                TextStyle(color: Theme.of(context).textTheme.headline2!.color),
-          ));
+          return UiError(
+            message: "err_Network",
+            retry: (){
+              context.read<LogInBloc>().add(GetParticipantIdEvent());
+              context.read<HomeBloc>().add(GetAllSectionsEvent(idParticipant: state.participantsId));
+              context.read<HomeBloc>().add(GetParticipantDomainEvent(id: state.participantsId));
+            },
+            close: () {
+              if(Platform.isAndroid) {
+                SystemNavigator.pop();
+              }else if(Platform.isIOS){
+                exit(0);
+              }
+            });
       }
     });
   }

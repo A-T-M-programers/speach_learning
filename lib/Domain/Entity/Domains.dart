@@ -1,5 +1,5 @@
-import 'package:speach_learning/Domain/Entity/domain_language.dart';
-import 'package:speach_learning/Process_Class/Level.dart';
+import 'package:flutter/material.dart';
+import 'package:speach_learning/Domain/Entity/Level.dart';
 
 class Domains{
   final int id;
@@ -12,16 +12,28 @@ class Domains{
 
   final List<Level> listLevel;
 
-  final int idLang;
+  // final int idLang;
 
-  final DomainLanguage domainLanguage;
+  final int domainLanguage;
+
+  final String type;
 
   Domains({
     required this.id,
     required this.title,
     required this.description,
-    required this.idLang,
+    this.type = "",
+    // required this.idLang,
     required this.listLevel,
-    required this.domainLanguage,
+    this.domainLanguage = 1,
   });
+
+  Color getColor(BuildContext context){
+    switch(type){
+      case "S": return Colors.blue;
+      case "X": return Colors.amberAccent;
+      case "C": return Colors.green.withOpacity(0.7);
+      default: return Theme.of(context).appBarTheme.backgroundColor!;
+    }
+  }
 }

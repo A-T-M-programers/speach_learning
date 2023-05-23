@@ -9,7 +9,7 @@ class ViewEmailParticipant extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileParticipantBloc,ParticipantState>(
+    return BlocBuilder<ProfileBloc,ParticipantState>(
         buildWhen: (previos,current) => previos.requestState != current.requestState,
         builder: (context, state) {
       switch(state.requestState){
@@ -29,7 +29,8 @@ class ViewEmailParticipant extends StatelessWidget {
                 color: Theme.of(context)
                     .textTheme
                     .headline2!
-                    .color),
+                    .color,
+            fontSize: 14),
           );
         case RequestState.error:
           return Text(

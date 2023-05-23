@@ -10,8 +10,7 @@ class ViewDomainMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
-        buildWhen: (previos, current) =>
-            previos.requestState != current.requestState,
+        buildWhen: (previos, current) => previos.requestState != current.requestState,
         builder: (context, state) {
           switch (state.requestState) {
             case RequestState.loading:

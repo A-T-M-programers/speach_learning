@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:speach_learning/Domain/Entity/Participants.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileBloc.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileEvent.dart';
-import 'package:speach_learning/core/services/services_locator.dart';
 
 // ignore: must_be_immutable
 class EditPhotoPage extends StatefulWidget {
 
 
-  const EditPhotoPage({super.key, required this.image});
+  const EditPhotoPage({super.key, required this.image,required this.id});
   final XFile image;
+  final int id;
 
   @override
   State<EditPhotoPage> createState() => _editPhotoPageState();
@@ -52,8 +51,8 @@ class _editPhotoPageState extends State<EditPhotoPage>{
         )]);
 
     if (croppedFile != null) {
-      context.read<ProfileParticipantBloc>().add(SetPhotoParticipantEvent(photoPath: croppedFile.path,id: sl<Participants>().id));
-      Navigator.pop(context);
+      context.read<ProfileBloc>().add(SetPhotoParticipantEvent(photoPath: croppedFile.path,id: widget.id));
+      // Navigator.pop(context);
     }
 
   }

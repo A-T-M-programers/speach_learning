@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileBloc.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileState.dart';
+import 'package:speach_learning/core/network/api_constance.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
 class ViewParticipantImage extends StatelessWidget {
@@ -12,7 +13,7 @@ class ViewParticipantImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileParticipantBloc, ParticipantState>(
+    return BlocBuilder<ProfileBloc, ParticipantState>(
         buildWhen: (previos,current) => previos.requestState != current.requestState,
         builder: (context, state) {
       switch (state.requestState) {
@@ -33,15 +34,18 @@ class ViewParticipantImage extends StatelessWidget {
                           )
                       ));
                 case StateImage.remote:
+                  CachedNetworkImage.evictFromCache(state.participants!.imageParticipant.linkImage);
                   return Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                         border: Border.all(color: Colors.white, width: 3),
                       ),
                       child: CachedNetworkImage(
+
+                        httpHeaders: {"Authorization":"Bearer "+ ApiConstance.token},
                         imageUrl: state.participants!.imageParticipant.linkImage,
-                        imageBuilder: (context, imageProvider) =>
-                            Container(
+                        imageBuilder: (context, imageProvider) {
+                          return  Container(
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
@@ -52,12 +56,12 @@ class ViewParticipantImage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(50),
                                 image: DecorationImage(
                                   image: imageProvider,
-                                  fit: BoxFit.fill,
+                                  fit: BoxFit.contain,
                                 ),
                                 border: Border.all(color: Colors.white,
                                     width: 3),
                               ),
-                            ),
+                            );},
                         placeholder: (context, url) =>
                         const CircularProgressIndicator(),
                         errorWidget: (context, url, error) =>

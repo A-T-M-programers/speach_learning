@@ -9,7 +9,7 @@ class ViewNameParticipant extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileParticipantBloc,ParticipantState>(
+    return BlocBuilder<ProfileBloc,ParticipantState>(
         buildWhen: (previos,current) => previos.requestState != current.requestState,
         builder: (context, state) {
       switch(state.requestState){

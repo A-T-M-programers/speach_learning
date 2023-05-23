@@ -59,6 +59,9 @@ dependencies:
   image_cropper: ^3.0.2
   cached_network_image: ^3.2.3
   google_sign_in: ^6.1.0
+  loading_animation_widget: ^1.2.0+4
+  path_provider: ^2.0.15
+  animations: ^2.0.7
 
 dev_dependencies:
   flutter_test:
