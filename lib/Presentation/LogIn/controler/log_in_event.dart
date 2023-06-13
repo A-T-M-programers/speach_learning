@@ -16,3 +16,16 @@ class GetParticipantWithEmailEvent extends LogInEvent{
   @override
   List<Object> get props => [email];
 }
+class GetTokenEvent extends LogInEvent{
+  final String email,password;
+
+  const GetTokenEvent(this.email,this.password);
+  @override
+  List<Object> get props => [email,password];
+}
+class CheckIsSuccessLogInEvent extends LogInEvent{
+  const CheckIsSuccessLogInEvent();
+  @override
+  List<Object> get props => [];
+}
+

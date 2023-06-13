@@ -1,8 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:speach_learning/Presentation/Read/bloc/Bloc_Controler_Read.dart';
-import 'package:speach_learning/core/error/Error_Class.dart';
+import 'package:speach_learning/core/global/static/static_variable.dart';
 
 // ignore: camel_case_types
 class bottomSheet {
@@ -59,13 +57,13 @@ class bottomSheet {
                                 SizedBox(
                                     width: size.width * 0.5,
                                     child: Text(
-                                      ErrorListen.getError(state["Problem"].toString()),
+                                      state["Problem"].toString(),
                                       style: const TextStyle(
                                         color: Colors.black54,
                                       ),
                                       softWrap: true,
                                       textAlign: TextAlign.center,
-                                    )),
+                                    ).tr()),
                                 const SizedBox(
                                   width: 10.0,
                                 ),
@@ -95,7 +93,7 @@ class bottomSheet {
                               color: Colors.white54,
                             ),
                             // ignore: prefer_const_constructors
-                            child: Center(child: Text('alright').tr())),
+                            child: Center(child: Text( state["method"] != null ? state["method"].toString() : 'alright').tr())),
                       )
                     ],
                   ),
@@ -104,7 +102,7 @@ class bottomSheet {
               context: context)
           .whenComplete(() {
         try {
-          BlocProvider.of<Bloc_changeStateBottomSheet>(context).changeStateBottomSheet(false);
+          StaticVariable.isBottomSheetShow = false;
         } catch (e, s) {
           // ignore: avoid_print
           print(s);

@@ -6,28 +6,28 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/Presentation/PhraseUI/controler/phrase_bloc.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileBloc.dart';
+import 'package:speach_learning/Presentation/Profile/controler/ProfileEvent.dart';
 import 'package:speach_learning/Presentation/Read/controler/read_bloc.dart';
+import 'package:speach_learning/Presentation/Read/controler/voice_bloc.dart';
 import 'package:speach_learning/Presentation/Route/UI/route.dart';
 import 'package:speach_learning/Presentation/Route/controler/route_page_bloc.dart';
 import 'package:speach_learning/Presentation/SplashScreen/controler/blocSplashScreen.dart';
 import 'package:speach_learning/core/global/themeApp/ThemeApp.dart';
 import 'package:speach_learning/core/services/services_locator.dart';
 import 'Presentation/Home/controler/home_bloc.dart';
-import 'Presentation/Home/controler/home_event.dart';
 import 'Presentation/LoadingPage/Ui/loading_page.dart';
 import 'Presentation/LogIn/controler/log_in_bloc.dart';
 import 'Presentation/PhraseUI/bloc/BlocShowCheckBox.dart';
 import 'Presentation/Profile/controler/ProfileState.dart';
-import 'Presentation/Read/bloc/Bloc_Controler_Read.dart';
 import 'Presentation/SplashScreen/UI/Splash_Screen.dart';
 import 'core/error/ui_error.dart';
 import 'core/utils/enums.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   ServicesLocator servicesLocator = ServicesLocator();
   servicesLocator.init();
   servicesLocator.initParticipants();
-  WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   runApp(
     EasyLocalization(
@@ -54,37 +54,11 @@ class MyApp extends StatelessWidget {
           BlocProvider<blocSplashScreen>(
             create: (BuildContext context) => blocSplashScreen(),
           ),
-          BlocProvider<Bloc_Controler>(
-            create: (BuildContext context) => Bloc_Controler(),
-          ),
-          BlocProvider<Bloc_increment>(
-            create: (BuildContext context) => Bloc_increment(),
-          ),
-          BlocProvider<Bloc_chang_color_Word>(
-            create: (BuildContext context) => Bloc_chang_color_Word(),
-          ),
-          BlocProvider<Bloc_chang_display_circuler>(
-            create: (BuildContext context) => Bloc_chang_display_circuler(),
-          ),
-          BlocProvider<Bloc_change_Language>(
-            create: (BuildContext context) => Bloc_change_Language(),
-          ),
-          BlocProvider<Bloc_changeStateBottomSheet>(
-            create: (BuildContext context) => Bloc_changeStateBottomSheet(),
-          ),
-          BlocProvider<Bloc_CheckLevel>(
-            create: (BuildContext context) => Bloc_CheckLevel(),
-          ),
           BlocProvider<BlocShowCheckBox>(
             create: (BuildContext context) => BlocShowCheckBox(),
           ),
-          BlocProvider<BlocUpdateShowListPhrase>(
-            create: (BuildContext context) => BlocUpdateShowListPhrase([]),
-          ),
-          BlocProvider<BlocPhraseManage>(
-              create: (BuildContext context) => BlocPhraseManage()),
           BlocProvider(create: (BuildContext context) {
-            return sl<LogInBloc>()..add(GetParticipantIdEvent());
+            return sl<LogInBloc>()..add(const CheckIsSuccessLogInEvent())..add(const GetTokenEvent("voca@test.com", "password"))..add(GetParticipantIdEvent());
           }),
           BlocProvider(create: (BuildContext context) {
             return sl<ProfileBloc>();
@@ -96,10 +70,13 @@ class MyApp extends StatelessWidget {
             return sl<PhraseBloc>();
           }),
           BlocProvider(create: (BuildContext context) {
-            return sl<RoutePageBloc>();
+            return sl<RoutePageBloc>()..add(const TransitionRoutePageEvent(BottomSheetOption.home));
           }),
           BlocProvider(create: (BuildContext context) {
             return sl<ReadBloc>();
+          }),
+          BlocProvider(create: (BuildContext context) {
+            return sl<VoiceBloc>();
           })
         ],
         child: BlocBuilder<ProfileBloc, ParticipantState>(
@@ -124,25 +101,41 @@ class CheckAnyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LogInBloc, LogInState>(
-        buildWhen: (previos, current) => previos.requestState != current.requestState,
+        buildWhen: (previos, current) => previos != current,
     builder: (context, state) {
       switch (state.requestState) {
         case RequestState.loading:
           return const LoadingPage();
         case RequestState.loaded:
-          if (state.participantsId != 0) {
-            context.read<RoutePageBloc>().add( const TransitionRoutePageEvent(BottomSheetOption.home));
+          if (state.participantsId != 0 && state.token.isNotEmpty && state.isCheckSuccessLogIn == "Ok") {
+            context.read<RoutePageBloc>().add(GetParticipantEvent(id: state.participantsId, key: "Route"));
             return RoutePage(idParticipant: state.participantsId,);
-          } else {
+          } else if(!state.token.isNotEmpty && state.participantsId != 0 && state.isCheckSuccessLogIn == "Ok"){
+            return const LoadingPage();
+          }else if(state.isCheckSuccessLogIn == ""){
+            return const LoadingPage();
+          } else if(state.isCheckSuccessLogIn != "Ok" && state.isCheckSuccessLogIn != ""){
+            return UiError(
+                message: state.isCheckSuccessLogIn,
+                retry: (){
+                  context.read<LogInBloc>().add(const CheckIsSuccessLogInEvent());
+                },
+                close: () {
+                  if(Platform.isAndroid) {
+                    SystemNavigator.pop();
+                  }else if(Platform.isIOS){
+                    exit(0);
+                  }
+                });
+          }else{
             return Splash_Screen();
           }
         case RequestState.error:
           return UiError(
-            message: "err_Network",
+            message: "err_network",
             retry: (){
+              context.read<LogInBloc>().add(const GetTokenEvent("voca@test.com", "password"));
               context.read<LogInBloc>().add(GetParticipantIdEvent());
-              context.read<HomeBloc>().add(GetAllSectionsEvent(idParticipant: state.participantsId));
-              context.read<HomeBloc>().add(GetParticipantDomainEvent(id: state.participantsId));
             },
             close: () {
               if(Platform.isAndroid) {

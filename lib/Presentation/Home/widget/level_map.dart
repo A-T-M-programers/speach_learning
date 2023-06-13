@@ -4,9 +4,8 @@ import 'package:speach_learning/Domain/Entity/Level.dart';
 
 // ignore: must_be_immutable
 class LevelMap extends StatelessWidget {
-  LevelMap({Key? key, required this.listLevel, required this.rightOut,required this.idParticipant})
+  LevelMap({Key? key, required this.listLevel, required this.rightOut})
       : super(key: key);
-  final int idParticipant;
   final List<Level> listLevel;
   bool rightOut;
 
@@ -23,12 +22,12 @@ class LevelMap extends StatelessWidget {
     for (var level in listLevel) {
       if (rightOut) {
         if (listLevel.length <= 1) {
-          list.add(Align(alignment: const Alignment(0, 0), child: ToolTipButtonLevel(level: level,idParticipant: idParticipant,)));
+          list.add(Align(alignment: const Alignment(0, 0), child: ToolTipButtonLevel(level: level)));
           return list;
         } else {
           list.add(Container(
               alignment: Alignment(width,0.0),
-              child: ToolTipButtonLevel(level: level,idParticipant: idParticipant,)));
+              child: ToolTipButtonLevel(level: level)));
           width = width + 0.1;
           for (int i = 0; i < 5 && level != listLevel.last; i++) {
             list.add(Container(
@@ -54,12 +53,12 @@ class LevelMap extends StatelessWidget {
           // ignore: prefer_const_constructors
           list.add(Align(
               alignment: const Alignment(0, 0),
-              child: ToolTipButtonLevel(level: level,idParticipant: idParticipant,)));
+              child: ToolTipButtonLevel(level: level)));
           return list;
         } else {
           list.add(Align(
               alignment: Alignment(width,0.0),
-              child: ToolTipButtonLevel(level: level,idParticipant: idParticipant,)));
+              child: ToolTipButtonLevel(level: level)));
           width = width - 0.1;
           for (int i = 0; i < 5 && level != listLevel.last; i++) {
             list.add(Container(

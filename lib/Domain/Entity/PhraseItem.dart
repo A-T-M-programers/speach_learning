@@ -8,38 +8,49 @@ class PhraseItem{
   final String translation;
 
   final String type;
+  void setType(String status){
+    type.replaceAll(type, status);
+  }
 
   final int wordCount;
 
   final int idLevel;
 
+  final int order;
+
   final List<Word> listWord;
 
+  const PhraseItem({
+    this.id = 0,
+    this.type = "",
+    this.listWord = const [],
+    this.idLevel = 0,
+    this.order = 0,
+    this.wordCount = 0,
+    this.content = "",
+    this.translation = ""
+});
 
-  PhraseItem(
-      {required this.id,
-      required this.content,
-      required this.translation,
-      required this.type,
-      required this.wordCount,
-      required this.idLevel,
-        this.listWord = const []});
-
-  // void _sortListWord(){
-  //   for(var element in listWord){
-  //     PWRB index = listPWRB.firstWhere((pwrb) => pwrb.iDWord == element.id);
-  //     Word temp = element;
-  //     element = listWord[index.index];
-  //     listWord[index.index] = temp;
-  //   }
-  // }
-  bool containWordById(String idWord){
-    if(listWord.any((element) => element.id == idWord)){
-      return true;
-    }else{
-      return false;
-    }
+  PhraseItem cobyPhraseItem(){
+    return PhraseItem(
+      id: id,
+      type: type,
+      listWord:List.generate(listWord.length, (index) => Word(
+          id: listWord[index].id,
+          content: listWord[index].content,
+          translation: listWord[index].translation,
+          idPhrase: listWord[index].idPhrase,
+          phraseWordId: listWord[index].phraseWordId,
+          wordType: listWord[index].wordType,
+          order: listWord[index].order)),
+      idLevel: idLevel,
+      order: order,
+      wordCount: wordCount,
+      content: content,
+      translation: translation
+    );
   }
+
 }
 // class PWRB{
 //   late String _iDPhrase;

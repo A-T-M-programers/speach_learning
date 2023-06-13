@@ -1,28 +1,36 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:speach_learning/Domain/Entity/Dialects.dart';
+import 'package:speach_learning/Domain/Entity/PhraseItem.dart';
 import 'package:speach_learning/Domain/Entity/Word.dart';
-import 'package:speach_learning/Presentation/Read/bloc/Bloc_Controler_Read.dart';
+import 'package:speach_learning/Presentation/Read/component/button_voice.dart';
 import 'package:speach_learning/Presentation/Read/controle/Speech_To_Text.dart';
-import 'package:speach_learning/Presentation/Read/controle/Text_To_Speech.dart';
+import 'package:speach_learning/Presentation/Read/controler/read_bloc.dart';
+import 'package:speach_learning/Presentation/Read/controler/voice_bloc.dart';
+import 'package:speach_learning/core/global/static/static_methode.dart';
+import 'package:speach_learning/core/global/static/static_variable.dart';
 
-class AlertDialogShowWord {
+class AlertDialogShowWord extends StatelessWidget {
   // ignore: non_constant_identifier_names
-  Text_To_Speech? text_to_speech;
+  static SpeechToTextClass speechToTextClass = SpeechToTextClass();
+  final Word word;
+  final Word? nextWord;
+  final PhraseItem phraseItem,conceptPhraseItem;
+  final Dialects dialects;
 
-  // ignore: non_constant_identifier_names
-  Speech_To_Text? speech_to_text;
+  const AlertDialogShowWord({
+    super.key,
+    required this.phraseItem,
+    required this.word,
+    this.nextWord,
+    required this.conceptPhraseItem,
+    required this.dialects,
+  });
 
-  // ignore: non_constant_identifier_names
-  String? change_Language;
-  List<Map<String, String>>? lan;
-
-  // ignore: non_constant_identifier_names
-  AlertDialogShowWord(BuildContext context, Word word, Word? nextWord,
-      // ignore: non_constant_identifier_names
-      {this.text_to_speech, this.change_Language, this.lan}) {
-    // ignore: prefer_const_constructors
-    AlertDialog alert = AlertDialog(
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
         shape: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
         backgroundColor: Theme.of(context).dialogBackgroundColor,
         elevation: 20.0,
@@ -32,142 +40,126 @@ class AlertDialogShowWord {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     border: Border.all(
-                        color: Theme.of(context).textTheme.headline2!.color!,
+                        color:
+                            Theme.of(context).textTheme.headlineSmall!.color!,
                         width: 3,
-                        strokeAlign: StrokeAlign.outside)),
+                        strokeAlign: BorderSide.strokeAlignOutside)),
                 child: Center(
-                    // ignore: avoid_unnecessary_containers
-                    child: Container(
-                  // ignore: prefer_const_literals_to_create_immutables
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 15.0),
-                          child: BlocBuilder<Bloc_chang_color_Word, Map<String, dynamic>>(buildWhen: (previos, next) {
-                            if (next["id-Word"] == word.id) {
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 15.0),
+                        child: BlocBuilder<VoiceBloc, VoiceState>(
+                            buildWhen: (previous, current) {
+                          if (previous.requestState != current.requestState) {
+                            if (current is ChangeColorWordState) {
+                              // if (word.id == current.idWord) {
+                              //   word.setState(current.state);
+                              //   return true;
+                              // }
                               return true;
+                            }
+                          }
+                          return false;
+                        }, builder: (context, state) {
+                          return Column(children: [
+                            Text(word.content,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: GetColorByType.call(
+                                        word.status, context))),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            Text(word.translation,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: GetColorByType.call(
+                                        word.status, context))),
+                          ]);
+                        }),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                        child: ButtonVoice(text: word.content,dialects: dialects,),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.amberAccent),
+                          ),
+                          child: Text(
+                            "skip",
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium!
+                                    .color),
+                          ).tr(),
+                          onPressed: () {
+                            if ((word.status == "S" || word.status == "F") && phraseItem.listWord.where((element) => element.status == "X").length < (phraseItem.listWord.length ~/ 3).toInt()) {
+                              word.setState("X");
+                              if(conceptPhraseItem.listWord.any((element) => element.phraseWordId == word.phraseWordId && element.status != "X" && element.status != "C")) {
+                                context.read<ReadBloc>().add(SetWordStateEvent(word.phraseWordId, "X", StaticVariable.participants.id,0));
+                              }
+                              context.read<VoiceBloc>().add(SetWordStateDuringVoiceEvent(word.phraseWordId, "X"));
+                              if (nextWord != null) {
+                                nextWord!.setState("S");
+                                if(conceptPhraseItem.listWord.any((element) => element.phraseWordId == word.phraseWordId && element.status != "X" && element.status != "C" && element.status != "S")) {
+                                  context.read<ReadBloc>().add(SetWordStateEvent(nextWord!.phraseWordId, "S", StaticVariable.participants.id,0));
+                                }
+                                context.read<VoiceBloc>().add(SetWordStateDuringVoiceEvent(nextWord!.phraseWordId, "S"));
+                              }
+                            } else if (word.status == "X") {
+                              if (nextWord != null) {
+                                nextWord!.setState("S");
+                                if(conceptPhraseItem.listWord.any((element) => element.phraseWordId == word.phraseWordId && element.status != "X" && element.status != "C" && element.status != "S")) {
+                                  context.read<ReadBloc>().add(SetWordStateEvent(nextWord!.phraseWordId, "S", StaticVariable.participants.id,0));
+                                }
+                                context.read<VoiceBloc>().add(SetWordStateDuringVoiceEvent(nextWord!.phraseWordId, "S"));
+                              }
                             } else {
-                              return false;
+                              if (phraseItem.listWord.where((element) => element.status == "X").length < (phraseItem.listWord.length ~/ 3).toInt()) {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("notSkipped", style: TextStyle(color: Theme.of(context).textTheme.displaySmall!.color),).tr(), backgroundColor: Theme.of(context).dialogBackgroundColor,));
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("exceeded", style: TextStyle(color: Theme.of(context).textTheme.displaySmall!.color),).tr(), backgroundColor: Theme.of(context).dialogBackgroundColor,));
+                              }
                             }
-                          }, builder: (context, type) {
-                            if (type["id-Word"] == word.id) {
-                              // word.uwrb.setType(type["type"]!);
-                            }
-                            return Column(children: [
-                              Text(word.content,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: word.getColorType(context))),
-                              const SizedBox(
-                                height: 10.0,
-                              ),
-                              Text(word.translation,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: word.getColorType(context))),
-                            ]);
-                          }),
+                          },
                         ),
-                        Container(
-                          margin:
-                              const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.volume_up_rounded,
-                              color: Color(0xffd4af37),
-                              size: 35.0,
-                            ),
-                            onPressed: () {
-                              text_to_speech!.speak(
-                                  word.content,
-                                  change_Language == "English(US)"
-                                      ? lan!.first
-                                      : lan!.last);
-                            },
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10.0),
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.greenAccent),
                           ),
+                          child: Text("read", style: TextStyle(color: Theme.of(context).textTheme.headlineMedium!.color)).tr(),
+                          onPressed: () {
+                            speechToTextClass.initSpeechState();
+                            speechToTextClass.startListening(phraseItem: conceptPhraseItem, word: word, nextWord: nextWord, context: context);
+                          },
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.amberAccent),
-                            ),
-                            child: Text(
-                              "skip",
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline1!
-                                      .color),
-                            ).tr(),
-                            onPressed: () {
-                              // if(word.uwrb.type == "3" || word.uwrb.type == "0") {
-                              //   context.read<Bloc_chang_color_Word>().chang_color_Word({"id-Word": word.id, "type": "4"});
-                              //   context.read<Bloc_CheckLevel>().CheckLevel({"id-Word":word.id,"type":"1"});
-                              //   Navigator.pop(context);
-                              // }
-                              // else if(word.uwrb.type == "4"){
-                              //   Navigator.pop(context);
-                              // }
-                              // else{
-                              //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("notSkipped",style: TextStyle(color: Theme.of(context).textTheme.headline4!.color),).tr(),backgroundColor: Theme.of(context).dialogBackgroundColor,));
-                              // }
-                            },
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 10.0),
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.greenAccent),
-                            ),
-                            child: Text("read",
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .headline1!
-                                            .color))
-                                .tr(),
-                            onPressed: () {
-                              speech_to_text = Speech_To_Text(word: word, nextWord: nextWord, bc: context, phraseItem: null);
-                              speech_to_text!.initSpeechState();
-                              // if (word.uwrb.type != "1") {
-                              //   speech_to_text!.startListening();
-                              //   if(word.uwrb.type == "1"){
-                              //     Navigator.pop(context);
-                              //   }
-                              // } else {
-                              //   speech_to_text!.startListening();
-                              //   if(word.uwrb.type == "1"){
-                              //     Navigator.pop(context);
-                              //   }
-                              // }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ))),
+                )),
             IconButton(
               color: Colors.redAccent,
               icon: const Icon(Icons.clear_rounded),
               onPressed: () {
-                Navigator.pop(context);
+                try {
+                  Navigator.pop(context);
+                } catch (error) {
+                  print(error);
+                }
               },
             )
           ]),
         ]);
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
   }
 }

@@ -24,7 +24,7 @@ class _WordItemState extends State<WordItem> {
     richMessage: TextSpan(
       text: widget.word.content + "  =  " + (widget.word.translation),
       style: TextStyle(
-        color: Theme.of(context).textTheme.headline1!.color!,
+        color: Theme.of(context).textTheme.headlineMedium!.color!,
       ),
     ),
     child: Text.rich(
@@ -36,8 +36,8 @@ class _WordItemState extends State<WordItem> {
         decorationThickness: 3,
         decorationStyle: TextDecorationStyle.dotted,
         decoration: TextDecoration.underline,
-        decorationColor:  Theme.of(context).textTheme.headline2!.color!,
-        shadows: [BoxShadow(color: Theme.of(context).textTheme.headline2!.color!, offset: const Offset(0, -5))],
+        decorationColor:  Theme.of(context).textTheme.headlineSmall!.color!,
+        shadows: [BoxShadow(color: Theme.of(context).textTheme.headlineSmall!.color!, offset: const Offset(0, -5))],
     ),
       ),
     )

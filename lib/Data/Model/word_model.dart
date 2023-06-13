@@ -9,16 +9,18 @@ class WordModel extends Word{
     required super.idPhrase,
     required super.wordType,
     required super.order,
+    required super.phraseWordId,
     required super.status
 });
 
   factory WordModel.fromJson(Map<String,dynamic> json,int idPhrase) =>
       WordModel(
-          id: json["word_id"],
-          content: json["content"],
-          translation: json["translation"],
+          id: json["word_id"]??0,
+          content: json["content"]??"",
+          translation: json["translation"]??"",
           idPhrase: idPhrase,
-          wordType: json["word_type"],
+          phraseWordId: json["phrase_word_id"] ?? 0 ,
+          wordType: json["word_type"] ?? "",
           status: json["status"] ?? "",
-          order: json["order"]);
+          order: json["order"] ?? 0);
 }

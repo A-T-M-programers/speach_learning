@@ -4,6 +4,8 @@ import 'package:speach_learning/Domain/Entity/Level.dart';
 class Domains{
   final int id;
 
+  final int order;
+
   final String title;
 
 
@@ -12,25 +14,26 @@ class Domains{
 
   final List<Level> listLevel;
 
-  // final int idLang;
+  final String key;
 
   final int domainLanguage;
 
   final String type;
 
   Domains({
-    required this.id,
-    required this.title,
-    required this.description,
+    this.id = 0,
+    this.order = 0,
+    this.title = "",
+    this.description = "",
     this.type = "",
-    // required this.idLang,
-    required this.listLevel,
+    this.key = "en",
+    this.listLevel =const [],
     this.domainLanguage = 1,
   });
 
   Color getColor(BuildContext context){
     switch(type){
-      case "S": return Colors.blue;
+      case "S": return Colors.blue.withOpacity(0.7);
       case "X": return Colors.amberAccent;
       case "C": return Colors.green.withOpacity(0.7);
       default: return Theme.of(context).appBarTheme.backgroundColor!;

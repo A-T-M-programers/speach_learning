@@ -1,8 +1,8 @@
-import 'package:equatable/equatable.dart';
 import 'package:speach_learning/Domain/Entity/Participants.dart';
+import 'package:speach_learning/Presentation/Route/controler/route_page_bloc.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
-abstract class ProfileEvent extends Equatable{
+abstract class ProfileEvent extends RoutePageEvent{
   const ProfileEvent();
 
   @override

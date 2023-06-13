@@ -2,7 +2,6 @@
 import 'package:speach_learning/Domain/Entity/Participants.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
-import 'dialect_model.dart';
 
 // ignore: must_be_immutable
 class ParticipantModel extends Participants {
@@ -16,7 +15,7 @@ class ParticipantModel extends Participants {
       required super.isAdmob,
       required super.learnWordCount,
       required super.learnPhraseCount,
-      required super.dialects});
+      required super.idDialects});
 
   factory ParticipantModel.fromJson(Map<String, dynamic> json) =>
       ParticipantModel(
@@ -29,5 +28,5 @@ class ParticipantModel extends Participants {
           isAdmob: json["is_admob"] == 0 ? false : true,
           learnWordCount: json["learn_word_count"],
           learnPhraseCount: json["learn_phrase_count"],
-          dialects: DialectModel.fromJson(json));
+          idDialects: json["dialect_id"]);
 }

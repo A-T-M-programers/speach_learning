@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
+
 class DioErrorModel extends Equatable{
   final DioErrorType dioErrorType;
   final String message;

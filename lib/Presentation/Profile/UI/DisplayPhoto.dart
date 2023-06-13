@@ -24,7 +24,7 @@ class show_photo extends StatelessWidget {
           switch (state.requestState) {
             case RequestState.loading:
               return CircularProgressIndicator(
-                color: Theme.of(context).textTheme.headline2!.color,
+                color: Theme.of(context).textTheme.headlineSmall!.color,
               );
             case RequestState.loaded:
               if(state.participants != null) {

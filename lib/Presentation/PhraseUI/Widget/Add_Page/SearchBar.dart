@@ -2,12 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/Domain/Entity/PhraseItem.dart';
-import 'package:speach_learning/Presentation/PhraseUI/bloc/BlocShowCheckBox.dart';
 import 'package:speach_learning/Presentation/PhraseUI/controler/phrase_bloc.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
-class SearchBar extends StatelessWidget {
-  const SearchBar({Key? key}) : super(key: key);
+class MySearchBar extends StatelessWidget {
+  const MySearchBar({Key? key}) : super(key: key);
 
   static Size size = const Size(0, 0);
   static TextEditingController search = TextEditingController();
@@ -34,7 +33,7 @@ class SearchBar extends StatelessWidget {
   Widget getWidget(bool checkLoaded,BuildContext context,List<PhraseItem> listPhraseItem){
     return TextFormField(
       style: TextStyle(
-          color: Theme.of(context).textTheme.headline1!.color,
+          color: Theme.of(context).textTheme.headlineSmall!.color,
           decorationThickness: 0.0,
           height: 1.5),
       enabled: true,
@@ -55,22 +54,22 @@ class SearchBar extends StatelessWidget {
         hintStyle: TextStyle(
             color: Theme.of(context)
                 .textTheme
-                .headline1!
+                .headlineSmall!
                 .color!
                 .withOpacity(0.5)),
         contentPadding: const EdgeInsets.only(left: 5.0, right: 5.0),
         border: const OutlineInputBorder(
             gapPadding: 0.0,
             borderSide: BorderSide(
-                strokeAlign: StrokeAlign.outside, color: Colors.white38)),
+                strokeAlign: BorderSide.strokeAlignOutside, color: Colors.white38)),
         enabledBorder: const OutlineInputBorder(
             gapPadding: 0.0,
             borderSide: BorderSide(
-                strokeAlign: StrokeAlign.outside, color: Colors.white38)),
+                strokeAlign: BorderSide.strokeAlignOutside, color: Colors.white38)),
         focusedBorder: const OutlineInputBorder(
             gapPadding: 0.0,
             borderSide: BorderSide(
-                strokeAlign: StrokeAlign.outside, color: Colors.white38)),
+                strokeAlign: BorderSide.strokeAlignOutside, color: Colors.white38)),
       ),
       onChanged:(value) => searchAI(checkLoaded,value,context,listPhraseItem),
     );
@@ -83,13 +82,8 @@ class SearchBar extends StatelessWidget {
         if (phraseItem.content.toLowerCase().contains(value.toLowerCase())) {
           list.add(phraseItem);
         }
-        // else{
-        //   if(phraseItem.listWord.last.wordInPhrase.toLowerCase().contains(value.toLowerCase())){
-        //     list.add(phraseItem);
-        //   }
-        // }
       }
-      context.read<BlocUpdateShowListPhrase>().showListPhraseItem(list);
+      context.read<PhraseBloc>().add(SearchListPhraseEvent(list));
     }else{
       return;
     }

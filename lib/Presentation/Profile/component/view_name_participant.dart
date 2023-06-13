@@ -19,7 +19,7 @@ class ViewNameParticipant extends StatelessWidget {
             style: TextStyle(
                 color: Theme.of(context)
                     .textTheme
-                    .headline2!
+                    .headlineSmall!
                     .color),
           );
         case RequestState.loaded:
@@ -28,7 +28,7 @@ class ViewNameParticipant extends StatelessWidget {
             style: TextStyle(
                 color: Theme.of(context)
                     .textTheme
-                    .headline2!
+                    .headlineSmall!
                     .color),
           );
         case RequestState.error:
@@ -37,7 +37,7 @@ class ViewNameParticipant extends StatelessWidget {
             style: TextStyle(
                 color: Theme.of(context)
                     .textTheme
-                    .headline2!
+                    .headlineSmall!
                     .color),
           );
       }

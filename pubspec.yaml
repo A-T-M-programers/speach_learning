@@ -41,7 +41,6 @@ dependencies:
   flutter_bloc: ^8.1.1
   bloc: ^8.1.0
   file_picker: ^5.2.4
-  flutter_pdfview: ^1.2.5
   syncfusion_flutter_pdf: ^20.4.38
   flutter_native_splash: ^2.2.16
   image_picker: ^0.8.6
@@ -109,11 +108,17 @@ flutter:
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+#   example:
+  fonts:
+    - family: DancingScript
+      fonts:
+        - asset: assets/Fonts/DancingScript-VariableFont_wght.ttf
+    - family: Playfair
+      fonts:
+        - asset: assets/Fonts/Playfair-VariableFont_opsz,wdth,wght.ttf
+    - family: RubikPuddles
+      fonts:
+        - asset: assets/Fonts/RubikPuddles-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

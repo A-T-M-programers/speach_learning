@@ -9,8 +9,10 @@ class LevelModel extends Level {
       required super.description,
       required super.phraseCount,
       required super.order,
+        required super.idDomain,
       required super.type,
-      super.listPhraseItem
+      super.listPhraseItem,
+        super.successCount
       });
 
   factory LevelModel.fromJson(Map<String, dynamic> json) =>
@@ -20,7 +22,9 @@ class LevelModel extends Level {
           description: json["description"],
           phraseCount: json["phrase_count"],
           order: json["order"],
+          idDomain: json["domain_id"] ?? 1,
           type: json["status"] ?? "",
-        listPhraseItem: json["phrases"] != null ? List.generate(json["phrases"].length, (index) => PhraseModel.fromJson(json["phrases"][index],json["id"])) : []
+          successCount: json["pastCount"] ?? 0,
+        listPhraseItem: json["phrases"] != null ? List.generate(json["phrases"].length, (index) => PhraseModel.fromJson(json["phrases"][index])) : []
       );
 }

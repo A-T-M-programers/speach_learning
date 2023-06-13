@@ -14,15 +14,15 @@ import 'package:speach_learning/Presentation/LoadingPage/Ui/loading_page.dart';
 import 'package:speach_learning/Presentation/LogIn/UI/log_in.dart';
 import 'package:speach_learning/Presentation/LogIn/controler/log_in_bloc.dart';
 import 'package:speach_learning/core/error/ui_error.dart';
+import 'package:speach_learning/core/global/static/static_variable.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
 // ignore: camel_case_types, must_be_immutable
 class home_page extends StatelessWidget {
-  home_page({Key? key, required this.idParticipant}) : super(key: key);
+  home_page({Key? key}) : super(key: key);
 
   // ignore: prefer_const_constructors
   Size size = Size(0.0, 0.0);
-  final int idParticipant;
 
   @override
   Widget build(BuildContext context) {
@@ -34,16 +34,6 @@ class home_page extends StatelessWidget {
             case RequestState.loading:
               return const LoadingPage();
             case RequestState.loaded:
-              if(state.allSections.isNotEmpty){
-                if(state.allSections[0].type == ""){
-                  context.read<HomeBloc>().add(SetDomainStateEvent(idParticipant: idParticipant, state: "S", idDomain: state.allSections[0].id));
-                }
-                if(state.allSections[0].listLevel.isNotEmpty){
-                  if(state.allSections[0].listLevel[0].type == ""){
-                    context.read<HomeBloc>().add(SetLevelStateEvent(idParticipant: idParticipant, state: "S", idLevel: state.allSections[0].listLevel[0].id));
-                  }
-                }
-              }
               return Scaffold(
                 appBar: AppBar(
                   backgroundColor:
@@ -92,20 +82,16 @@ class home_page extends StatelessWidget {
                   ],
                 ),
                 body: !(state.requestState == RequestState.loaded && state.allSections.isEmpty) ?
-                AllSectionsViewComponent(participantId: idParticipant,)
+                const AllSectionsViewComponent()
                     : Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("unregister",style: TextStyle(color: Theme.of(context).textTheme.headline2!.color),).tr(),
+                        Text("unregister",style: TextStyle(color: Theme.of(context).textTheme.headlineSmall!.color),).tr(),
                         IconButton(
                             onPressed: (){
-                              if(idParticipant == 0){
-                                context.read<LogInBloc>().add(GetParticipantIdEvent());
-                              }else {
-                                context.read<HomeBloc>().add(GetAllSectionsEvent(idParticipant: idParticipant));
-                              }
-                            }, icon: Icon(Icons.refresh,size: 50.0,color: Theme.of(context).textTheme.headline2!.color!,))
+                                context.read<HomeBloc>().add(GetAllSectionsEvent(idParticipant: StaticVariable.participants.id));
+                            }, icon: Icon(Icons.refresh,size: 50.0,color: Theme.of(context).textTheme.headlineSmall!.color!,))
                       ],)),
               );
             case RequestState.error:
@@ -121,7 +107,7 @@ class home_page extends StatelessWidget {
                         context.read<LogInBloc>().add(GetParticipantIdEvent());
                       }else {
                         context.read<HomeBloc>().add(GetAllSectionsEvent(idParticipant: state.participantId));
-                        context.read<HomeBloc>().add(GetParticipantDomainEvent(id: state.participantId));
+                        context.read<HomeBloc>().add(GetParticipantDomainEvent(idLang: state.participantId));
                       }
                       break;
                   }

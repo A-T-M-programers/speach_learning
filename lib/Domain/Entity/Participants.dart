@@ -1,7 +1,5 @@
 
 import 'package:equatable/equatable.dart';
-import 'package:speach_learning/Domain/Entity/Dialects.dart';
-import 'package:speach_learning/Domain/Entity/Lang.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
 // ignore: must_be_immutable
@@ -33,7 +31,10 @@ class Participants extends Equatable {
 
   final int learnPhraseCount;
 
-  final Dialects dialects;
+  int idDialects;
+  void setIdDialect(int idDialect){
+    idDialects = idDialect;
+  }
 
   Participants(
       {required this.id,
@@ -45,7 +46,7 @@ class Participants extends Equatable {
       required this.isAdmob,
       required this.learnWordCount,
       required this.learnPhraseCount,
-      required this.dialects});
+      required this.idDialects});
 
   factory Participants.from(Participants participants) => Participants(
       id: participants.id,
@@ -57,7 +58,7 @@ class Participants extends Equatable {
       isAdmob: participants.isAdmob,
       learnWordCount: participants.learnWordCount,
       learnPhraseCount: participants.learnPhraseCount,
-      dialects: participants.dialects);
+      idDialects: participants.idDialects);
 
   factory Participants.empty() => Participants(
       id: 0,
@@ -69,7 +70,7 @@ class Participants extends Equatable {
       isAdmob: false,
       learnWordCount: 0,
       learnPhraseCount: 0,
-      dialects: const Dialects(id: 0, locale: "", key: "", lang: Lang(id: 0, name: "")));
+      idDialects: 1);
 
   @override
   List<Object> get props => [
@@ -82,7 +83,7 @@ class Participants extends Equatable {
         isAdmob,
         learnWordCount,
         learnPhraseCount,
-        dialects
+    idDialects
       ];
 }
 

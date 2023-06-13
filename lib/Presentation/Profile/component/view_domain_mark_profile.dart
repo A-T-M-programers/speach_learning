@@ -16,11 +16,10 @@ class ViewDomainMarkProfile extends StatelessWidget {
         case RequestState.loading:
           return Text(
             '0',
-            // ignore: prefer_const_constructors
             style: TextStyle(
               fontFamily: 'PMingLiU-ExtB',
               fontSize: 14,
-              color: Theme.of(context).textTheme.headline2!.color,
+              color: Theme.of(context).textTheme.headlineSmall!.color,
             ),
             textAlign: TextAlign.center,
             softWrap: false,
@@ -28,11 +27,10 @@ class ViewDomainMarkProfile extends StatelessWidget {
         case RequestState.loaded:
           return Text(
             '${state.participantDomain.idDomain + 1}',
-            // ignore: prefer_const_constructors
             style: TextStyle(
               fontFamily: 'PMingLiU-ExtB',
               fontSize: 14,
-              color: Theme.of(context).textTheme.headline2!.color,
+              color: Theme.of(context).textTheme.headlineSmall!.color,
             ),
             textAlign: TextAlign.center,
             softWrap: false,
@@ -40,11 +38,10 @@ class ViewDomainMarkProfile extends StatelessWidget {
         case RequestState.error:
           return Text(
             '0',
-            // ignore: prefer_const_constructors
             style: TextStyle(
               fontFamily: 'PMingLiU-ExtB',
               fontSize: 14,
-              color: Theme.of(context).textTheme.headline2!.color,
+              color: Theme.of(context).textTheme.headlineSmall!.color,
             ),
             textAlign: TextAlign.center,
             softWrap: false,

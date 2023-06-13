@@ -2,95 +2,59 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:speach_learning/Presentation/Home/controler/home_bloc.dart';
+import 'package:speach_learning/Presentation/Home/controler/home_event.dart';
 import 'package:speach_learning/Presentation/LoadingPage/Ui/loading_page.dart';
 import 'package:speach_learning/Presentation/PhraseUI/Widget/Add_Page/ListPhraseItem.dart';
 import 'package:speach_learning/Presentation/PhraseUI/Widget/Add_Page/SearchBar.dart';
-import 'package:speach_learning/Presentation/PhraseUI/bloc/BlocShowCheckBox.dart';
 import 'package:speach_learning/Presentation/PhraseUI/controler/phrase_bloc.dart';
-import 'package:speach_learning/Presentation/Read/controler/read_bloc.dart';
 import 'package:speach_learning/Presentation/SplashScreen/UI/Splash_Screen.dart';
-import 'package:speach_learning/Domain/Entity/PhraseItem.dart';
 import 'package:speach_learning/core/error/ui_error.dart';
+import 'package:speach_learning/core/global/static/static_variable.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
-// ignore: camel_case_types, must_be_immutable
-class add_page extends StatelessWidget {
-  // ignore: prefer_const_constructors_in_immutables
-  add_page({Key? key,required this.idParticipant,required this.idLevel}) : super(key: key);
+class PhrasesPage extends StatelessWidget {
+  const PhrasesPage({Key? key,required this.idLevel}) : super(key: key);
 
-  final int idLevel,idParticipant;
-  Size size = const Size(0.0, 0.0);
+  final int idLevel;
+  static Size size = const Size(0.0, 0.0);
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     return BlocBuilder<PhraseBloc,PhraseState>(
-        buildWhen: (previous, current) => previous.requestState != current.requestState,
+        buildWhen: (previous, current) {
+          print(current.requestState);
+          return previous.requestState != current.requestState;
+          },
         builder: (context,state){
           switch (state.requestState) {
             case RequestState.loading:
               return const LoadingPage();
             case RequestState.loaded:
-              if(state.level.listPhraseItem.isNotEmpty){
-                if(state.level.listPhraseItem[0].type == ""){
-                  context.read<PhraseBloc>().add(SetPhraseStateEvent(idParticipant, state.level.listPhraseItem[0].id, "S"));
-                }
-                if(state.level.listPhraseItem[0].listWord.isNotEmpty){
-                  if(state.level.listPhraseItem[0].listWord[0].status == ""){
-                    context.read<ReadBloc>().add(SetWordStateEvent(state.level.listPhraseItem[0].listWord[0].id, "S", idParticipant));
-                  }else{
-                    context.read<ReadBloc>().add(const EmptyEvent());
-                  }
-                }
-              }
-              return Scaffold(
+              return WillPopScope(
+                  onWillPop: () async {
+                    context.read<HomeBloc>().add(GetAllSectionsEvent(idParticipant: StaticVariable.participants.id));
+                    context.read<HomeBloc>().add(GetParticipantDomainEvent(idLang: StaticVariable.participants.id));
+                    return true;
+                  },
+                  child: Scaffold(
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   appBar: AppBar(
                     backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-                    actions: const [SearchBar()],
+                    actions:const [MySearchBar()],
                   ),
                   body: SizedBox(
                     height: size.height - 40,
                     child: Stack(
                       children: <Widget>[
-                        // ignore: prefer_const_literals_to_create_immutables
                         Pinned.fromPins(
                             Pin(start: 0.0, end: 0.0),
                             Pin(start: 0.0, end: 0.0),
-                            child: BlocBuilder<BlocUpdateShowListPhrase,List<PhraseItem>?>(
-                                buildWhen: (previos,next){
-                                  if(previos != next){
-                                    if(next != null){
-                                      // widget.level.setListPhrase(next);
-                                      return true;
-                                    }
-                                    return false;
-                                  }else{
-                                    return false;
-                                  }
-                                },
-                                builder: (context,state) =>
-                                //   BlocBuilder<BlocPhraseManage,Map>(
-                                // buildWhen: (previos,next){
-                                //   try {
-                                //     if (previos != next) {
-                                //       if (next.containsKey("Delete")) {
-                                //         widget.level.listPhraseItem.removeWhere((element) => element.iD == next["Delete"]["id-Phrase"]);
-                                //         return true;
-                                //       }
-                                //       return false;
-                                //     } else {
-                                //       return false;
-                                //     }
-                                //   }catch(e){
-                                //     print("Error in Phrase Manage in add_page Page ===>" + e.toString());
-                                //     return false;
-                                //   }
-                                // },
-                                //   builder: (bc,manage)=>
-                                SingleChildScrollView(
-                                  child: ListPhraseItem(idParticipant: idParticipant,),
-                                ))),
+                            child: SingleChildScrollView(
+                              padding:const EdgeInsets.only(bottom: 100.0),
+                                  child: ListPhraseItem(),
+                                )),
                         Stack(
                           children: <Widget>[
                             Pinned.fromPins(
@@ -134,17 +98,12 @@ class add_page extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-                  // floatingActionButton: Container(
-                  //   margin: const EdgeInsets.only(bottom: 40.0, right: 10),
-                  //   child: const ViewFloating(),
-                  // )
-              );
+              ));
             case RequestState.error:
               return UiError(
                   message: state.error.message,
                   retry: (){
-                    context.read<PhraseBloc>().add(GetLevelEvent(idLevel: idLevel, idParticipant: idParticipant));
+                    context.read<PhraseBloc>().add(GetLevelEvent(idLevel: idLevel, idParticipant: StaticVariable.participants.id));
                   },
                   close: (){
                     Navigator.pop(context);

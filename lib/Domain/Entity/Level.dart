@@ -12,19 +12,25 @@ class Level{
 
   final String type;
 
+  final int idDomain;
+
+  final int successCount;
+
   final int order;
 
   final List<PhraseItem> listPhraseItem;
 
 
   const Level({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.phraseCount,
-    required this.order,
+    this.id = 0,
+    this.title = "",
+    this.description = "",
+    this.phraseCount = 0,
+    this.idDomain = 0,
+    this.order = 0,
     this.listPhraseItem = const [],
-    this.type = ""});
+    this.type = "",
+  this.successCount = 0});
 
   Color getColor(BuildContext context){
     switch(type){

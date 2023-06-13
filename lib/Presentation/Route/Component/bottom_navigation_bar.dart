@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:speach_learning/Presentation/Read/Widget/SingleChildListTextView.dart';
 import 'package:speach_learning/Presentation/Route/controler/route_page_bloc.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
@@ -16,11 +17,12 @@ class BottomNavigationBarHome extends StatelessWidget {
     size = MediaQuery.of(context).size;
     return Container(
       height: size.width * 0.125,
+      width: size.width,
       decoration: BoxDecoration(
           color: Colors.transparent,
           boxShadow: [
             BoxShadow(
-                color: Theme.of(context).textTheme.headline5!.color!.withOpacity(0.1),
+                color: Theme.of(context).textTheme.displaySmall!.color!.withOpacity(0.1),
             )],
       ),
       child: ListView.builder(
@@ -63,50 +65,41 @@ class BottomNavigationBarHome extends StatelessWidget {
                   color: Colors.transparent,
                     duration: const Duration(seconds: 1),
                   curve: Curves.fastLinearToSlowEaseIn,
-                  width: index == currentIndex ? size.width * 0.25 : size.width * 0.17,
+                  width: index == currentIndex ? size.width * 0.23 : size.width * 0.17,
                   alignment: Alignment.center,
-                  child: AnimatedContainer(duration: const Duration(seconds: 1),
+                  child: AnimatedContainer(
+                    duration: const Duration(seconds: 1),
                   curve: Curves.fastLinearToSlowEaseIn,
-                    height: index == currentIndex ? size.width * 0.18 : 0,
-                    width: index == currentIndex ? size.width * 0.32 : 0,
+                    height: index == currentIndex ? size.width * 0.1 : 0,
+                    width: index == currentIndex ? size.width * 0.23 : 0,
                     decoration: BoxDecoration(
                       color: index == currentIndex ? Colors.blueAccent.withOpacity(0.4) : Colors.transparent,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                   ),),
-                  AnimatedContainer(duration: const Duration(seconds: 1),
+                  AnimatedContainer(
+                    duration: const Duration(seconds: 1),
                   curve: Curves.fastLinearToSlowEaseIn,
-                    width: index == currentIndex ? size.width * 0.31 : size.width * 0.1,
+                    width: index == currentIndex ? size.width * 0.23 : size.width * 0.19,
                     alignment: Alignment.center,
-                    child: Stack(
-                      children: [
-                        Row(
-                          children: [
-                          AnimatedContainer(duration: const Duration(seconds: 1),
-                          curve: Curves.fastLinearToSlowEaseIn,
-                            width: index == currentIndex ? size.width *0.13 : 0,
-                          ),
-                            AnimatedOpacity(
-                                opacity: index == currentIndex ? 1 : 0,
-                                duration: const Duration(seconds: 1),
-                            curve: Curves.fastLinearToSlowEaseIn,
-                              child: Text(index == currentIndex ? listOfNames[index] : "",
-                              style: TextStyle(color: Theme.of(context).textTheme.headline6!.color,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13),
-                              ).tr(),
-                            )
-                        ],),
-                        Row(
+                    child:Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(listOfImage[index]),
-                          AnimatedContainer(duration: const Duration(seconds: 1),
-                          curve: Curves.fastLinearToSlowEaseIn,
-                          width: index == currentIndex ? size.width * 0.2 : 0,),
-                        ],)
-                      ],
-                    ),
+                            5.pw,
+                            AnimatedOpacity(
+                              opacity: index == currentIndex ? 1 : 0,
+                              duration: const Duration(seconds: 1),
+                              curve: Curves.fastLinearToSlowEaseIn,
+                              child: Text(index == currentIndex ? listOfNames[index] : "",
+                                style: TextStyle(color: Theme.of(context).textTheme.displayMedium!.color,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13,
+                                    fontFamily: "RubikPuddles"
+                                ),
+                              ).tr(),
+                            ),
+                        ],),
                   )
                 ],
               );},

@@ -3,13 +3,21 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:speach_learning/Data/DataSource/participant_locale_file.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileBloc.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileState.dart';
-import 'package:speach_learning/core/network/api_constance.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
 class ViewParticipantImage extends StatelessWidget {
-  const ViewParticipantImage({Key? key}) : super(key: key);
+  ViewParticipantImage({Key? key}) : super(key: key){
+    getToken();
+  }
+
+  static String token = "";
+
+  void getToken() async {
+    token = await GetParticipantTokenLocaleFile().getOption();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +49,7 @@ class ViewParticipantImage extends StatelessWidget {
                         border: Border.all(color: Colors.white, width: 3),
                       ),
                       child: CachedNetworkImage(
-
-                        httpHeaders: {"Authorization":"Bearer "+ ApiConstance.token},
+                        httpHeaders: {"Authorization":"Bearer "+ token},
                         imageUrl: state.participants!.imageParticipant.linkImage,
                         imageBuilder: (context, imageProvider) {
                           return  Container(
@@ -88,7 +95,7 @@ class ViewParticipantImage extends StatelessWidget {
         child: Icon(
           Icons.person_sharp,
           size: 90,
-          color: Theme.of(context).textTheme.headline2!.color,
+          color: Theme.of(context).textTheme.headlineSmall!.color,
         ));
   }
 }

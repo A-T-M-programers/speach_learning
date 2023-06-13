@@ -24,7 +24,7 @@ class AlertDialogShow{
     Animation _heartAnimation;
     AnimationController _heartAnimationController;
 
-    _heartAnimationController = AnimationController(vsync: widgetThis, duration: Duration(milliseconds: 1200));
+    _heartAnimationController = AnimationController(vsync: widgetThis, duration:const Duration(milliseconds: 1200));
     _heartAnimation = Tween(begin: 150.0, end: 200.0).animate(CurvedAnimation(
         curve: Curves.bounceOut, parent: _heartAnimationController));
 
@@ -43,29 +43,27 @@ class AlertDialogShow{
       animation: _heartAnimationController,
       builder: (context, child) {
         return Center(
-          child: Container(
-            child: Center(
-              child: Icon(
-                Icons.favorite,
-                color: Colors.red,
-                size: _heartAnimation.value,
-              ),
+          child: Center(
+            child: Icon(
+              Icons.favorite,
+              color: Colors.red,
+              size: _heartAnimation.value,
             ),
           ),
         );
       },
     ),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
 
           TweenAnimationBuilder(
             child: Text('skiplevel'.tr() +' $level',
-              style: TextStyle(
+              style:const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 color: Colors.green
               ),
             ),
-            duration: Duration(milliseconds: 500),
+            duration:const Duration(milliseconds: 500),
             curve: Curves.bounceOut,
             tween: Tween(begin: 1.0, end: 0.0),
             builder: (context,double? value, child){
@@ -79,10 +77,10 @@ class AlertDialogShow{
             },
           ),
 
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           TweenAnimationBuilder(
-            child: SizedBox(),
-            duration: Duration(milliseconds: 1200),
+            child: const SizedBox(),
+            duration: const Duration(milliseconds: 1200),
             curve: Curves.bounceOut,
             tween: Tween(begin: 1.0, end: 0.0),
             builder: (context,double? value, child){
@@ -123,7 +121,7 @@ class AlertDialogShow{
                     return const CircularProgressIndicator(color: Colors.white,strokeWidth: 2.0,backgroundColor: Colors.transparent,);
                   } else if(snapshot.connectionState == ConnectionState.done) {
                     if(snapshot.hasError){
-                      return Text("theirisproblem",style: TextStyle(color: Theme.of(context).textTheme.headline1!.color,backgroundColor: Colors.transparent),).tr();
+                      return Text("theirisproblem",style: TextStyle(color: Theme.of(context).textTheme.headlineMedium!.color,backgroundColor: Colors.transparent),).tr();
                     }else if(snapshot.hasData) {
                       Future.delayed(const Duration(milliseconds: 500),(){
                         Navigator.pop(context);
@@ -141,7 +139,7 @@ class AlertDialogShow{
                     });
                     return const CircularProgressIndicator(color: Colors.white,strokeWidth: 2.0,backgroundColor: Colors.transparent,);
                   }else{
-                    return Text("theirisproblem",style: TextStyle(color: Theme.of(context).textTheme.headline1!.color,backgroundColor: Colors.transparent),).tr();
+                    return Text("theirisproblem",style: TextStyle(color: Theme.of(context).textTheme.headlineSmall!.color,backgroundColor: Colors.transparent),).tr();
                   }
             }),
           )]);
@@ -160,13 +158,13 @@ class AlertDialogShow{
         builder: (BuildContext context) {
           return AlertDialog(
             elevation: 10.0,
-            shape: OutlineInputBorder(borderSide: BorderSide(strokeAlign: StrokeAlign.outside,width: 1.5,color: Theme.of(context).textTheme.headline2!.color!),borderRadius: BorderRadius.circular(20.0)),
-            backgroundColor: Theme.of(context).textTheme.headline6!.color,
+            shape: OutlineInputBorder(borderSide: BorderSide(strokeAlign: BorderSide.strokeAlignOutside,width: 1.5,color: Theme.of(context).textTheme.headlineSmall!.color!),borderRadius: BorderRadius.circular(20.0)),
+            backgroundColor: Theme.of(context).textTheme.displayMedium!.color,
             actionsAlignment: MainAxisAlignment.center,
-            title: Text(title,style: TextStyle(color: Theme.of(context).textTheme.headline4!.color),).tr(),
+            title: Text(title,style: TextStyle(color: Theme.of(context).textTheme.displayLarge!.color),).tr(),
             content: Text(content,
               style: TextStyle(
-                  color: Theme.of(context).textTheme.headline2!.color,
+                  color: Theme.of(context).textTheme.headlineSmall!.color,
                   fontSize: 14
               ),
             ).tr(),

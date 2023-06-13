@@ -7,8 +7,3 @@ class BlocOffsetSlideTransition extends Cubit<Map<int,Offset>>{
 
   void offsetSlideTransition(Map<int,Offset> data) => emit(data);
 }
-class BlocAddPhrase extends Cubit<Map>{
-  BlocAddPhrase():super({});
-
-  void changeState(Map data) => emit(data);
-}

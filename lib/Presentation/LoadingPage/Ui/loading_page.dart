@@ -16,9 +16,9 @@ class LoadingPage extends StatelessWidget {
                 children: [
                   const Icon(Icons.cloud_download_rounded,color: Colors.greenAccent,size: 80.0,),
                   10.ph,
-                  Text("loading",style: TextStyle(color: Theme.of(context).textTheme.headline2!.color,fontSize: 16)).tr(),
+                  Text("loading",style: TextStyle(color: Theme.of(context).textTheme.headlineSmall!.color,fontSize: 16)).tr(),
               10.ph,
-              LoadingAnimationWidget.stretchedDots(color: Theme.of(context).textTheme.headline2!.color!, size: 80.0),
+              LoadingAnimationWidget.stretchedDots(color: Theme.of(context).textTheme.headlineSmall!.color!, size: 80.0),
         ])),
         ),
         onWillPop: () async {

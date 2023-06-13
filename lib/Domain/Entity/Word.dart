@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class Word {
   final int id;
@@ -9,11 +8,16 @@ class Word {
 
   final int idPhrase;
 
+  final int phraseWordId;
+
   final int order;
 
   final String wordType;
 
-  final String status;
+  String status;
+  void setState(String state){
+    status = state;
+  }
 
 
   Word(
@@ -22,16 +26,9 @@ class Word {
       required this.translation,
       required this.idPhrase,
       required this.order,
-        this.wordType = "",
+        required this.wordType,
+        required this.phraseWordId,
       this.status = ""});
-
-  Color getColorType(BuildContext context) {
-    return status == "C"
-        ? Colors.green : status == "F"
-        ? Colors.red : status == "S"
-        ? Colors.blue : status == "X"
-        ? Colors.amberAccent : Theme.of(context).textTheme.headline2!.color!;
-  }
 }
 
 // class UWRB {

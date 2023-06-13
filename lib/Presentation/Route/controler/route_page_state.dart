@@ -2,25 +2,29 @@ part of 'route_page_bloc.dart';
 
 class RoutePageState extends Equatable {
   final RequestState requestState;
-  final String message;
+  final ServerFailure error;
   final BottomSheetOption bottomSheetOption;
+  final bool checkParticipantFound;
 
   const RoutePageState({
     this.requestState = RequestState.loading,
-    this.message = "",
+    this.error = const ServerFailure("", 200, DioErrorType.unknown),
+    this.checkParticipantFound = false,
     this.bottomSheetOption = BottomSheetOption.empty});
 
   RoutePageState cobyWith({
   RequestState? requestState,
-    String? message,
-    BottomSheetOption? bottomSheetOption
+    ServerFailure? error,
+    BottomSheetOption? bottomSheetOption,
+    bool? checkParticipantFound,
 }) => RoutePageState(
       requestState: requestState?? this.requestState,
-    message: message?? this.message,
-    bottomSheetOption: bottomSheetOption?? this.bottomSheetOption
+      error: error?? this.error,
+    bottomSheetOption: bottomSheetOption?? this.bottomSheetOption,
+    checkParticipantFound: checkParticipantFound?? this.checkParticipantFound
   );
 
   @override
-  List<Object> get props => [requestState,message,bottomSheetOption];
+  List<Object> get props => [requestState,error,bottomSheetOption,checkParticipantFound];
 }
 

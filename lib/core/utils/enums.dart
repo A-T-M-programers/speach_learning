@@ -23,3 +23,11 @@ enum BottomSheetOption{
   home,
   empty,
 }
+
+enum ReadPageStateBuild{
+  main,
+  level1,
+  level2,
+  level3,
+  level4
+}

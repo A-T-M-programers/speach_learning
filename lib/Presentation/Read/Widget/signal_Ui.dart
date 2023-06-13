@@ -1,28 +1,18 @@
+import 'dart:math';
+
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_audio_waveforms/flutter_audio_waveforms.dart';
-import 'package:speach_learning/Presentation/Read/controle/Speech_To_Text.dart';
+import 'package:speach_learning/Presentation/Read/controler/voice_bloc.dart';
 
-import '../bloc/Bloc_Controler_Read.dart';
-// ignore: camel_case_types, must_be_immutable
-class signal_Ui_controler extends StatefulWidget {
-  // ignore: non_constant_identifier_names
-  signal_Ui_controler({Key? key,this.speech_to_text}) : super(key: key);
+class SignalUiControler extends StatelessWidget {
 
-  // ignore: non_constant_identifier_names
-  Speech_To_Text? speech_to_text;
 
-  @override
-  State<signal_Ui_controler> createState() => _signal_Ui_controlerState();
-}
+  const SignalUiControler({Key? key}) : super(key: key);
 
-// ignore: camel_case_types
-class _signal_Ui_controlerState extends State<signal_Ui_controler> {
-
-  Size size = const Size(0, 0);
-  double level = 0.0;
+  static Size size = const Size(0, 0);
 
   @override
   Widget build(BuildContext context) {
@@ -45,109 +35,64 @@ class _signal_Ui_controlerState extends State<signal_Ui_controler> {
                                       BorderRadius.all(
                                           Radius.circular(50))),
                                   margin: const EdgeInsets.only(right: 8),
-                                  child: BlocBuilder<Bloc_Controler,dynamic>(
-                                    buildWhen: (previos,next){
-                                      if (next is double && previos != next && previos is double) {
-                                        return true;
+                                  child: BlocBuilder<VoiceBloc,VoiceState>(
+                                      builder: (context,state) {
+                                      if(state is ChangeRateVoiceState) {
+                                        return RectangleWaveform(
+                                          samples: List.generate(
+                                              70, (index) => state.rate -
+                                              (Random().nextDouble() * 10.0)),
+                                          height: 40,
+                                          width: size.width * 0.5,
+                                          activeColor: Colors.white70,
+                                          inactiveColor: Colors.white70,
+                                          elapsedDuration: const Duration(
+                                              milliseconds: 50),
+                                          maxDuration: const Duration(
+                                              milliseconds: 50),
+                                          isCentered: true,
+                                          isRoundedRectangle: true,
+                                          inactiveBorderColor: Colors.black45,
+                                          activeBorderColor: Colors.black45,
+                                          borderWidth: 0.001,
+                                          activeGradient: const LinearGradient(
+                                              begin: Alignment.bottomCenter,
+                                              end: Alignment.topCenter,
+                                              colors: [
+                                                Colors.black26,
+                                                Colors.black45
+                                              ],
+                                              stops: [0.0, 0.3]),
+                                        );
                                       }else{
-                                        return false;
+                                        return RectangleWaveform(
+                                          samples: List.generate(
+                                              70, (index) => Random().nextDouble() * 10.0),
+                                          height: 40,
+                                          width: size.width * 0.5,
+                                          activeColor: Colors.white70,
+                                          inactiveColor: Colors.white70,
+                                          elapsedDuration: const Duration(
+                                              milliseconds: 50),
+                                          maxDuration: const Duration(
+                                              milliseconds: 50),
+                                          isCentered: true,
+                                          isRoundedRectangle: true,
+                                          inactiveBorderColor: Colors.black45,
+                                          activeBorderColor: Colors.black45,
+                                          borderWidth: 0.001,
+                                          activeGradient: const LinearGradient(
+                                              begin: Alignment.bottomCenter,
+                                              end: Alignment.topCenter,
+                                              colors: [
+                                                Colors.black26,
+                                                Colors.black45
+                                              ],
+                                              stops: [0.0, 0.3]),
+                                        );
                                       }
-                                    },
-                                      builder: (context, level) {
-                                        if (level is double) {
-                                          this.level = level;
-                                        }
-                                       return   RectangleWaveform(
-                                            samples: [
-                                              this.level - 1,
-                                              this.level - 8,
-                                              this.level - 5,
-                                              this.level - 9,
-                                              this.level - 3,
-                                              this.level - 4,
-                                              this.level - 5,
-                                              this.level - 7,
-                                              this.level - 3,
-                                              -this.level + 4,
-                                              -this.level + 3,
-                                              -this.level + 8,
-                                              -this.level + 2,
-                                              -this.level + 7,
-                                              -this.level + 1,
-                                              -this.level + 9,
-                                              -this.level + 2,
-                                              -this.level + 9,
-                                              this.level - 4,
-                                              this.level - 5,
-                                              this.level - 7,
-                                              this.level - 3,
-                                              -this.level + 4,
-                                              -this.level + 3,
-                                              -this.level + 8,
-                                              -this.level + 2,
-                                              this.level - 1,
-                                              this.level - 8,
-                                              this.level - 5,
-                                              this.level - 9,
-                                              this.level - 3,
-                                              -this.level + 7,
-                                              -this.level + 1,
-                                              -this.level + 9,
-                                              -this.level + 2,
-                                              -this.level + 9,
-                                              this.level - 1,
-                                              this.level - 8,
-                                              this.level - 5,
-                                              this.level - 9,
-                                              this.level - 3,
-                                              this.level - 4,
-                                              this.level - 5,
-                                              this.level - 7,
-                                              this.level - 3,
-                                              -this.level + 4,
-                                              -this.level + 3,
-                                              -this.level + 8,
-                                              -this.level + 2,
-                                              -this.level + 7,
-                                              -this.level + 1,
-                                              -this.level + 9,
-                                              -this.level + 2,
-                                              -this.level + 9,
-                                              this.level - 4,
-                                              this.level - 5,
-                                              this.level - 7,
-                                              this.level - 3,
-                                              -this.level + 4,
-                                              -this.level + 3,
-                                              -this.level + 8,
-                                              -this.level + 2,
-                                              this.level - 1,
-                                              this.level - 8,
-                                              this.level - 5,
-                                              this.level - 9,
-                                              this.level - 3,
-                                              -this.level + 7,
-                                              -this.level + 1,
-                                              -this.level + 9,
-                                              -this.level + 2,
-                                              -this.level + 9,],
-                                            height: 40,
-                                            width: size.width * 0.5,
-                                            activeColor: Colors.white70,
-                                            inactiveColor: Colors.white70,
-                                            elapsedDuration: const Duration(milliseconds: 50),
-                                            maxDuration: const Duration(milliseconds: 50),
-                                            isCentered: true,
-                                            isRoundedRectangle: true,
-                                            inactiveBorderColor: Colors.black45,
-                                            activeBorderColor: Colors.black45,
-                                            borderWidth: 0.001,
-                                            activeGradient: const LinearGradient(
-                                                begin: Alignment.bottomCenter,
-                                                end: Alignment.topCenter,
-                                                colors: [Colors.black26, Colors.black45],
-                                                stops: [0.0, 0.3]),
-                                          );}),
+
+                                    }),
                                 )))
     ]);
   }

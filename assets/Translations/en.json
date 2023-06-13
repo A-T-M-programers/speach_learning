@@ -12,8 +12,9 @@
   "entertext": "Enter Text ...",
   "words": "Words Count :",
   "match": "Their is not Match",
-  "errnetwork": "Their is not Network Connection",
-  "errspeech": "The Speech is not clearly",
+  "err_network": "Their is not Network Connection",
+  "error_speech_timeout": "The time limit for speaking has expired",
+  "error_no_match": "The speaking is not clearly",
   "alright": "Alright",
   "listening": "Listening...!!!",
   "volume": "Volume",
@@ -29,6 +30,7 @@
   "lock": "Lock",
   "again": "Again",
   "notSkipped": "Can not skipped the word",
+  "exceeded": "You have exceeded the Word limit",
   "theirisproblem": "Their is problem, you try again",
   "emptylevel": "The level still empty, try later",
   "from": "From",
@@ -70,5 +72,11 @@
   "about": "About",
   "awards": "Awards",
   "subscription": "Subscription",
-  "": ""
+  "": "",
+  "skipped": "Excellent, you have skipped to this phrase",
+  "tryAgain": "Sorry you have wrong read, Please try again",
+  "try": "Try Again",
+  "type": "Type",
+  "client" : "Error in the Connection",
+  "server": "Error in the Server"
 }

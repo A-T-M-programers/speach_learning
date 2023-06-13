@@ -31,10 +31,6 @@ class ToggleButtonCustom extends StatelessWidget {
         isSelected: listSelected,
         // text color of selected toggle
         selectedColor: Colors.white,
-        // text color of not selected toggle
-        color: Theme.of(context).textTheme.headline2!.color,
-        // fill color of selected toggle
-        fillColor: Theme.of(context).textTheme.headline2!.color,
         // when pressed, splash color is seen
         splashColor: Colors.white54,
         // long press to identify highlight color

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:speach_learning/Domain/Entity/Lang.dart';
 
 class Dialects extends Equatable{
   final int id;
@@ -8,10 +7,14 @@ class Dialects extends Equatable{
 
   final String key;
 
-  final Lang lang;
+  final int idLang;
 
-  const Dialects({required this.id,required this.locale,required this.key,required this.lang});
+  const Dialects({
+    this.id = 0,
+    this.locale = "",
+    this.key = "",
+    this.idLang = 0});
 
   @override
-  List<Object> get props => [id,locale,key,lang];
+  List<Object> get props => [id,locale,key,idLang];
 }

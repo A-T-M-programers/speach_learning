@@ -7,8 +7,10 @@ import 'package:speach_learning/Domain/Entity/Participants.dart';
 import 'package:speach_learning/Domain/Repository/repository_participant.dart';
 import 'package:speach_learning/Presentation/LogIn/controler/log_in_bloc.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileEvent.dart';
+import 'package:speach_learning/Presentation/Read/controler/read_bloc.dart';
 import 'package:speach_learning/core/error/exceptions.dart';
 import 'package:speach_learning/core/error/failure.dart';
+import 'package:speach_learning/core/global/static/static_variable.dart';
 import 'package:speach_learning/core/utils/enums.dart';
 
 class SetThemeAppParticipantRepository extends BaseParticipantRepository<ThemeApp,SetThemeAppParticipantEvent> {
@@ -65,6 +67,26 @@ class SetPhotoParticipantRepository extends BaseParticipantRepository<String,Set
     }
   }
 }
+
+class SetParticipantDialectRepository extends BaseParticipantRepository<int,SetParticipantDialectEvent> {
+  final BaseParticipantRemoteDataSource<int,SetParticipantDialectEvent> baseParticipantRemoteDataSource;
+
+
+  SetParticipantDialectRepository(this.baseParticipantRemoteDataSource);
+
+  @override
+  Future<Either<Failure, int>> call(SetParticipantDialectEvent parameter) async {
+    try {
+      final result = await baseParticipantRemoteDataSource(parameter);
+      return Right(result);
+    }on ServerException catch(failure){
+      return Left(ServerFailure(failure.errorMessageModel.statusMessage,failure.errorMessageModel.statesCode,DioErrorType.badResponse));
+    }on ServerDioException catch(dio){
+      return Left(ServerFailure(dio.dioErrorModel.message,dio.dioErrorModel.stateCode!,dio.dioErrorModel.dioErrorType));
+    }
+  }
+}
+
 class SetParticipantRepository extends BaseParticipantRepository<int,SetParticipantEvent> {
   final BaseParticipantRemoteDataSource<int,SetParticipantEvent> baseParticipantRemoteDataSource;
 
@@ -94,6 +116,7 @@ class GetParticipantWithIdRepository extends BaseParticipantRepository<Participa
   Future<Either<Failure, Participants>> call(GetParticipantEvent parameter) async {
     try {
       final result = await baseParticipantRemoteDataSource(parameter);
+      StaticVariable.participants = result;
       return Right(result);
     }on ServerException catch(failure){
       return Left(ServerFailure(failure.errorMessageModel.statusMessage,failure.errorMessageModel.statesCode,DioErrorType.badResponse));

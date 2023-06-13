@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:adobe_xd/blend_mask.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:speach_learning/core/global/static/AlertDialog.dart';
-import 'package:speach_learning/Presentation/Home/UI/home_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:speach_learning/Presentation/LogIn/component/view_email_button.dart';
 import 'package:speach_learning/Presentation/SplashScreen/UI/ButtonDrage.dart';
@@ -88,7 +86,7 @@ class log_in extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'Castellar',
                           fontSize: size.height * 0.037,
-                          color: Theme.of(context).textTheme.headline4!.color,
+                          color: Theme.of(context).textTheme.displayLarge!.color,
                         ),
                         softWrap: false,
                       ),
@@ -100,7 +98,7 @@ class log_in extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'Castellar',
                         fontSize: size.height * 0.14,
-                        color: Theme.of(context).textTheme.headline3!.color,
+                        color: Theme.of(context).textTheme.headlineLarge!.color,
                       ),
                       softWrap: false,
                     ))

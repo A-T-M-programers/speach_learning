@@ -4,7 +4,7 @@ class GetColorByType {
   static Color call(String type, BuildContext context) {
     switch (type) {
       case "":
-        return Theme.of(context).textTheme.headline3!.color!;
+        return Theme.of(context).textTheme.headlineSmall!.color!;
       case "S":
         return Colors.blue;
       case "X":

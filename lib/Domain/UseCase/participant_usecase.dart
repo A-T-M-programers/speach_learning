@@ -3,6 +3,7 @@ import 'package:speach_learning/Domain/Entity/Participants.dart';
 import 'package:speach_learning/Domain/Repository/repository_participant.dart';
 import 'package:speach_learning/Presentation/LogIn/controler/log_in_bloc.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileEvent.dart';
+import 'package:speach_learning/Presentation/Read/controler/read_bloc.dart';
 import 'package:speach_learning/core/error/failure.dart';
 import 'package:speach_learning/core/usecases/base_useCase.dart';
 import 'package:speach_learning/core/utils/enums.dart';
@@ -39,6 +40,18 @@ class SetPhotoParticipantUseCase extends BaseUseCase<String,SetPhotoParticipantE
     return await baseParticipantRepository(param);
   }
 }
+
+class SetParticipantDialectUseCase extends BaseUseCase<int,SetParticipantDialectEvent> {
+  final BaseParticipantRepository<int,SetParticipantDialectEvent> baseParticipantRepository;
+
+  SetParticipantDialectUseCase(this.baseParticipantRepository);
+
+  @override
+  Future<Either<Failure, int>> call(SetParticipantDialectEvent param) async {
+    return await baseParticipantRepository(param);
+  }
+}
+
 class SetParticipantUseCase extends BaseUseCase<int,SetParticipantEvent> {
   final BaseParticipantRepository<int,SetParticipantEvent> baseParticipantRepository;
 

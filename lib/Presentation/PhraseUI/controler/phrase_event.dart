@@ -5,13 +5,15 @@ abstract class PhraseEvent extends Equatable {
 
   @override
   List<Object> get props =>[];
+
+  const PhraseEvent();
 }
 
 class GetLevelEvent extends PhraseEvent{
 
   final int idParticipant, idLevel;
 
-  GetLevelEvent({required this.idLevel,required this.idParticipant});
+  const GetLevelEvent({required this.idLevel,required this.idParticipant});
 
   @override
   List<Object> get props =>[idLevel,idParticipant];
@@ -19,12 +21,22 @@ class GetLevelEvent extends PhraseEvent{
 
 class SetPhraseStateEvent extends PhraseEvent{
 
-  final int idParticipant,idPhrase;
+  final int idParticipant,idPhrase,idLevel;
   final String state;
 
-  SetPhraseStateEvent(this.idParticipant, this.idPhrase, this.state);
+  const SetPhraseStateEvent(this.idParticipant, this.idPhrase, this.state,this.idLevel);
 
   @override
-  List<Object> get props =>[idPhrase,idParticipant,state];
+  List<Object> get props =>[idPhrase,idParticipant,state,idLevel];
+}
+
+class SearchListPhraseEvent extends PhraseEvent{
+
+  final List<PhraseItem> listPhraseItem;
+
+  const SearchListPhraseEvent(this.listPhraseItem);
+
+  @override
+  List<Object> get props =>[listPhraseItem];
 }
 

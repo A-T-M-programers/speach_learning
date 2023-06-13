@@ -10,18 +10,28 @@ class PhraseModel extends PhraseItem{
     required super.type,
     required super.wordCount,
     required super.idLevel,
+    required super.order,
     required super.translation,
     super.listWord
 });
   
-  factory PhraseModel.fromJson(Map<String, dynamic> json,int idLevel) =>
-      PhraseModel(
+  factory PhraseModel.fromJson(Map<String, dynamic> json) {
+    List<WordModel> listWordModel = [];
+    if(json["words"] != null) {
+      listWordModel = List.generate(json["words"].length, (index) => WordModel.fromJson(json["words"][index], json["id"]));
+      if(listWordModel.isNotEmpty) {
+          listWordModel.sort((a, b) => a.order.compareTo(b.order));
+      }
+    }
+     return PhraseModel(
           id: json["id"],
           content: json["content"],
           type: json["status"] ?? "",
           wordCount: json["word_count"],
-          idLevel: idLevel ,
+          idLevel:  json["level_id"] ?? 0,
+          order:  json["order"] ?? 1,
           translation: json["translation"],
-      listWord: json["words"] != null ? List.generate(json["words"].length, (index) => WordModel.fromJson(json["words"][index],json["id"])) : []
-      );
+      listWord: listWordModel
+     );
+  }
 }

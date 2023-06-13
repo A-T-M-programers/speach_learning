@@ -2,6 +2,7 @@
 class Filter_Text{
   static final List<String> _somple = ['!','@','#','\$','%','^','&','*','(',')','_','-','+','=','<','>','?','/','\\','|',':','~','×','{','}','[',']',',','.',' ','\n','\t'];
   static final Map<String,String> _type = {"Question":"?","Normal":"."};
+  static final List<String> _compoundPhrase = ["-"];
   static final Map<String,bool> _returnTypePhrase = {"0":false,"1":true,"2":true};
 
   static String substring(String str){
@@ -18,5 +19,14 @@ class Filter_Text{
   }
   static bool returnTypePhrase(String str){
     return _returnTypePhrase.containsKey(str) ? _returnTypePhrase[str]! : false;
+  }
+
+  static String isCompoundPhrase(String str){
+    for(String element in _compoundPhrase){
+      if(str.contains(element)){
+        return str.split(element).join(" ");
+      }
+    }
+    return str;
   }
 }

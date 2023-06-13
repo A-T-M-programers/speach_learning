@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speach_learning/Presentation/LogIn/controler/log_in_bloc.dart';
-import 'package:speach_learning/core/network/api_constance.dart';
 
 abstract class BaseParticipantLocalFile<T,Parameter>{
   Future<T> call(Parameter parameter);
@@ -47,9 +46,6 @@ class GetParticipantTokenLocaleFile{
   Future<String> getOption() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String option = preferences.getString('token') ?? "";
-    if(option != ""){
-      ApiConstance.token = option;
-    }
     return option;
   }
 }

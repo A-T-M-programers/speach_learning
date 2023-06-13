@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:speach_learning/core/error/Error_Class.dart';
 
 class UiError extends StatelessWidget {
   const UiError({Key? key , required this.message,required this.retry,required this.close}) : super(key: key);
@@ -41,13 +40,13 @@ class UiError extends StatelessWidget {
                               SizedBox(
                                   width: size.width * 0.9,
                                   child: Text(
-                                    ErrorListen.getError(message),
+                                    message,
                                     style: const TextStyle(
                                       color: Colors.black54,
                                     ),
                                     softWrap: true,
                                     textAlign: TextAlign.center,
-                                  )),
+                                  ).tr()),
                             ],
                           )),
                     ),

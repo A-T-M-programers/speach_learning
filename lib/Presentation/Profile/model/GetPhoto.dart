@@ -65,7 +65,7 @@ class get_photo {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: Text("From where do you want to take the photo?",style: TextStyle(color: Theme.of(context).textTheme.headline2!.color),),
+              title: Text("From where do you want to take the photo?",style: TextStyle(color: Theme.of(context).textTheme.headlineSmall!.color),),
               content: SingleChildScrollView(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

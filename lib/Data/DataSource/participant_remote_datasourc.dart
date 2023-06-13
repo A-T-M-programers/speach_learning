@@ -5,7 +5,9 @@ import 'package:speach_learning/Data/DataSource/participant_locale_file.dart';
 import 'package:speach_learning/Data/Model/participant_model.dart';
 import 'package:speach_learning/Presentation/LogIn/controler/log_in_bloc.dart';
 import 'package:speach_learning/Presentation/Profile/controler/ProfileEvent.dart';
+import 'package:speach_learning/Presentation/Read/controler/read_bloc.dart';
 import 'package:speach_learning/core/error/exceptions.dart';
+import 'package:speach_learning/core/global/static/static_variable.dart';
 import 'package:speach_learning/core/network/api_constance.dart';
 import 'package:speach_learning/core/network/check_connection.dart';
 import 'package:speach_learning/core/error/dio_error_model.dart';
@@ -109,6 +111,39 @@ class SetPhotoParticipantRemoteDataSource extends BaseParticipantRemoteDataSourc
     }
   }
 }
+
+class SetParticipantDialectRemoteDataSource extends BaseParticipantRemoteDataSource<int,SetParticipantDialectEvent> {
+  SetParticipantDialectRemoteDataSource();
+
+  @override
+  Future<int> call(SetParticipantDialectEvent parameter) async {
+    if(await CheckConnection.getCheckConnectionNetWork()) {
+      try {
+        while(!sl.isRegistered<Dio>(instanceName: "Dio")) {
+          await Future.delayed(const Duration(milliseconds: 500));
+        }
+        final formData = FormData.fromMap({
+          "_method": "patch",
+          "dialect_id": parameter.idDialect,
+        });
+        final response = await sl<Dio>(instanceName: "Dio").post(
+            "${ApiConstance.apiParticipantKey}/${parameter.idParticipant}",
+            data: formData);
+        if (response.statusCode == 200) {
+          StaticVariable.participants.setIdDialect(parameter.idDialect);
+          return parameter.idDialect;
+        } else {
+          throw ServerException(errorMessageModel: ErrorMessageModel.fromJson(response.data));
+        }
+      }on DioError catch(error){
+        throw ServerDioException(dioErrorModel: DioErrorModel(stateCode: error.response != null ? error.response!.statusCode : 403, message: error.message ?? "", dioErrorType: error.type));
+      }
+    }else{
+      throw const ServerDioException(dioErrorModel: DioErrorModel(stateCode: 400, message: "err_network", dioErrorType: DioErrorType.connectionError));
+    }
+  }
+}
+
 class SetParticipantRemoteDataSource extends BaseParticipantRemoteDataSource<int,SetParticipantEvent> {
 
   final BaseParticipantLocalFile<void,int> baseParticipantLocalFile;
@@ -133,7 +168,7 @@ class SetParticipantRemoteDataSource extends BaseParticipantRemoteDataSource<int
           "theme_app":parameter.participants.themApp == ThemeApp.light ? "L" : "D",
           "is_admob": parameter.participants.isAdmob ? "1" : "0",
           "lang_app":parameter.participants.langApp.toString(),
-          "dialect_id":parameter.participants.dialects.id
+          "dialect_id":parameter.participants.idDialects
         });
         final response = await sl<Dio>(instanceName: "Dio").post(
             ApiConstance.apiParticipantKey,

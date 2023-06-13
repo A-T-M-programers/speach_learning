@@ -19,7 +19,7 @@ class ViewEmailParticipant extends StatelessWidget {
            style: TextStyle(
                color: Theme.of(context)
                    .textTheme
-                   .headline2!
+                   .headlineSmall!
                    .color),
          );
         case RequestState.loaded:
@@ -28,7 +28,7 @@ class ViewEmailParticipant extends StatelessWidget {
             style: TextStyle(
                 color: Theme.of(context)
                     .textTheme
-                    .headline2!
+                    .headlineSmall!
                     .color,
             fontSize: 14),
           );
@@ -38,7 +38,7 @@ class ViewEmailParticipant extends StatelessWidget {
             style: TextStyle(
                 color: Theme.of(context)
                     .textTheme
-                    .headline2!
+                    .headlineSmall!
                     .color),
           );
       }

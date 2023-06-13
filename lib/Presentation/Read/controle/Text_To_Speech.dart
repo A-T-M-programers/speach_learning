@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:speach_learning/Domain/Entity/Dialects.dart';
 
 class Language {
   final String name;
@@ -22,13 +23,11 @@ const languages = [
 
 enum TtsState { playing, stopped, paused, continued }
 
-class Text_To_Speech{
-  late List<String> t;
-  late FlutterTts flutterTts;
-  String? language;
+class TextToSpeech{
+  FlutterTts flutterTts = FlutterTts();
   String? engine;
   double volume = 1.0;
-  double pitch = 1.3;
+  double pitch = 1.0;
   double rate = 0.44300;
   bool isCurrentLanguageInstalled = false;
 
@@ -62,7 +61,6 @@ class Text_To_Speech{
   List? availVoices;
 
   initTts() {
-    flutterTts = FlutterTts();
 
     _setAwaitOptions();
 
@@ -72,32 +70,26 @@ class Text_To_Speech{
     }
 
     flutterTts.setStartHandler(() {
-        print("Playing");
         ttsState = TtsState.playing;
     });
 
     flutterTts.setCompletionHandler(() {
-        print("Complete");
         ttsState = TtsState.stopped;
     });
 
     flutterTts.setCancelHandler(() {
-        print("Cancel");
         ttsState = TtsState.stopped;
     });
 
     flutterTts.setPauseHandler(() {
-        print("Paused");
         ttsState = TtsState.paused;
     });
 
     flutterTts.setContinueHandler(() {
-        print("Continued");
         ttsState = TtsState.continued;
     });
 
     flutterTts.setErrorHandler((msg) {
-        print("error: $msg");
         ttsState = TtsState.stopped;
     });
   }
@@ -117,12 +109,12 @@ class Text_To_Speech{
     availVoices = jsonVoices!.map((e) => jsonDecode(e)).toList();
   }
 
-  Future speak(String? textVoice,Map<String,String> voice) async {
+  Future speak(String? textVoice,Dialects dialects) async {
     await flutterTts.setVolume(volume);
     await flutterTts.setSpeechRate(rate);
     await flutterTts.setPitch(pitch);
-    await flutterTts.setLanguage("en_US");
-    await flutterTts.setVoice(voice);
+    await flutterTts.setLanguage(dialects.locale);
+    await flutterTts.setVoice({"name":dialects.key, "locale":dialects.locale});
 
     if (textVoice != null) {
       if (textVoice.isNotEmpty) {

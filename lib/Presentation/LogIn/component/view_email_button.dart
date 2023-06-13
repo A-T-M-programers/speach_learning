@@ -1,12 +1,11 @@
 
 import 'package:adobe_xd/adobe_xd.dart';
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:speach_learning/Data/DataSource/participant_locale_file.dart';
-import 'package:speach_learning/Domain/Entity/Dialects.dart';
-import 'package:speach_learning/Domain/Entity/Lang.dart';
 import 'package:speach_learning/Domain/Entity/Participants.dart';
 import 'package:speach_learning/Presentation/Home/UI/home_page.dart';
 import 'package:speach_learning/Presentation/Home/controler/home_bloc.dart';
@@ -37,9 +36,10 @@ class ViewEmailButton extends StatelessWidget {
             break;
           case RequestState.loaded:
             sl<BaseParticipantLocalFile<void,int>>().call(current.participantsId);
-            context.read<HomeBloc>().add(GetParticipantDomainEvent(id: current.participantsId));
+            context.read<HomeBloc>().add(GetParticipantDomainEvent(idLang: current.participantsId));
             context.read<HomeBloc>().add(GetAllSectionsEvent(idParticipant: current.participantsId));
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (route) => home_page(idParticipant: current.participantsId,)), (route) => false);
+            context.read<ProfileBloc>().add(GetParticipantEvent(id: current.participantsId, key: "login"));
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (route) => home_page()), (route) => false);
             break;
           case RequestState.error:
             setParticipant(googleSignInAccount, context);
@@ -54,9 +54,9 @@ class ViewEmailButton extends StatelessWidget {
                 case RequestState.loading:
                   break;
                 case RequestState.loaded:
-                  context.read<HomeBloc>().add(GetParticipantDomainEvent(id: current.idParticipant));
                   context.read<HomeBloc>().add(GetAllSectionsEvent(idParticipant: current.idParticipant));
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (route) => home_page(idParticipant: current.idParticipant,)), (route) => false);
+                  context.read<ProfileBloc>().add(GetParticipantEvent(id: current.idParticipant, key: "login"));
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (route) => home_page()), (route) => false);
                   break;
                 case RequestState.error:
                   bottomSheet.showbottomsheet(context,{"Problem": current.error.message});
@@ -86,6 +86,9 @@ class ViewEmailButton extends StatelessWidget {
                 response.fold((l) => {print(l.message)}, (r) {
                   if (r != null) {
                     googleSignInAccount = r;
+                    if(!sl.isRegistered<Dio>(instanceName: "Dio")){
+                      context.read<LogInBloc>().add(const GetTokenEvent("voca@test.com", "password"));
+                    }
                     context.read<LogInBloc>().add(GetParticipantWithEmailEvent(email: r.email));
                   }
                 });
@@ -151,11 +154,7 @@ class ViewEmailButton extends StatelessWidget {
             isAdmob: false,
             learnWordCount: 0,
             learnPhraseCount: 0,
-            dialects: const Dialects(
-                id: 2,
-                locale: "en-US",
-                key: "en-us-x-tpf-local",
-                lang: Lang(id: 2, name: "English")))));
+            idDialects:2)));
   }
 }
 

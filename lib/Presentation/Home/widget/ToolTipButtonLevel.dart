@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:info_popup/info_popup.dart';
 import 'package:speach_learning/Domain/Entity/Level.dart';
-import 'package:speach_learning/Presentation/LogIn/controler/log_in_bloc.dart';
-import 'package:speach_learning/Presentation/PhraseUI/UI/add_page.dart';
+import 'package:speach_learning/Presentation/PhraseUI/UI/phrasesPage.dart';
 import 'package:speach_learning/Presentation/PhraseUI/controler/phrase_bloc.dart';
 import 'package:speach_learning/Presentation/Read/Widget/SingleChildListTextView.dart';
 import 'package:speach_learning/core/global/static/static_methode.dart';
+import 'package:speach_learning/core/global/static/static_variable.dart';
 
 
 class ToolTipButtonLevel extends StatelessWidget {
   // ignore: prefer_const_constructors_in_immutables
-  ToolTipButtonLevel({Key? key, required this.level,required this.idParticipant}) : super(key: key);
-  final int idParticipant;
+  ToolTipButtonLevel({Key? key, required this.level}) : super(key: key);
   final Level level;
   static Size size = const Size(0.0, 0.0);
 
@@ -24,10 +23,9 @@ class ToolTipButtonLevel extends StatelessWidget {
       areaBackgroundColor: Colors.transparent,
       contentMaxWidth: size.width,
       customContent: Container(
-          height: 120.0,
-          padding: EdgeInsets.zero,
-          margin: EdgeInsets.only(
-              left: size.width * 0.05, right: size.width * 0.05),
+          height: 130.0,
+          padding: const EdgeInsets.all(10.0),
+          margin: EdgeInsets.only(left: size.width * 0.05, right: size.width * 0.05),
           decoration: BoxDecoration(
               color: GetColorByType.call(level.type, context).withOpacity(0.9),
               borderRadius: BorderRadius.circular(20.0)),
@@ -35,53 +33,47 @@ class ToolTipButtonLevel extends StatelessWidget {
             children: [
               // ignore: prefer_const_constructors
                Container(
-                    margin: const EdgeInsets.only(top: 10.0),
                     alignment: Alignment.topCenter,
                     child: Text(level.title,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline6!.color,
-                          fontWeight: FontWeight.w700),
+                          color: Theme.of(context).textTheme.headlineMedium!.color,
+                          fontWeight: FontWeight.w700,
+                      fontFamily: "Playfair"
+                      ),
                     ),
               ),
               Container(
-                    margin: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
+                    margin: const EdgeInsets.only(left: 10.0),
                     alignment: Alignment.topRight,
                     child: Text(
-                          "0 " +
+                          "${level.successCount} " +
                           "from".tr() +
                           " " +
                           level.phraseCount.toString(),
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline6!.color,
+                          color: Theme.of(context).textTheme.headlineMedium!.color,
                           fontWeight: FontWeight.w500,
                           fontSize: 12),
                     ),
               ),
-               Row(children: [
-                 Expanded(
-                     flex: 1,
-                     child: Container(
-                       alignment: Alignment.centerLeft,
-                       margin: const EdgeInsets.all(18.0),
+                Container(
+                       alignment: context.locale == const Locale("en") ? Alignment.topLeft : Alignment.topRight,
+                   margin: const EdgeInsets.only(top: 30.0),
                    child: Text(level.description,
-                   style: TextStyle(color: Theme.of(context).textTheme.headline6!.color),),
-                 )),Expanded(
-            flex: 1,
-            child: Container(
+                   style: TextStyle(color: Theme.of(context).textTheme.headlineMedium!.color,fontFamily: "Playfair"),),
+                 ),
+                  Container(
                     alignment: Alignment.bottomCenter,
-                    margin: const EdgeInsets.all(18.0),
                     child: ElevatedButton(
                       onPressed: () {
                         if (level.type == "") {
                           return;
                         } else if(level.phraseCount != 0) {
-                          if(idParticipant != 0) {
-                            context.read<PhraseBloc>().add(GetLevelEvent(idLevel: level.id, idParticipant: idParticipant));
-                            Navigator.push(context, MaterialPageRoute(builder: (route) => add_page(idParticipant: idParticipant, idLevel: level.id,)));
-                          }else{
-                            context.read<LogInBloc>().add(GetParticipantIdEvent());
-                            context.read<PhraseBloc>().add(GetLevelEvent(idLevel: level.id, idParticipant: idParticipant));
-                            Navigator.push(context, MaterialPageRoute(builder: (route) => add_page(idParticipant: idParticipant, idLevel: level.id,)));
+                          try {
+                            context.read<PhraseBloc>().add(GetLevelEvent(idLevel: level.id, idParticipant: StaticVariable.participants.id));
+                            Navigator.push(context, MaterialPageRoute(builder: (route) => PhrasesPage(idLevel: level.id,)));
+                          }catch(error){
+                            print(error.toString());
                           }
                         }else{
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text("emptylevel", style: TextStyle(color: Colors.white70),).tr(),backgroundColor: Colors.black87,));
@@ -90,21 +82,21 @@ class ToolTipButtonLevel extends StatelessWidget {
                       child: Text(
                         level.getLUBR(),
                         style: TextStyle(
-                            color: Theme.of(context).textTheme.headline6!.color),
+                            color: Theme.of(context).textTheme.headlineMedium!.color),
                       ).tr(),
                       style: ButtonStyle(
                           minimumSize: MaterialStateProperty.all(Size(size.width * 0.3, 30.0)),
-                          backgroundColor: MaterialStateProperty.all(level.getColor(context)),
+                          backgroundColor: MaterialStateProperty.all(Colors.green.withOpacity(0.8)),
                           shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
-                          side: MaterialStateProperty.all(BorderSide(width: 0.5,color: Theme.of(context).textTheme.headline2!.color!))
+                          side: MaterialStateProperty.all(BorderSide(width: 0.5,color: Theme.of(context).textTheme.headlineSmall!.color!))
                       ),
                     ),),
-              ),]),
-            ],
-          )),
+        ]),
+
+      ),
       // ignore: prefer_const_constructors
       arrowTheme: InfoPopupArrowTheme(
-        color: Theme.of(context).appBarTheme.backgroundColor!,
+        color: GetColorByType.call(level.type, context).withOpacity(0.9),
         arrowDirection: ArrowDirection.up,
       ),
       dismissTriggerBehavior: PopupDismissTriggerBehavior.onTapArea,
@@ -112,7 +104,7 @@ class ToolTipButtonLevel extends StatelessWidget {
       contentOffset: Offset.zero,
       child:Column(children: [
         10.ph,
-        Text(level.id.toString(),style: TextStyle(color: Theme.of(context).textTheme.headline6!.color),),
+        Text(level.order.toString(),style: TextStyle(fontFamily: "DancingScript",color: Theme.of(context).textTheme.headlineSmall!.color,fontWeight: FontWeight.w500),),
         Container(
         height: 45.0,
           width: 45.0,

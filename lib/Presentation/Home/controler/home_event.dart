@@ -15,12 +15,12 @@ class GetAllSectionsEvent extends HomeEvent {
   List<Object> get props =>[idParticipant];
 }
 class GetParticipantDomainEvent extends HomeEvent {
-  final int id;
+  final int idLang;
 
-  const GetParticipantDomainEvent({required this.id});
+  const GetParticipantDomainEvent({required this.idLang});
 
   @override
-  List<Object> get props =>[id];
+  List<Object> get props =>[idLang];
 }
 class SetLevelStateEvent extends HomeEvent {
   final int idParticipant,idLevel;

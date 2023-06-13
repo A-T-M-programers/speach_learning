@@ -1,11 +1,15 @@
 import 'dart:ui' as ui;
 import 'package:adobe_xd/adobe_xd.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speach_learning/Presentation/Read/UI/read_page.dart';
+import 'package:speach_learning/Presentation/Read/controler/read_bloc.dart';
 import 'package:speach_learning/core/global/static/Filter_Text.dart';
 import 'package:speach_learning/Domain/Entity/PhraseItem.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:speach_learning/core/global/static/static_methode.dart';
+import 'package:speach_learning/core/global/static/static_variable.dart';
+import 'package:speach_learning/core/services/services_locator.dart';
 
 import 'WordItem.dart';
 
@@ -14,12 +18,11 @@ class ItemPhrase extends StatelessWidget {
   ItemPhrase(
       {Key? key,
       required this.phraseItem,
-      required this.index,
-      required this.idParticipant})
+      required this.index,})
       : super(key: key);
 
   final PhraseItem phraseItem;
-  final int index,idParticipant;
+  final int index;
 
   // ignore: prefer_const_constructors
   Size size = Size(0.0, 0.0);
@@ -38,16 +41,6 @@ class ItemPhrase extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 20.0),
                         elevation: 10.0,
                         child: ListTile(
-                          // onLongPress: () {
-                          //   if (isSelected) {
-                          //     isSelected = false;
-                          //   } else {
-                          //     isSelected = true;
-                          //   }
-                          //   if (less || equal) {
-                          //     context.read<BlocShowCheckBox>().showCheckBox({phraseItem.id: isSelected});
-                          //   }
-                          // },
                           trailing: phraseItem.type == ""
                               ? const SizedBox()
                               : IconButton(
@@ -58,13 +51,25 @@ class ItemPhrase extends StatelessWidget {
                                   icon: const Icon(
                                       Icons.arrow_circle_right_rounded),
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (route) => read_page(idParticipant: idParticipant,context: route,phraseItem: phraseItem)));
+                                    try {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (route) =>BlocProvider<ReadBloc>(
+                                                  create: (context) {
+                                                    return ReadBloc(sl(),sl(),sl(),sl(),sl(),sl(),sl(),sl())
+                                                      ..add(const GetAllDialectEvent())
+                                                      ..add(GetPhraseEvent(StaticVariable.participants.id, phraseItem.id));
+                                                  },
+                                                child: ReadPage(),
+                                              )));
+                                    }catch(error){
+                                      print(error.toString());
+                                    }
                                   },
                                 ),
                           title: Text(
                             phraseItem.translation,
                             style: TextStyle(
-                                color: Theme.of(context).textTheme.headline3!.color!),
+                                color: Theme.of(context).textTheme.headlineLarge!.color!),
                           ),
                           leading:SizedBox(
                               width: size.width * 0.1,
@@ -75,8 +80,8 @@ class ItemPhrase extends StatelessWidget {
                                         color: GetColorByType.call(phraseItem.type, context),
                                       ) : const SizedBox(),
                                 Pinned.fromPins(
-                                  Pin(size: 25.0, start: 0.0),
-                                  Pin(size: 25.0, end: 0.0),
+                                  Pin(size: 30.0, start: 0.0),
+                                  Pin(size: 30.0, end: 0.0),
                                   child: SvgPicture.string(
                                     _svg_oxph2,
                                     allowDrawingOutsideViewBox: true,
@@ -86,8 +91,8 @@ class ItemPhrase extends StatelessWidget {
                                 // appeared level user on top layer
                                 //*
                                 Pinned.fromPins(
-                                  Pin(size: 10.0, middle: 0.24),
-                                  Pin(size: 10.0, end: 4.0),
+                                  Pin(size: 10.0, middle: 0.32),
+                                  Pin(size: 10.0, end: 6.0),
                                   child: Text.rich(
                                     // ignore: prefer_const_constructors
                                     TextSpan(
@@ -96,9 +101,7 @@ class ItemPhrase extends StatelessWidget {
                                         fontSize: 9,
                                         color: Colors.black,
                                       ),
-                                      // ignore: prefer_const_literals_to_create_immutables
                                       children: [
-                                        // ignore: prefer_const_constructors
                                         TextSpan(
                                           text: '${phraseItem.idLevel}',
                                           style: const TextStyle(
@@ -135,7 +138,7 @@ class ItemPhrase extends StatelessWidget {
                                           BoxShadow(
                                               color: Theme.of(context)
                                                   .textTheme
-                                                  .headline2!
+                                                  .headlineSmall!
                                                   .color!,
                                               offset: const Offset(0, -3))
                                         ],

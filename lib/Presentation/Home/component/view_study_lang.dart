@@ -16,17 +16,23 @@ class ViewStudyLang extends StatelessWidget {
         case RequestState.loading:
           return Container(
             margin: const EdgeInsets.only(right: 5.0, left: 5.0),
-            child: const Text("EN"),
+            child: const Text("EN",style: TextStyle(fontFamily: "RubikPuddles",fontWeight: FontWeight.w600),),
           );
         case RequestState.loaded:
+          if(state.allSections.isNotEmpty){
             return Container(
               margin: const EdgeInsets.only(right: 5.0, left: 5.0),
-              child: Text(state.participantDomain.name),
+              child: Text(state.allSections[0].key.toUpperCase(),style:const TextStyle(fontFamily: "RubikPuddles",fontWeight: FontWeight.w600)),
             );
+          }
+          return Container(
+            margin: const EdgeInsets.only(right: 5.0, left: 5.0),
+            child: const Text("EN",style: TextStyle(fontFamily: "RubikPuddles",fontWeight: FontWeight.w600),),
+          );
         case RequestState.error:
           return Container(
             margin: const EdgeInsets.only(right: 5.0, left: 5.0),
-            child: const Text("EN"),
+            child: const Text("EN",style: TextStyle(fontFamily: "RubikPuddles",fontWeight: FontWeight.w600)),
           );
       }
     });

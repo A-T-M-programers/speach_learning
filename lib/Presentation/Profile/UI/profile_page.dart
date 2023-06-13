@@ -48,7 +48,7 @@ class profile_page extends StatelessWidget {
 
                 onWillPop: () async {
                   context.read<HomeBloc>().add(GetAllSectionsEvent(idParticipant: id));
-                  context.read<HomeBloc>().add(GetParticipantDomainEvent(id: id));
+                  context.read<HomeBloc>().add(GetParticipantDomainEvent(idLang: id));
                   return true;
                 },
                 child: Scaffold(
@@ -59,7 +59,7 @@ class profile_page extends StatelessWidget {
                       title: Text(
                         "profile",
                         style:
-                        TextStyle(color: Theme.of(context).textTheme.headline1!.color),
+                        TextStyle(color: Theme.of(context).textTheme.headlineMedium!.color),
                       ).tr(),
                       centerTitle: true,
                       actions: [
@@ -79,7 +79,7 @@ class profile_page extends StatelessWidget {
                             }
                           },
                           icon: const Icon(Icons.logout_rounded),
-                          color: Theme.of(context).textTheme.headline1!.color,)
+                          color: Theme.of(context).textTheme.headlineMedium!.color,)
                       ],
                     ),
                     body: SingleChildScrollView(
@@ -136,7 +136,7 @@ class profile_page extends StatelessWidget {
                                                   onTap: () {
                                                     Navigator.push(context, MaterialPageRoute(builder: (context) => show_photo()));
                                                   },
-                                                  child: const ViewParticipantImage()),
+                                                  child: ViewParticipantImage()),
                                             ]),
                                           ),
                                         ),
@@ -181,7 +181,7 @@ class profile_page extends StatelessWidget {
                                                   fontSize: 16,
                                                   color: Theme.of(context)
                                                       .textTheme
-                                                      .headline2!
+                                                      .headlineSmall!
                                                       .color,
                                                 ),
                                                 softWrap: false,
@@ -217,7 +217,7 @@ class profile_page extends StatelessWidget {
                                                   fontSize: 16,
                                                   color: Theme.of(context)
                                                       .textTheme
-                                                      .headline2!
+                                                      .headlineSmall!
                                                       .color,
                                                 ),
                                                 softWrap: false,
@@ -252,7 +252,7 @@ class profile_page extends StatelessWidget {
                                                   fontSize: 16,
                                                   color: Theme.of(context)
                                                       .textTheme
-                                                      .headline2!
+                                                      .headlineSmall!
                                                       .color,
                                                 ),
                                                 softWrap: false,
@@ -283,7 +283,7 @@ class profile_page extends StatelessWidget {
                                                   fontSize: 16,
                                                   color: Theme.of(context)
                                                       .textTheme
-                                                      .headline2!
+                                                      .headlineSmall!
                                                       .color,
                                                 ),
                                                 softWrap: false,
